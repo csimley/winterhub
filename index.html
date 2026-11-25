@@ -201,6 +201,27 @@ tr.me td{background:var(--hl)}
 .score-sum b{font:800 30px/1 "Barlow Condensed",sans-serif}
 @media (max-width:560px){.test{grid-template-columns:minmax(0,1fr)}}
 
+
+/* coach view */
+.cday{margin:22px 0 0;border-top:3px solid var(--ink);padding-top:8px}
+.cday.today{border-top-color:var(--red)}
+.cday h3{font:800 26px/1.05 "Barlow Condensed",sans-serif;margin:0 0 4px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.cday h3 small{font:500 14px "Barlow",sans-serif;color:var(--muted)}
+.crow{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.crow:last-child{border-bottom:0}
+.crow .ct{font:700 17px/1.2 "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums}
+.crow .ct span{display:block;font:500 13px/1.25 "Barlow",sans-serif;color:var(--muted)}
+.crow .cp{font-size:13px;font-weight:700;color:var(--k);display:block;margin-bottom:1px}
+.crow .cw{font-weight:600}
+.crow ul{margin:4px 0 0;padding-left:18px;font-size:15px}
+.crow li{margin:2px 0}
+.crow .cn{font-size:14px;color:var(--muted);margin-top:3px}
+.cquiet{color:var(--muted);font-size:15px;padding:6px 0}
+.cweekpick{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cweekpick select{font:500 15px "Barlow",sans-serif;color:var(--ink);background:var(--surface);border:1.5px solid var(--rule);border-radius:6px;padding:6px 8px}
+@media (max-width:460px){.crow{grid-template-columns:70px minmax(0,1fr);gap:8px}}
+@media print{.top,.tabs,.settings,.cweekpick,.nav,.timer{display:none!important}.wrap{padding:0}.cday{break-inside:avoid}}
+
 /* timer */
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;background:var(--ink);color:var(--bg);padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px))}
 .timer.on{display:block}
@@ -311,6 +332,7 @@ tr.me td{background:var(--hl)}
     <button class="tab" role="tab" data-view="standards">Varsity standards</button>
     <button class="tab" role="tab" data-view="guide">Guide</button>
     <button class="tab" role="tab" data-view="numbers">My numbers</button>
+    <button class="tab" role="tab" data-view="coach">Coach view</button>
   </nav>
   <main id="main"></main>
 </div>
@@ -1083,6 +1105,9 @@ function renderGuide(){
 <h2>Varsity standards</h2>
 <p>The Varsity standards tab lists what we expect by March 1 in fitness, juggling, first touch, passing and 1v1 moves. Put your best numbers in as you test and it shows how close you are.</p>
 
+<h2>Coaches</h2>
+<p>The Coach view tab shows everything at every level, day by day: lifts for all three lanes, runs, chess, futsal, indoor games and technical sessions. Pick a week, or print it.</p>
+
 <h2>Friday chess</h2>
 <p>Fridays 3:30–4:15 in Room B001 on school days. A short lesson, then games. The point isn’t to become a chess player. It’s practice at the same question we ask on the field: what does this move take away, and what does it give up?</p>
 
@@ -1223,13 +1248,86 @@ function stdUpdate(id,val){
   const [met,total]=stdCounts();const su=$("#stdSum");if(su)su.innerHTML='<b>'+met+' of '+total+'</b> varsity standards met';
 }
 
+
+/* =========================================================
+   COACH VIEW: everything, all levels, ignores personal settings
+   ========================================================= */
+let coachWeek=mondayOf((TODAY>=START&&TODAY<=END)?TODAY:START);
+function coreSummary(lift){
+  const out=[];
+  lift.blocks.forEach(b=>b.items.forEach(it=>{
+    if(!it.core)return;
+    const key=liftKey(it.n),nm=LIFTNAME[key]||cap(it.n);
+    const parts=LANES.map(([k,lab],i)=>{const p=(it.pct[i]&&it.pct[i].length)?it.pct[i]:null;return p?lab.replace("-Season","")+" "+it.sets[i]+" to "+Math.max(...p)+"%":null;}).filter(Boolean);
+    out.push(nm+(/fast/i.test(it.n)?" (every rep fast)":"")+": "+parts.join(", "));
+  }));
+  return out;
+}
+function runSummary(run){
+  return run.rows.filter(([t,l])=>!/warm-up|cool-down/i.test(l)).map(([t,l,x])=>l+": "+x);
+}
+function coachDayHTML(d){
+  const k=K(d),rows=[];
+  const sc=scFor(d);
+  if(sc&&!sc.off){
+    const lift=sc.lift,run=sc.run;
+    let w='<span class="cw">'+esc(lift.title)+'</span>';
+    let det='<ul>';
+    if(sc.era==="dec"){
+      det+='<li>Group A lifts in class ('+esc(FALLWK[sc.wk])+'). Group B (new lifters) in the weight room.</li>';
+      const teach=[];lift.blocks.forEach(b=>{if(!/warm-up/i.test(b.label))teach.push(b.label+": "+b.items.map(i=>i.n).join(", "));});
+      teach.forEach(t=>det+='<li>'+esc(t)+'</li>');
+    } else {
+      const cs=coreSummary(lift);
+      cs.forEach(t=>det+='<li>'+esc(t)+'</li>');
+      const acc=[];lift.blocks.forEach(b=>{if(/warm-up/i.test(b.label))return;b.items.forEach(i=>{if(!i.core&&i.n&&i.n.length<60)acc.push(i.n);});});
+      if(acc.length)det+='<li>'+(cs.length?'Also: ':'')+esc(acc.join(", "))+'</li>';
+      const raw=SCDAY[k]&&SCDAY[k].d.fin;
+      if(raw)det+='<li>Off-season finisher (after school): '+esc(raw.items.map(([n,rx])=>rx?n+" "+rx:n).join(", "))+'</li>';
+    }
+    det+='</ul>';
+    const notes=[sc.rule].concat(sc.notes||[]).filter(Boolean);
+    rows.push({t:"3:30",sub:"to 4:15",k:"sc",p:"Weight room, Group B",html:w+det+(notes.length?'<div class="cn">'+notes.map(esc).join(" ")+'</div>':'')+'<div class="cn">'+(sc.era==="dec"?'':'Group A lifts this during class. ')+'Needs one coach in the weight room.</div>'});
+    rows.push({t:"3:30",sub:"Group A to 4:00<br>Group B 4:15–4:45",k:"sc",p:"Run: "+run.title,html:'<ul>'+runSummary(run).map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>'+(run.note?'<div class="cn">'+esc(run.note)+'</div>':'')+'<div class="cn">Needs one run coach for both waves (3:30 and 4:15).</div>'});
+  } else if(sc&&sc.off&&d.getDay()>=1&&d.getDay()<=4){
+    rows.push({t:"—",sub:"",k:"sc",p:"Strength + speed",html:'<span class="cn">'+esc(sc.why)+'</span>'});
+  }
+  if(chessOn(d))rows.push({t:"3:30",sub:"to 4:15",k:"chess",p:"Chess, Room B001",html:'<span class="cw">Friday chess</span><div class="cn">Grades 6–12.</div>'});
+  const fm=FUTSAL.find(m=>K(m.date)===k);
+  if(fm)rows.push({t:"7:00",sub:"to 9:10",k:"futsal",p:"Futsal, Main Gym",html:'<span class="cw">Matchday '+fm.md+(fm.playoff?': seeding games':'')+'</span><ul>'+fm.games.map(([a,as,b,bs],i)=>'<li>'+SLOTS[i]+': '+(fm.playoff?seedName(a):esc(a))+' vs '+(fm.playoff?seedName(b):esc(b))+(as!=null?' ('+as+'–'+bs+')':'')+'</li>').join("")+'</ul>'});
+  INDOOR.filter(g=>K(g.date)===k).sort((a,b)=>a.h-b.h).forEach(g=>{
+    const [t,ap]=g.time.split(" ");
+    rows.push({t:t+" "+ap,sub:"Field "+g.field,k:"indoor",p:"Indoor, "+(g.level==="Varsity"?"Varsity":"JV"),html:'<span class="cw">vs '+esc(g.opp)+'</span>',sort:g.h});
+  });
+  const ts=TECHBY[k];
+  if(ts){
+    const p=TECH.PHASES[TECH.phaseOf(ts.w)];
+    const bl=TECH.blocksFor(ts).filter(b=>!b.pos&&!/warm-up/i.test(b.title)).map(b=>b.title);
+    rows.push({t:"Home",sub:"any time",k:"tech",p:"Technical program",html:'<span class="cw">'+esc(TECH.THEMES[ts.d])+'</span> <span class="cn">('+ts.code+', '+p.name+')</span><ul><li>'+esc(bl.join(", "))+(ts.d==="Thu"?", position block":"")+'</li></ul>'+(TECH.TESTS.includes(ts.code)?'<div class="cn">Test day: players log test numbers in the form.</div>':'')+(ts.w===5?'<div class="cn">Holiday week: any three days.</div>':'')});
+  }
+  const order={"3:30":15.5,"7:00":19,"Home":30,"—":0};
+  rows.sort((a,b)=>(a.sort??order[a.t]??25)-(b.sort??order[b.t]??25));
+  let h='<section class="cday'+(K(d)===K(TODAY)?' today':'')+'"><h3>'+DAYFULL[d.getDay()]+', '+MONFULL[d.getMonth()]+' '+d.getDate()+(K(d)===K(TODAY)?' <small>Today</small>':'')+'</h3>';
+  if(!rows.length)h+='<div class="cquiet">Nothing scheduled.</div>';
+  rows.forEach(r=>h+='<div class="crow" style="--k:'+KCOLOR[r.k]+'"><div class="ct">'+r.t+(r.sub?'<span>'+r.sub+'</span>':'')+'</div><div><span class="cp">'+esc(r.p)+'</span>'+r.html+'</div></div>');
+  return h+'</section>';
+}
+function renderCoach(){
+  let opts='';
+  for(let w=mondayOf(START);w<=END;w=add(w,7))opts+='<option value="'+K(w)+'"'+(K(w)===K(coachWeek)?' selected':'')+'>Week of '+short(w)+'</option>';
+  let h='<div class="prose"><h2>Coach view</h2><p>Everything happening at every level, day by day. This view ignores the player settings and shows all groups, lanes, teams and grades.</p></div>';
+  h+='<div class="weekbar"><div class="cweekpick"><select id="cWeek" aria-label="Pick a week">'+opts+'</select><button class="btn" id="cPrint" type="button">Print this week</button></div><div class="nav"><button id="cPrev" '+(add(coachWeek,-1)<START?"disabled":"")+'>Prev</button><button id="cToday">This week</button><button id="cNext" '+(add(coachWeek,7)>END?"disabled":"")+'>Next</button></div></div>';
+  for(let i=0;i<7;i++)h+=coachDayHTML(add(coachWeek,i));
+  $("#main").innerHTML=h;
+}
+
 /* =========================================================
    ROUTING + EVENTS
    ========================================================= */
-const VIEWS=["day","futsal","indoor","standards","guide","numbers"];
+const VIEWS=["day","futsal","indoor","standards","guide","numbers","coach"];
 function render(){
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));
-  if(view==="day")renderDay();else if(view==="futsal")renderFutsal();else if(view==="indoor")renderIndoor();else if(view==="standards")renderStandards();else if(view==="guide")renderGuide();else renderNumbers();
+  if(view==="day")renderDay();else if(view==="futsal")renderFutsal();else if(view==="indoor")renderIndoor();else if(view==="standards")renderStandards();else if(view==="guide")renderGuide();else if(view==="coach")renderCoach();else renderNumbers();
 }
 function fromHash(){const h=(location.hash||"").replace("#","");view=VIEWS.includes(h)?h:"day";}
 fromHash();
@@ -1257,6 +1355,10 @@ if(!S.group&&!S.indoor&&!S.futsal&&!store.get("hub-settings",null)){$("#settings
 $("#main").addEventListener("click",e=>{
   const dd=e.target.closest("[data-date]");if(dd&&!dd.disabled){const [y,m,d]=dd.dataset.date.split("-").map(Number);sel=new Date(y,m-1,d);render();return;}
   const go=e.target.closest("[data-goto]");if(go){const [y,m,d]=go.dataset.goto.split("-").map(Number);sel=new Date(y,m-1,d);weekStart=mondayOf(sel);render();window.scrollTo(0,0);return;}
+  if(e.target.id==="cPrev"){coachWeek=add(coachWeek,-7);render();return;}
+  if(e.target.id==="cNext"){coachWeek=add(coachWeek,7);render();return;}
+  if(e.target.id==="cToday"){coachWeek=mondayOf((TODAY>=START&&TODAY<=END)?TODAY:START);render();return;}
+  if(e.target.id==="cPrint"){window.print();return;}
   if(e.target.id==="prevW"){weekStart=add(weekStart,-7);sel=add(weekStart,0)<START?new Date(START):new Date(weekStart);render();return;}
   if(e.target.id==="nextW"){weekStart=add(weekStart,7);sel=new Date(weekStart);render();return;}
   if(e.target.id==="todayW"){sel=(TODAY>=START&&TODAY<=END)?new Date(TODAY):new Date(START);weekStart=mondayOf(sel);render();return;}
@@ -1273,7 +1375,7 @@ $("#main").addEventListener("input",e=>{
   if(mk){const mx=store.get("hub-max",{});const v=parseFloat(e.target.value);if(v>0)mx[mk]=v;else delete mx[mk];store.set("hub-max",mx);const ts=$("#topsets");if(ts)ts.innerHTML=topSetsHTML();return;}
   if(e.target.id==="cW"||e.target.id==="cR"){conv();}
 });
-$("#main").addEventListener("change",e=>{if(e.target.id==="cR")conv();const sd=e.target.dataset&&e.target.dataset.std;if(sd&&e.target.tagName==="SELECT")stdUpdate(sd,e.target.value);});
+$("#main").addEventListener("change",e=>{if(e.target.id==="cWeek"){const [y,m,d]=e.target.value.split("-").map(Number);coachWeek=new Date(y,m-1,d);render();return;}if(e.target.id==="cR")conv();const sd=e.target.dataset&&e.target.dataset.std;if(sd&&e.target.tagName==="SELECT")stdUpdate(sd,e.target.value);});
 function conv(){const w=parseFloat(($("#cW")||{}).value),r=+(($("#cR")||{}).value);const o=$("#cOut");if(!o)return;if(!(w>0)){o.textContent="–";return;}o.textContent=Math.floor(w/(r===5?0.87:0.93)/5)*5+" lb";}
 
 /* =========================================================
