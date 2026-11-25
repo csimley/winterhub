@@ -222,6 +222,31 @@ tr.me td{background:var(--hl)}
 @media (max-width:460px){.crow{grid-template-columns:70px minmax(0,1fr);gap:8px}}
 @media print{.top,.tabs,.settings,.cweekpick,.nav,.timer{display:none!important}.wrap{padding:0}.cday{break-inside:avoid}}
 
+
+/* technical tab */
+.tstrip{display:grid;grid-template-columns:34px repeat(13,minmax(0,1fr));gap:3px;margin:18px 0 4px}
+.tstrip .lab{font:600 13px/1 "Barlow Condensed",sans-serif;color:var(--muted);display:flex;align-items:center}
+.tstrip .wk{font:600 13px/1 "Barlow Condensed",sans-serif;color:var(--muted);text-align:center;padding-bottom:3px}
+.tcell{aspect-ratio:1;min-height:18px;border:1.5px solid var(--rule);background:var(--surface);border-radius:3px;padding:0;cursor:pointer;position:relative}
+.tcell.done{background:var(--ink);border-color:var(--ink)}
+.tcell.today{border-color:var(--c-tech);border-width:2.5px}
+.tcell.sel{background:var(--c-tech);border-color:var(--c-tech)}
+.tcell.test::after{content:"";position:absolute;right:2px;top:2px;width:5px;height:5px;border-radius:50%;background:var(--c-futsal)}
+.tphases{display:grid;grid-template-columns:34px repeat(13,minmax(0,1fr));gap:3px;margin-bottom:6px}
+.tphases span{font:600 12px/1.1 "Barlow Condensed",sans-serif;color:var(--muted);border-top:2px solid var(--rule);padding-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tlegend{font-size:13px;color:var(--muted);margin:0 0 8px}
+.tlegend b{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px;margin:0 4px 0 10px}
+.tlegend b:first-child{margin-left:0}
+.tsess{margin-top:16px}
+.tsess h2{font:800 clamp(38px,10vw,60px)/.92 "Barlow Condensed","Arial Narrow",sans-serif;margin:0 0 6px}
+.tsess .kick{margin:0;font-weight:600;font-size:18px}
+.tbody{margin-top:10px;border-top:1px solid var(--rule)}
+.tbody .tblock:first-child{border-top:0;padding-top:14px}
+.tlog{margin:18px 0 0;padding:18px;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+.tlog h3{font:700 24px/1.1 "Barlow Condensed",sans-serif;margin:0 0 6px}
+.tlog p{margin:0 0 6px}
+@media (max-width:420px){.tstrip,.tphases{grid-template-columns:28px repeat(13,minmax(0,1fr));gap:2px}}
+
 /* timer */
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;background:var(--ink);color:var(--bg);padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px))}
 .timer.on{display:block}
@@ -321,6 +346,7 @@ tr.me td{background:var(--hl)}
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" data-view="guide">Guide</button>
     <button class="tab" role="tab" data-view="day">Day by day</button>
+    <button class="tab" role="tab" data-view="technical">Technical</button>
     <button class="tab" role="tab" data-view="futsal">Futsal</button>
     <button class="tab" role="tab" data-view="indoor">Indoor</button>
     <button class="tab" role="tab" data-view="standards">Varsity standards</button>
@@ -962,18 +988,52 @@ function indoorHTML(g){
 /* technical */
 function techHTML(s){
   const P=TECH.PHASES[TECH.phaseOf(s.w)];
-  let h='<article class="ev" style="--k:var(--c-tech)"><div class="t"><b style="font-size:22px">Home</b><small>About 30 min, any time today</small></div><div>';
-  h+='<p class="kind">Winter technical program</p><h3>'+esc(TECH.THEMES[s.d])+'</h3>';
-  h+='<p class="note">Session '+s.code+', week '+s.w+' of 13, '+P.name+' phase. '+esc(P.note)+'</p>';
-  if(s.w===5)h+='<div class="alert">Holiday week: do the three sessions on any three days this week, and log each one by its name.</div>';
-  if(TECH.TESTS.includes(s.code))h+='<div class="alert">Test day. Have a wall, a ball and markers ready. Tests are listed in the session.</div>';
   const blocks=TECH.blocksFor(s);let total=0;blocks.forEach(b=>total+=b.min);
-  h+='<details class="part" style="--k:var(--c-tech)"><summary><span class="st">Open the session</span><span class="sm">'+blocks.length+' blocks, about '+total+' min</span></summary><div class="pbody">';
-  blocks.forEach((b,n)=>h+=tblockHTML(b,n+1,s));
-  h+='<div class="tblock"><h4>Log it</h4><p>When you finish, log <strong>'+esc(s.label)+'</strong> with your best juggle of the day. Coach sees every log.</p>';
-  if(TECH.FORM_PREFILL.startsWith("https://"))h+='<div class="row"><a class="btn primary" data-log="'+s.code+'" href="'+TECH.FORM_PREFILL+encodeURIComponent(s.label)+'" target="_blank" rel="noopener">Log this session</a>'+(tDone[s.code]?'<span class="note">Logged on this phone.</span>':'')+'</div>';
-  h+='</div></div></details></div></article>';
+  let h='<article class="ev" style="--k:var(--c-tech)"><div class="t"><b style="font-size:22px">Home</b><small>About '+total+' min, any time today</small></div><div>';
+  h+='<p class="kind">Winter technical program</p><h3>'+esc(TECH.THEMES[s.d])+'</h3>';
+  h+='<p class="note">Session '+s.code+', week '+s.w+' of 13, '+P.name+' phase.'+(tDone[s.code]?' Logged on this phone.':'')+'</p>';
+  if(s.w===5)h+='<div class="alert">Holiday week: do the three sessions on any three days this week, and log each one by its name.</div>';
+  if(TECH.TESTS.includes(s.code))h+='<div class="alert">Test day. Have a wall, a ball and markers ready.</div>';
+  h+='<div class="row"><button class="btn primary" data-opentech="'+s.i+'">Open today’s session</button></div>';
+  h+='</div></article>';
   return h;
+}
+let techSel=(()=>{const t=TODAY.getTime();const ex=TECH.SESSIONS.find(x=>x.date.getTime()===t);if(ex)return ex.i;const nx=TECH.SESSIONS.find(x=>x.date.getTime()>t);return nx?nx.i:TECH.SESSIONS.length-1;})();
+function renderTech(){
+  const SS=TECH.SESSIONS,s=SS[techSel],P=TECH.PHASES[TECH.phaseOf(s.w)];
+  const todayS=SS.find(x=>x.date.getTime()===TODAY.getTime());
+  let h='';
+  if(S.tech==="no")h+='<p class="flag">You’re set as not in the technical program, so these sessions don’t show on your day-by-day view. Change it in My settings.</p>';
+  h+='<div class="tsess"><h2>'+longDate(s.date)+'</h2><p class="kick">'+esc(TECH.THEMES[s.d])+'</p><p class="note">Session '+s.code+', week '+s.w+' of 13, '+P.name+' phase. '+esc(P.note)+'</p>';
+  let st;
+  if(todayS&&todayS.i===s.i)st="Today’s session.";
+  else if(s.date<TODAY)st=tDone[s.code]?"Already logged on this phone.":"Past session. Doing it as a make-up? Log it under this session’s name.";
+  else st=(TODAY<SS[0].date&&s.i===0)?"The program starts Monday, Nov 30. This is your first session.":"Upcoming session.";
+  h+='<p class="flag">'+st+'</p>';
+  if(s.w===5)h+='<div class="alert">Holiday week: do the three sessions on any three days this week, and log each one by its name.</div>';
+  h+='</div>';
+  // strip
+  h+='<div class="tstrip" role="grid" aria-label="All 39 sessions"><div></div>';
+  for(let w=1;w<=13;w++)h+='<div class="wk">'+w+'</div>';
+  for(const d of ["Mon","Tue","Thu"]){
+    h+='<div class="lab">'+d+'</div>';
+    for(let w=1;w<=13;w++){
+      const x=SS.find(q=>q.w===w&&q.d===d);
+      const c=["tcell"];if(tDone[x.code])c.push("done");if(todayS&&x.i===todayS.i)c.push("today");if(x.i===techSel)c.push("sel");if(TECH.TESTS.includes(x.code))c.push("test");
+      h+='<button class="'+c.join(" ")+'" data-ti="'+x.i+'" aria-label="'+DAYFULL[x.date.getDay()]+', '+short(x.date)+(tDone[x.code]?', logged':'')+'"'+(x.i===techSel?' aria-current="true"':'')+'></button>';
+    }
+  }
+  h+='</div><div class="tphases" aria-hidden="true"><span></span><span style="grid-column:span 4">Foundation</span><span style="grid-column:span 4">Speed</span><span style="grid-column:span 4">Game speed</span><span>Test</span></div>';
+  h+='<p class="tlegend"><b style="background:var(--c-tech)"></b>Showing <b style="border:2.5px solid var(--c-tech)"></b>Today <b style="background:var(--ink)"></b>Logged <b style="background:var(--c-futsal);border-radius:50%"></b>Test day</p>';
+  const nav='<div class="row"><button class="btn" data-ti="'+Math.max(0,techSel-1)+'"'+(techSel===0?' disabled':'')+'>Previous session</button>'+(todayS?'<button class="btn" data-ti="'+todayS.i+'">Today</button>':'')+'<button class="btn" data-ti="'+Math.min(SS.length-1,techSel+1)+'"'+(techSel===SS.length-1?' disabled':'')+'>Next session</button></div>';
+  h+=nav;
+  const blocks=TECH.blocksFor(s);let total=0;blocks.forEach(b=>total+=b.min);
+  h+='<div class="tbody">';blocks.forEach((b,n)=>h+=tblockHTML(b,n+1,s));h+='</div>';
+  h+='<section class="tlog"><h3>Log it</h3><p>About '+total+' minutes. When you finish, log <strong>'+esc(s.label)+'</strong> with your best juggle of the day. Coach sees every log.</p>';
+  if(TECH.FORM_PREFILL.startsWith("https://"))h+='<div class="row"><a class="btn primary" data-log="'+s.code+'" href="'+TECH.FORM_PREFILL+encodeURIComponent(s.label)+'" target="_blank" rel="noopener">Log this session</a>'+(tDone[s.code]?'<span class="note">Logged on this phone.</span>':'')+'</div>';
+  h+='</section>';
+  h+='<p class="note" style="margin-top:16px">Test days, juggling club tiers and what you need at home are on the Guide tab.</p>';
+  $("#main").innerHTML=h;
 }
 function tblockHTML(b,n,s){
   const key=s.code+"#"+n;
@@ -1111,7 +1171,7 @@ function renderGuide(){
 <li>Monday–Thursday only. Fridays have no lifting or running.</li></ul>
 
 <h2>Winter technical program</h2>
-<p>Three sessions a week at home, about 30 minutes each, Monday, Nov 30 through Thursday, Feb 25. Mondays are first touch. Tuesdays are 1v1: square up, sell the fake, escape with the outside of the foot. Thursdays are turns, a block for your position and a juggling record attempt.</p>
+<p>Every session is on the Technical tab, which opens to today’s session. Three sessions a week at home, about 30 minutes each, Monday, Nov 30 through Thursday, Feb 25. Mondays are first touch. Tuesdays are 1v1: square up, sell the fake, escape with the outside of the foot. Thursdays are turns, a block for your position and a juggling record attempt.</p>
 <p>You need about 4×4 yards, a ball, a solid wall, a chair and six markers. Every block has a timer: it beeps high to start each set and low to rest, and a quick double beep in random-cue mode means react. Turn your volume up.</p>
 <p>Log every session within 24 hours with the button at the bottom of the session. Missed a day? Make it up Wednesday, Friday or the weekend and log the session you made up.</p>
 <h3>Which position block?</h3>
@@ -1353,13 +1413,13 @@ function renderCoach(){
 /* =========================================================
    ROUTING + EVENTS
    ========================================================= */
-const VIEWS=["day","futsal","indoor","standards","guide","coach"];
+const VIEWS=["day","technical","futsal","indoor","standards","guide","coach"];
 function render(){
   if(view==="coach"){try{sessionStorage.setItem("hub-coach","1")}catch(e){}}
   let coach=false;try{coach=sessionStorage.getItem("hub-coach")==="1"}catch(e){}
   $("#coachTab").hidden=!(coach||view==="coach");
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));
-  if(view==="day")renderDay();else if(view==="futsal")renderFutsal();else if(view==="indoor")renderIndoor();else if(view==="standards")renderStandards();else if(view==="guide")renderGuide();else if(view==="coach")renderCoach();else renderNumbers();
+  if(view==="day")renderDay();else if(view==="technical")renderTech();else if(view==="futsal")renderFutsal();else if(view==="indoor")renderIndoor();else if(view==="standards")renderStandards();else if(view==="guide")renderGuide();else if(view==="coach")renderCoach();else renderNumbers();
 }
 function fromHash(){const h=(location.hash||"").replace("#","");view=VIEWS.includes(h)?h:"day";}
 fromHash();
@@ -1394,9 +1454,11 @@ $("#main").addEventListener("click",e=>{
   if(e.target.id==="prevW"){weekStart=add(weekStart,-7);sel=add(weekStart,0)<START?new Date(START):new Date(weekStart);render();return;}
   if(e.target.id==="nextW"){weekStart=add(weekStart,7);sel=new Date(weekStart);render();return;}
   if(e.target.id==="todayW"){sel=(TODAY>=START&&TODAY<=END)?new Date(TODAY):new Date(START);weekStart=mondayOf(sel);render();return;}
+  const ot=e.target.closest("[data-opentech]");if(ot){techSel=+ot.dataset.opentech;view="technical";if(location.hash!=="#technical")location.hash="technical";else render();window.scrollTo(0,0);return;}
+  const ti=e.target.closest("[data-ti]");if(ti&&!ti.disabled){techSel=+ti.dataset.ti;render();return;}
   const pk=e.target.closest("[data-pick]");if(pk){S.pos=pk.dataset.pick;saveS();syncSettings();render();return;}
   const tb=e.target.closest("[data-timer]");if(tb){try{startTimer(JSON.parse(tb.dataset.timer),tb.dataset.title)}catch(err){}return;}
-  const lg=e.target.closest("[data-log]");if(lg){tDone[lg.dataset.log]=true;store.set("hub-tdone",tDone);}
+  const lg=e.target.closest("[data-log]");if(lg){tDone[lg.dataset.log]=true;store.set("hub-tdone",tDone);setTimeout(render,300);}
 });
 $("#main").addEventListener("change",e=>{
   const k=e.target.dataset&&e.target.dataset.ck;if(k){tChecks[k]=e.target.checked;store.set("hub-tchecks",tChecks);}
