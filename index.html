@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EHS Soccer Winter Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1f2f0;--surface:#ffffff;--ink:#17191c;--muted:#5b636d;--rule:#d7dbde;--soft:#e7e9e6;
+  --red:#b3141d;--on-red:#ffffff;
+  --c-sc:#17191c;--c-tech:#b3141d;--c-futsal:#a65f00;--c-indoor:#2c6a3a;--c-chess:#365a86;
+  --hl:#fbecc8;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121417;--surface:#1b1e22;--ink:#eceef0;--muted:#a1a9b3;--rule:#30353b;--soft:#23272c;
+    --red:#e2434b;--on-red:#ffffff;
+    --c-sc:#eceef0;--c-tech:#e2434b;--c-futsal:#e39a35;--c-indoor:#5fb071;--c-chess:#7fa6d6;
+    --hl:#3b3220;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121417;--surface:#1b1e22;--ink:#eceef0;--muted:#a1a9b3;--rule:#30353b;--soft:#23272c;
+  --red:#e2434b;--on-red:#ffffff;
+  --c-sc:#eceef0;--c-tech:#e2434b;--c-futsal:#e39a35;--c-indoor:#5fb071;--c-chess:#7fa6d6;
+  --hl:#3b3220;color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:780px;margin:0 auto;padding:16px 18px 150px}
+button,select,input{font-family:inherit}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .bars{display:grid;grid-template-columns:repeat(5,5px);gap:3px;height:34px}
+.brand .bars i{display:block;border-radius:2px}
+.brand h1{font:800 30px/0.95 "Barlow Condensed","Arial Narrow",sans-serif;margin:0;letter-spacing:.005em}
+.brand p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.setbtn{font:600 15px "Barlow",sans-serif;padding:8px 14px;border-radius:6px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.settings{margin:14px 0 0;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;display:none}
+.settings.on{display:block}
+.settings h2{font:700 22px/1.1 "Barlow Condensed",sans-serif;margin:0 0 4px}
+.settings > p{margin:0 0 12px;font-size:15px;color:var(--muted)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.sgrid label{display:block;font-size:14px;font-weight:600;color:var(--muted)}
+.sgrid select{display:block;width:100%;margin-top:4px;font:500 16px "Barlow",sans-serif;color:var(--ink);background:var(--bg);border:1.5px solid var(--rule);border-radius:6px;padding:8px 10px}
+.mine{margin:10px 0 0;font-size:14px;color:var(--muted)}
+.poshelp{margin:16px 0 0;padding-top:12px;border-top:1px solid var(--rule)}
+.poshelp h3{font:700 19px/1.15 "Barlow Condensed",sans-serif;margin:0 0 4px}
+.poshelp p{margin:0 0 6px;font-size:15px}
+.poshelp ul{margin:0 0 6px;padding-left:20px;font-size:15px}
+.poshelp li{margin:4px 0}
+.tabs{display:flex;gap:2px;margin:16px 0 0;border-bottom:2px solid var(--rule);overflow-x:auto;scrollbar-width:none}
+.tab{background:none;border:0;padding:10px 12px;font:600 16px "Barlow",sans-serif;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
+
+/* week strip */
+.weekbar{display:flex;align-items:center;justify-content:space-between;margin:18px 0 8px;gap:8px}
+.weekbar .wl{font:700 18px/1.1 "Barlow Condensed",sans-serif;color:var(--muted)}
+.nav{display:flex;gap:6px}
+.nav button{font:600 15px "Barlow",sans-serif;padding:6px 11px;border-radius:6px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer}
+.nav button:disabled{opacity:.4;cursor:default}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.day{background:var(--surface);border:1.5px solid var(--rule);border-radius:6px;padding:7px 4px 6px;cursor:pointer;color:var(--ink);text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:86px}
+.day .dn{font:600 13px/1 "Barlow",sans-serif;color:var(--muted)}
+.day .dd{font:800 30px/1 "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums}
+.day .pips{display:flex;flex-direction:column;gap:2px;width:100%;padding:0 3px;margin-top:3px}
+.day .pips i{display:block;height:4px;border-radius:2px}
+.day.today{border-color:var(--red);border-width:2.5px}
+.day.sel{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.day.sel .dn{color:var(--bg);opacity:.8}
+.day.sel .pips i.k-sc{background:var(--bg)!important}
+.day.out{opacity:.35;cursor:default}
+.key{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted);margin:8px 0 0}
+.key span{display:inline-flex;align-items:center;gap:5px}
+.key i{display:inline-block;width:14px;height:4px;border-radius:2px}
+
+/* day headline */
+.dayhead{margin:26px 0 4px}
+.dayhead h2{font:800 clamp(44px,12vw,74px)/.9 "Barlow Condensed","Arial Narrow",sans-serif;margin:0;letter-spacing:-.005em}
+.dayhead p{margin:8px 0 0;color:var(--muted)}
+.flag{margin:14px 0 0;padding:10px 14px;background:var(--hl);border-radius:6px;font-weight:500}
+
+/* events */
+.ev{display:grid;grid-template-columns:74px minmax(0,1fr);gap:14px;padding:20px 0 18px;border-top:1px solid var(--rule)}
+.ev:first-of-type{margin-top:18px}
+.ev .t{border-left:5px solid var(--k);padding-left:9px}
+.ev .t b{display:block;font:800 26px/1 "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums}
+.ev .t small{display:block;font-size:13px;color:var(--muted);margin-top:3px;line-height:1.25}
+.ev h3{font:700 27px/1.05 "Barlow Condensed","Arial Narrow",sans-serif;margin:0 0 4px}
+.ev .kind{font-size:14px;font-weight:600;color:var(--k);margin:0 0 2px}
+.ev p{margin:0 0 8px}
+.who{margin:6px 0 10px;padding:0;list-style:none}
+.who li{padding:6px 0;border-bottom:1px dashed var(--rule)}
+.who li:last-child{border-bottom:0}
+.who li.me{font-weight:600;background:var(--hl);padding:6px 8px;border-radius:5px;border-bottom:0}
+.who b{font-weight:700}
+.note{font-size:15px;color:var(--muted)}
+.alert{padding:9px 12px;border-radius:6px;background:var(--hl);font-size:15px;margin:8px 0}
+
+details.part{border:1px solid var(--rule);border-radius:8px;background:var(--surface);margin:10px 0}
+details.part > summary{cursor:pointer;list-style:none;padding:12px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+details.part > summary::-webkit-details-marker{display:none}
+details.part > summary .st{font:700 21px/1.1 "Barlow Condensed",sans-serif}
+details.part > summary .sm{font-size:14px;color:var(--muted);white-space:nowrap}
+details.part > summary::after{content:"+";font:700 22px/1 "Barlow",sans-serif;color:var(--muted)}
+details.part[open] > summary::after{content:"–"}
+.pbody{padding:0 14px 14px}
+.blk{padding:10px 0;border-top:1px solid var(--rule)}
+.blk:first-child{border-top:0;padding-top:0}
+.blk h4{margin:0 0 4px;font:700 15px/1.2 "Barlow",sans-serif;color:var(--muted)}
+.blk h4 span{font-weight:500}
+.it{margin:6px 0 8px}
+.it .nm{font-weight:600}
+.it .rx{font-weight:700;color:var(--red)}
+.it .cue{font-size:15px;color:var(--muted);margin-top:1px}
+.sets{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 2px}
+.sets span{font-size:14px;border:1.5px solid var(--rule);border-radius:5px;padding:3px 8px;background:var(--bg);font-variant-numeric:tabular-nums}
+.sets span b{font-weight:700}
+.rows .r{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;padding:7px 0;border-top:1px solid var(--rule)}
+.rows .r:first-child{border-top:0}
+.rows .r .rt{font-size:14px;color:var(--muted)}
+.rows .r .rl{font-weight:700;display:block}
+
+/* technical blocks */
+.tblock{padding:14px 0;border-top:1px solid var(--rule)}
+.tblock:first-child{border-top:0;padding-top:2px}
+.tblock .focus{display:block;font-size:14px;font-weight:600;color:var(--c-tech);margin:0 0 2px}
+.tblock h4{font:700 22px/1.1 "Barlow Condensed",sans-serif;margin:0 0 4px}
+.tblock .rx{font-weight:600;margin:0 0 6px}
+.tblock ol{margin:6px 0 8px;padding-left:22px}
+.tblock li{margin:3px 0}
+.cues{border-left:3px solid var(--rule);padding:2px 0 2px 12px;margin:8px 0}
+.cues div{margin:2px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.btn{font:600 15px "Barlow",sans-serif;padding:8px 13px;border-radius:6px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.check{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted);cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--red)}
+.picker{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+
+.empty{margin:22px 0 0;padding:18px;border:1.5px dashed var(--rule);border-radius:8px}
+.empty h3{font:700 24px/1.1 "Barlow Condensed",sans-serif;margin:0 0 6px}
+.empty p{margin:0 0 8px}
+
+/* pages */
+.prose h2{font:800 34px/1 "Barlow Condensed","Arial Narrow",sans-serif;margin:30px 0 10px}
+.prose h3{font:700 22px/1.15 "Barlow Condensed",sans-serif;margin:22px 0 6px}
+.prose p{margin:0 0 12px;max-width:68ch}
+.prose ul{margin:0 0 12px;padding-left:22px;max-width:68ch}
+.prose li{margin:3px 0}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:460px;margin:8px 0 16px;font-size:16px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:600 14px "Barlow",sans-serif;color:var(--muted)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.me td{background:var(--hl)}
+.score{font:800 20px/1 "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.md{font:700 20px/1.1 "Barlow Condensed",sans-serif;margin:18px 0 2px}
+.rosters{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 20px}
+.rosters h3{margin-top:10px}
+.rosters ol{margin:0;padding-left:22px}
+.rosters li{margin:2px 0}
+.gk{font-size:12px;font-weight:700;color:var(--on-red);background:var(--red);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+.grade{color:var(--muted);font-size:14px}
+.numgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:10px 0 6px}
+.numgrid label{font-size:14px;font-weight:600;color:var(--muted)}
+.numgrid input,.conv input,.conv select{display:block;width:100%;margin-top:4px;font:600 22px "Barlow Condensed",sans-serif;color:var(--ink);background:var(--surface);border:1.5px solid var(--rule);border-radius:6px;padding:8px 10px}
+.conv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:end;margin:8px 0}
+.conv label{font-size:14px;font-weight:600;color:var(--muted)}
+.convout{font:800 34px/1 "Barlow Condensed",sans-serif;padding:8px 0}
+
+
+/* standards */
+.std-intro{max-width:68ch}
+.stdsec{margin:30px 0 0}
+.stdsec > h2{font:800 34px/1 "Barlow Condensed","Arial Narrow",sans-serif;margin:0 0 6px}
+.stdsec > p{margin:0 0 6px;max-width:68ch}
+.stdsec .where{font-size:15px;color:var(--muted)}
+.test{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:8px 18px;padding:14px 0;border-top:1px solid var(--rule)}
+.test:first-of-type{margin-top:10px}
+.test h3{font:700 21px/1.15 "Barlow Condensed",sans-serif;margin:0 0 3px}
+.test .how{font-size:15px;color:var(--muted);margin:0}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0}
+.bar span{font-size:14px;border-radius:5px;padding:3px 9px;border:1.5px solid var(--rule);background:var(--surface)}
+.bar span b{font-weight:700}
+.bar .v{border-color:var(--red)}
+.mine-in{display:flex;flex-direction:column;gap:6px;align-self:start}
+.mine-in label{font-size:13px;font-weight:600;color:var(--muted)}
+.mine-in input[type=number]{width:100%;font:700 22px "Barlow Condensed",sans-serif;color:var(--ink);background:var(--surface);border:1.5px solid var(--rule);border-radius:6px;padding:6px 10px;margin-top:3px}
+.status{font-size:14px;font-weight:700}
+.status.ok{color:var(--c-indoor)}
+.status.elite{color:var(--c-futsal)}
+.status.gap{color:var(--muted);font-weight:500}
+.score-sum{margin:18px 0 0;padding:14px 16px;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+.score-sum b{font:800 30px/1 "Barlow Condensed",sans-serif}
+@media (max-width:560px){.test{grid-template-columns:minmax(0,1fr)}}
+
+/* timer */
+.timer{position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;background:var(--ink);color:var(--bg);padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px))}
+.timer.on{display:block}
+.timer.work{background:var(--red);color:var(--on-red)}
+.timer.cue{background:#ffffff;color:#000000}
+.tin{max-width:780px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;align-items:center}
+.tt{font-size:14px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp{font:700 22px/1.1 "Barlow Condensed",sans-serif}
+.clock{font:800 50px/1 "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums}
+.tbtns{display:flex;flex-direction:column;gap:6px}
+.tbtns button{font:600 14px "Barlow",sans-serif;padding:6px 12px;border-radius:5px;border:1.5px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.timer :focus-visible{outline-color:currentColor}
+@media (max-width:460px){
+  .ev{grid-template-columns:58px minmax(0,1fr);gap:10px}
+  .ev .t b{font-size:22px}
+  .day{min-height:78px;padding:6px 2px}
+  .day .dd{font-size:25px}
+  .day .dn{font-size:12px}
+  .rows .r{grid-template-columns:62px minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="bars" aria-hidden="true"><i style="background:var(--c-sc)"></i><i style="background:var(--c-tech)"></i><i style="background:var(--c-chess)"></i><i style="background:var(--c-futsal)"></i><i style="background:var(--c-indoor)"></i></div>
+      <div><h1>EHS Soccer Winter Hub</h1><p>Everything you need to do, day by day</p></div>
+    </div>
+    <button class="setbtn" id="setBtn" aria-expanded="false" aria-controls="settings">My settings</button>
+  </header>
+
+  <section class="settings" id="settings" aria-label="My settings">
+    <h2>Make this page yours</h2>
+    <p>Pick once. This phone remembers it and highlights your groups and games.</p>
+    <div class="sgrid">
+      <label>My grade
+        <select id="sGrade">
+          <option value="">Choose</option>
+          <option value="6">6th grade</option>
+          <option value="7">7th grade</option>
+          <option value="8">8th grade</option>
+          <option value="9">9th grade</option>
+          <option value="10">10th grade</option>
+          <option value="11">11th grade</option>
+          <option value="12">12th grade</option>
+        </select>
+      </label>
+      <label>After-school lifting group
+        <select id="sGroup">
+          <option value="">Not set (show both)</option>
+          <option value="A">Group A: I lift in weight training class</option>
+          <option value="B">Group B: I don’t lift in class</option>
+          <option value="none">Not participating</option>
+        </select>
+      </label>
+      <label>Weight room lane (Jan–Feb)
+        <select id="sLane">
+          <option value="pre">Pre-Season</option>
+          <option value="in">In-Season</option>
+          <option value="off">Off-Season</option>
+        </select>
+      </label>
+      <label>Indoor team
+        <select id="sIndoor">
+          <option value="">Not set (show both)</option>
+          <option value="Varsity">Varsity</option>
+          <option value="Junior Varsity">Junior Varsity</option>
+          <option value="none">Not participating</option>
+        </select>
+      </label>
+      <label>Futsal team
+        <select id="sFutsal"><option value="">Not set</option><option value="none">Not participating</option></select>
+      </label>
+      <label>Winter technical program
+        <select id="sTech">
+          <option value="yes">I’m in it (show my sessions)</option>
+          <option value="no">Not participating</option>
+        </select>
+      </label>
+      <label>Technical position block
+        <select id="sPos">
+          <option value="">Choose</option>
+          <option value="central">Central: center backs, center mids, attacking mids, strikers</option>
+          <option value="wide">Wide: wingers, outside backs</option>
+        </select>
+      </label>
+    </div>
+    <p class="alert" id="msNote" hidden>Middle school players (grades 6–8) take part in chess, futsal and the winter technical program. Strength + speed and indoor games are for high school players, so they’re hidden.</p>
+    <div class="poshelp">
+      <h3>Which position block is mine?</h3>
+      <p>Thursday technical sessions include a block for your position. Pick the channel where you play most.</p>
+      <ul>
+        <li><strong>Central channel:</strong> center backs, center mids, attacking mids and strikers. You play through the middle, so you practice receiving on the half-turn, playing forward, and holding the ball with your back to pressure.</li>
+        <li><strong>Wide channel:</strong> wingers and outside backs. You play along the touchline, so you practice receiving down the line, beating the press, going 1v1 and crossing.</li>
+      </ul>
+      <p class="note">Play more than one spot? Pick the one Coach uses you at most. You can switch any time.</p>
+    </div>
+    <p class="mine" id="mine"></p>
+  </section>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-view="day">Day by day</button>
+    <button class="tab" role="tab" data-view="futsal">Futsal</button>
+    <button class="tab" role="tab" data-view="indoor">Indoor</button>
+    <button class="tab" role="tab" data-view="standards">Varsity standards</button>
+    <button class="tab" role="tab" data-view="guide">Guide</button>
+    <button class="tab" role="tab" data-view="numbers">My numbers</button>
+  </nav>
+  <main id="main"></main>
+</div>
+
+<div class="timer" id="timer" role="region" aria-label="Interval timer">
+  <div class="tin">
+    <div><div class="tt" id="tTitle"></div><div class="tp" id="tPhase"></div></div>
+    <div class="clock" id="tClock">0:00</div>
+    <div class="tbtns"><button id="tPause" type="button">Pause</button><button id="tStop" type="button">Close</button></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   TECHNICAL PROGRAM (copied from the Antler Winter Technical Program page)
+   ========================================================= */
+const TECH=(function(){
+const FORM_PREFILL = "https://docs.google.com/forms/d/e/1FAIpQLSd6ktbfZJGfLcS5TZC1uZDc73a__YOjr4FXcHp-QdM_WASOQQ/viewform?usp=pp_url&entry.31083359=";
+/* Coach: optional demo videos, keyed like "tue-3" or "thu-4" (https links only). */
+const DEMOS = {"mon-1":"https://www.youtube.com/watch?v=D1fzbTaXUz8","mon-2":"https://www.youtube.com/watch?v=carTOij1P7g","mon-3":"https://www.youtube.com/watch?v=VJtavpOhK6s","mon-4":"https://www.youtube.com/watch?v=JlPfNgGNbqw","mon-5":"https://www.youtube.com/watch?v=xJGHMjrHU3c","mon-6":"https://www.youtube.com/watch?v=I9D0iJxrvQU","mon-7":"https://www.youtube.com/watch?v=bmih3V54v6Y","mon-8":"https://www.youtube.com/watch?v=8xfWkNLdVYE","mon-9":"https://www.youtube.com/watch?v=-De9EQ0xZmQ","mon-10":"https://www.youtube.com/watch?v=phYwvJLMfS0","mon-11":"https://www.youtube.com/watch?v=2q6-vP_jE6I","mon-12":"https://www.youtube.com/watch?v=XeKNARcJ6Wo","mon-13":"https://www.youtube.com/watch?v=quDH7EgDWRI","tue-1":"https://www.youtube.com/watch?v=Z-3WzTcS0Xk","tue-2":"https://www.youtube.com/watch?v=dyHOunNH30M","tue-3":"https://www.youtube.com/watch?v=_xek5HWdI7g","tue-4":"https://www.youtube.com/watch?v=M7BZBXWBpoM","tue-5":"https://www.youtube.com/watch?v=ZA8Ktd6l-PI","tue-6":"https://www.youtube.com/watch?v=7z0GQ0IC6u8","tue-7":"https://www.youtube.com/watch?v=6dcW1VhK3Yw","tue-8":"https://www.youtube.com/watch?v=7nFvh7ITZm8","tue-9":"https://www.youtube.com/shorts/pkfoz--LZsM","tue-10":"https://www.youtube.com/watch?v=FqDfXbgyJdg","tue-11":"https://www.youtube.com/watch?v=lEaIPPTLPP0","tue-12":"https://www.youtube.com/watch?v=TPHEzk__jbQ","tue-13":"https://www.youtube.com/watch?v=NkLIHc4zHdE","thu-1":"https://www.youtube.com/watch?v=XDtFycaf6sk","thu-2":"https://www.youtube.com/watch?v=tptS44T2_Lc","thu-3":"https://www.youtube.com/watch?v=YpuAC0whCY4","thu-4":"https://www.youtube.com/watch?v=RbHfV-R4UAc","thu-5":"https://www.youtube.com/watch?v=Gms0BBPdGiY","thu-6":"https://www.youtube.com/watch?v=_xek5HWdI7g","thu-7":"https://www.youtube.com/watch?v=L978KcAfZAo","thu-8":"https://vimeo.com/74923160","thu-9":"https://www.youtube.com/watch?v=RmmWrETzWfA","thu-10":"https://www.youtube.com/watch?v=Gms0BBPdGiY","thu-11":"https://www.youtube.com/watch?v=RbHfV-R4UAc","thu-12":"https://www.youtube.com/watch?v=YpuAC0whCY4"};
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DAYNAMES={Mon:"Monday",Tue:"Tuesday",Thu:"Thursday"};
+const DAYS=[["Mon",0],["Tue",1],["Thu",3]];
+const TESTS=["W01 Mon","W07 Mon","W13 Thu"];
+const SESSIONS=[];
+for(let w=1;w<=13;w++){for(const [d,off] of DAYS){
+  const dt=new Date(2026,10,30+(w-1)*7+off);
+  const code="W"+String(w).padStart(2,"0")+" "+d;
+  SESSIONS.push({i:SESSIONS.length,w,d,code,date:dt,label:code+" ("+MONTHS[dt.getMonth()]+" "+dt.getDate()+")"});
+}}
+const phaseOf=w=>w<=4?1:w<=8?2:w<=12?3:4;
+const PHASES={
+  1:{name:"Foundation",note:"Clean technique at 60–75% speed. Slow is fine; sloppy is not."},
+  2:{name:"Speed",note:"Same skills, faster. Every rep finishes with an explosive escape."},
+  3:{name:"Game speed",note:"Random cues and the clock. You react instead of rehearse."},
+  4:{name:"Prove it",note:"Best-of sessions, then final testing on Thursday."}
+};
+const THEMES={Mon:"First touch",Tue:"1v1: square up, sell, escape",Thu:"Turns, position work and juggling"};
+
+/* ---------- Content ---------- */
+const WARM={
+  1:{rx:"8 × 30 s on, 15 s off",timer:{work:30,rest:15,rounds:8},items:[
+    "Toe taps: alternate soles on top of the ball, stay on your toes",
+    "Bells: inside-inside between your feet",
+    "Sole roll across with your right foot",
+    "Sole roll across with your left foot",
+    "Pull-push, right: pull back with the sole, push forward with the laces",
+    "Pull-push, left",
+    "V-pulls: pull back with the sole, push out at an angle with the inside of the same foot; alternate feet",
+    "Outside-inside: small outside touch, then inside touch with one foot (right 15 s, left 15 s)"]},
+  2:{rx:"8 × 30 s on, 15 s off",timer:{work:30,rest:15,rounds:8},items:[
+    "Toe taps while circling all the way around the ball",
+    "Croquetas in place: inside of one foot to inside of the other",
+    "L-pull, right: pull back with the sole, push behind your standing leg with the inside of the same foot",
+    "L-pull, left",
+    "Pull-push outside: pull back with the sole, push away with the outside of the same foot; alternate feet",
+    "Sole stop and go: roll forward, stop it dead, explode two touches with the outside",
+    "Scissors in place, alternating feet",
+    "Your three favorite patterns, as fast as clean allows"]},
+  3:{rx:"8 × 30 s on, 15 s off, random-cue mode",timer:{work:30,rest:15,rounds:8,random:true},note:"Same patterns as the Speed phase. On every double beep, explode with two outside-foot touches away, then come straight back into the pattern.",items:[
+    "Toe taps circling the ball","Croquetas in place","L-pull, right","L-pull, left",
+    "Pull-push outside, alternating","Sole stop and go","Scissors in place","Your three favorite patterns"]}
+};
+
+const MON=[null,
+ {name:"Across the body",text:"Pass into the wall, let the ball run across your body and receive it with the foot farther from the ball. First touch goes out to the side, then pass with that foot. Next rep goes the other way.",cues:["Open your hips before the ball arrives","Receive with the far foot","First touch lands 1–2 feet out in front, never under you","The ball never stops dead"]},
+ {name:"Outside-foot cushion",text:"Receive with the outside of the foot nearest the ball and steer it away from an imaginary defender on that side, then pass with the other foot.",cues:["Toe down and turned in","Contact on the pinky-toe side","Touch goes away from pressure, not back into it"]},
+ {name:"Sole stop and play",text:"Stop the return with your sole, roll it one step to the side, pass. Second half of each set: sole-roll it straight into space without stopping it first.",cues:["Sole on top of the ball, heel down","Roll it to where your next pass leaves from","Hips over the ball"]},
+ {name:"Out of the air",text:"Throw the ball off the wall so it comes back in the air, or toss it 10+ feet straight up. Kill it with your laces, thigh or inside of the foot so it drops within one step, then pass it back.",cues:["Get under the flight early","Pull the surface down as the ball arrives","Relaxed ankle, not stiff"]},
+ {name:"Holiday mixtape",text:"One set each of across the body, outside cushion, sole stop and out of the air. Grade yourself 1–5 on each. Your lowest grade gets a fifth set.",cues:["Honest grades","Write the lowest one in your log notes"]},
+ {name:"Receive on the half-turn",text:"Stand side-on so you can see the wall and the open room. Receive with your back foot and take your first touch forward past a marker 2 yards to the side, as if you just turned to face goal.",cues:["Shoulder check before every pass hits the wall","Hips open to the space, not square to the wall","First touch goes forward, not sideways"]},
+ {name:"Half-turn, weak side first",text:"Same as last week, but every set starts on your weak side. After testing, two sets each way.",cues:["Weak side gets the same speed","Check, open, forward"]},
+ {name:"Beat the chair",text:"Put a chair (the defender) one yard off your passing line. Your first touch goes past the chair’s side, then two hard touches to get away.",cues:["Pick a side before the ball arrives","Your first touch is a weapon, not a stop","Accelerate out of the touch"]},
+ {name:"Bouncers",text:"Hit the wall at different heights so returns come back on different bounces. Control each one before its second bounce with whatever surface it asks for.",cues:["Read the bounce early and move your feet","Sole for short hops, laces or thigh for higher ones","Ball dead within one step"]},
+ {name:"Weak-foot Monday",text:"Everything with your weaker foot: receive, touch and pass. Set 1 across the body, set 2 outside cushion, set 3 sole, then half-turn for the rest.",cues:["Slow the pass down if you have to, but never switch feet","Strong-foot standard on every touch"]},
+ {name:"Scan and choose",text:"Markers 3 yards behind you on each side. Before every return, check over a shoulder and pick a side; your first touch turns you that way, two touches out, come back. In random-cue mode, a double beep means that side just got blocked: turn the other way.",cues:["Check before the ball hits the wall, not after","Decide early, touch once, go"]},
+ {name:"Speed rounds",text:"Short rounds against the clock. Odd sets two-touch, even sets one-touch. Count passes that hit the wall and beat your number from the last speed set you did.",cues:["Stay on your toes","Pass with the inside, firm and low"],rx:"8 × 30 s, 15 s rest",timer:{work:30,rest:15,rounds:8}},
+ {name:"Best of",text:"Pick the two Monday touches that felt worst this winter. Two sets each.",cues:["Work on the weakness, not the favorite"]}
+];
+const MON_RX={1:["4 sets × 2 min, 30 s rest. Stand 3–4 yards from the wall; switch your starting foot each set.",{work:120,rest:30,rounds:4}],
+  2:["4 × 2 min, 30 s rest, 5–6 yards from the wall. Pass harder, receive faster.",{work:120,rest:30,rounds:4}],
+  3:["6 × 60 s, 20 s rest at game pace. Count clean reps; log your best set in the notes.",{work:60,rest:20,rounds:6}]};
+const MON_B={
+ 1:{name:"Gates",rx:"4 × 90 s, 30 s rest",timer:{work:90,rest:30,rounds:4},text:"Two gates (two shoes 1 yard apart), 2 yards to your left and 2 yards to your right. Pass, receive and take your first touch through a gate, dribble back, repeat. Alternate gates.",cues:["Through the gate in one touch","Look at the gate before the ball arrives"]},
+ 2:{name:"Gate and go",rx:"4 × 90 s, 30 s rest",timer:{work:90,rest:30,rounds:4},text:"Same gates. After your first touch through the gate, hit this week’s Tuesday move on a marker 2 yards past it and explode back.",cues:["Under 6 seconds from pass to finish","Full-speed escape every rep"]},
+ 3:{name:"Pressure clock",rx:"6 × 45 s, 30 s rest",timer:{work:45,rest:30,rounds:6},text:"Rounds through the gates against the clock. Count clean reps (one touch through, under control). Beat your best round from last week.",cues:["Quality counts, sloppy reps don’t","Write your best round in your log notes"]}
+};
+
+const SSE=[["Square up","Dribble at the chair. At about 2 yards, shorten your steps, get your hips square to the defender, and keep the ball where you can go either way."],
+  ["Sell","Hit the move. Sell it with your eyes, shoulders and hips; the defender reads your body, not the ball."],
+  ["Escape","Explode past with the outside of your foot: two hard touches into the space behind the chair, then 3 yards at full speed."]];
+const TUE=[null,
+ {name:"Shoulder drop",text:"Without touching the ball, drop your shoulder and step hard to one side. Push off that foot and take the ball the other way with the outside of your other foot.",cues:["Big step, little ball","Head and shoulder go with the fake"]},
+ {name:"Scissors",text:"Swing your right foot around the front of the ball from inside to outside and plant it. Take the ball the other way with the outside of your left foot. Mirror it.",cues:["The ball stays still while your foot moves","Plant and push off the scissors foot"]},
+ {name:"Fake cross and go",text:"Wind up like you’re crossing or shooting with your right foot. Stop the leg just over the ball, then push it forward and away with the outside of the same foot.",cues:["The wind-up has to look real","Push past the chair’s front foot"]},
+ {name:"Matthews",text:"Small inside touch (or just a lean) to your left with your right foot, then snap the ball right with the outside of the same foot.",cues:["Lean, then snap","Same foot for both touches; explode on the second"]},
+ {name:"Holiday review",text:"Pick your two best moves from weeks 1–4. Half your reps with each, both directions.",cues:["Full speed only if it’s clean"]},
+ {name:"Stop and go",text:"Dribble at the chair, stop the ball dead with your sole and freeze for a beat. As the defender relaxes, explode past with the outside of the foot.",cues:["The change of pace is the move","Your first step after the stop is your fastest"]},
+ {name:"Double scissors",text:"Scissors with one foot, then the other, then escape with the outside of the foot that takes you away from the defender.",cues:["Rhythm: right, left, go","Keep your body over the ball"]},
+ {name:"Croqueta and go",text:"Shift the ball sideways from the inside of one foot to the inside of the other, across the chair’s front, then burst forward with the outside of the receiving foot.",cues:["Short, quick shift under your hips","Burst straight out of the shift"]},
+ {name:"Pull-V escape",text:"Pull the ball back with your sole as if retreating, then push it away at an angle with the outside of the same foot.",cues:["The pull invites the defender in","Escape at a 45-degree angle"]},
+ {name:"Scissors into Matthews",text:"Scissors to show one way, then Matthews to go the other way. Two moves, one escape.",cues:["Don’t pause between moves","Second move is the one that beats him"]},
+ {name:"Move and counter",text:"Lead with your go-to move. Every third rep, pretend the defender didn’t bite: hit a second move to the other side before you escape.",cues:["Read, then counter","Escape with the outside every time"]},
+ {name:"Your signature",text:"Your two best moves at full speed in random-cue mode. This is your 1v1 set going into the season.",cues:["Same quality on both feet"]},
+ {name:"Best of",text:"Your best two moves, both feet, full speed. Film one rep on each foot and send it to Coach.",cues:["Square up, sell, escape, every rep"]}
+];
+const TUE_RX={1:["5 sets of 6 reps (3 each way), 30 s rest. First set at walking pace, then 75%.",{work:90,rest:30,rounds:5}],
+  2:["6 sets of 6 reps at full speed, 30 s rest. Walk back, reset, go.",{work:90,rest:30,rounds:6}],
+  3:["6 × 60 s, 30 s rest, random-cue mode. Dribble around your space; on every double beep, attack the chair from wherever you are.",{work:60,rest:30,rounds:6,random:true}]};
+const TUE_B={
+ 1:{name:"Outside-foot box",rx:"6 × 60 s, 20 s rest, alternate feet",timer:{work:60,rest:20,rounds:6},text:"A 3×3 yard box of four markers. Dribble around it using only the outside of your right foot (clockwise), then only the outside of your left (counterclockwise).",cues:["Touch every step","Toe down, contact on the pinky-toe side"]},
+ 2:{name:"Slalom and escape",rx:"5 × 60 s, 30 s rest",timer:{work:60,rest:30,rounds:5},text:"Five markers in a line, 1 yard apart. Slalom using outside touches only, then hit the move of the week at the last marker and burst 3 yards.",cues:["Small touches through the slalom, big one on the escape"]},
+ 3:{name:"Shadow defender",rx:"6 × 45 s, 30 s rest, random-cue mode",timer:{work:45,rest:30,rounds:6,random:true},text:"Dribble freely at half speed. On every double beep, hit the move of the week toward the nearest marker and explode out with two outside-foot touches.",cues:["Half speed to full speed in one step"]}
+};
+
+const THU=[null,
+ {name:"Inside hook",text:"Reach past the ball, hook it back with the inside of your foot, and go back the way you came.",cues:["Plant beside the ball, not behind it","Get low before you turn"]},
+ {name:"Outside hook",text:"Reach past the ball and hook it back with the outside of your foot, turning away from the defender.",cues:["Body between the defender and the ball","Turn on the balls of your feet"]},
+ {name:"Drag-back",text:"Stop the ball with your sole, drag it back, spin toward it, and push away with your other foot.",cues:["Drag it, don’t stab it","Spin fast, then go"]},
+ {name:"Cruyff",text:"Fake a pass, then use the inside of the same foot to drag the ball behind your standing leg and go the other way.",cues:["Sell the pass","Ball goes close behind the standing leg"]},
+ {name:"Holiday turn tour",text:"One set each of inside hook, outside hook, drag-back and Cruyff, then a free set with your best one.",cues:["Same speed into every turn"]},
+ {name:"Fake-shot hook",text:"Wind up a shot, then hook the ball back with the inside of the same foot instead of striking it.",cues:["The fake has to look like a strike","Hook and accelerate"]},
+ {name:"L-turn",text:"Pull the ball back with your sole, then push it behind your standing leg with the inside of the same foot and go 90 degrees the other way.",cues:["Pull and push in one motion","Low center of gravity"]},
+ {name:"Stop turn",text:"Step on the ball to stop it, step past it with your other foot, spin back, and go with the first foot.",cues:["Stop it dead, then go","Explode out of the spin"]},
+ {name:"Roulette",text:"Sole drag back with your right foot as you spin, then a second sole drag with your left to finish the spin and go.",cues:["Keep your body between the chair and the ball","Two sole touches, one smooth spin"]},
+ {name:"Turn and burst",text:"Any turn you own, then three explosive touches. The clock is the defender: count turns per set and beat it.",cues:["Fastest touch is the first one after the turn"]},
+ {name:"Turn combo",text:"Cruyff into a drag-back: show one turn, then turn again before you leave.",cues:["Second turn comes before the defender recovers"]},
+ {name:"Random-cue turns",text:"Dribble anywhere; on a double beep, pick the turn that fits the space you’re in and go.",cues:["Your feet decide, not your brain"]},
+ {name:"Final tests",text:"",cues:[]}
+];
+const THU_RX={1:["5 × 45 s, 30 s rest. Two lines 5 yards apart; dribble to a line, turn, go back. Alternate feet every turn.",{work:45,rest:30,rounds:5}],
+  2:["5 × 45 s, 30 s rest. After every turn, two hard touches to get away. Count turns per set; log your best in the notes.",{work:45,rest:30,rounds:5}],
+  3:["6 × 45 s, 30 s rest, random-cue mode. Dribble anywhere; on every double beep, turn 180 immediately and accelerate.",{work:45,rest:30,rounds:6,random:true}]};
+
+const POS={
+ central:{label:"Central channel",who:"center backs, center mids, attacking mids and strikers",
+   1:{name:"Half-turn and play forward",text:"Side-on to the wall with a taped target 2 yards to one side. Check a shoulder, receive with your back foot, take your first touch forward, then pass into the target. Center backs and center mids: that pass is your line-breaking ball. Attacking mids and strikers: a forward first touch means you’re facing goal.",cues:["Check before the ball hits the wall","Hips open, first touch forward","Two touches max: receive, play"]},
+   2:{name:"Back to pressure: hold, turn or set",text:"Face the wall with the chair right behind you as the defender. Before every return, check a shoulder and call it out loud: “turn” or “set.” Turn: spin off the chair on your first touch. Set: shield it with your sole, ball on your far foot, then play it back one-touch.",cues:["Wide base, arm out","Ball on the foot farthest from the defender","Decide before the ball arrives"]},
+   3:{name:"Receive, turn, finish or play",random:true,text:"Receive and turn in one touch, then within 3 seconds strike (strikers and attacking mids) or pass (center backs and center mids) into a taped target. A double beep means the defender is tight on your back: set it back instead of turning.",cues:["Three seconds from receive to finish or pass","The beep is pressure: protect the ball"]}},
+ wide:{label:"Wide channel",who:"wingers and outside backs",
+   1:{name:"Receive down the line",text:"Imagine a touchline on one side of you. Pass into the wall, receive on the back foot nearest that line, take your first touch forward down it, two touches, then a low cross into a taped target. Wingers start higher, outside backs deeper; the touch is the same.",cues:["Hips open up the field","First touch forward, not across","Cross within two touches"]},
+   2:{name:"Escape the press, then go or cut",text:"Chair right in front of you as the press. Receive and take your first touch away from it with the outside of the foot, drive three touches, then either keep going down the line or cut inside and strike low with your far foot into a taped target.",cues:["Touch away from pressure","Head up on the drive","Cut across the defender’s front foot"]},
+   3:{name:"Receive straight into 1v1",random:true,text:"Receive off the wall with your first touch going at the chair, straight into the move of the week, escape, and deliver a low cross into the target. On a double beep, the defender has shown you inside: cut in and strike instead.",cues:["The receive sets up the move","No stopping between receive, move and delivery"]}}
+};
+
+const JUG=[null,
+ "One-bounce juggling: one bounce between every touch, alternating feet. When that’s easy, two touches between bounces.",
+ "Strong foot only, ball from your hands. Ten attempts; record your best.",
+ "Weak foot only, ball from your hands. Ten attempts; record your best.",
+ "Thigh-foot: thigh, foot, thigh, foot. Both sides.",
+ "100-touch challenge: how fast can you get 100 total touches with no hands? Drops are fine; count every touch.",
+ "Alternating feet only: right, left, right, left.",
+ "Low juggling: every touch stays below your knee.",
+ "Head work: toss and head it back up, then foot-thigh-head patterns.",
+ "No hands: start every attempt by flicking the ball up from the ground.",
+ "The cycle: laces, thigh, head, thigh, laces. Count full cycles.",
+ "Walking juggles: cover the length of your space and back without a drop.",
+ "High-low: one touch head-high, one touch low. Control the height.",
+ "Final attempts."
+];
+
+const TEST_ITEMS=[
+ ["Juggling max","Ball starts in your hands, any surface except hands and arms. Best of 3 attempts. Log it as “Best juggling today.”"],
+ ["Weak-foot juggling","Weak foot only (no thighs), ball from your hands. Best of 3. Log it as weak-foot juggling."],
+ ["Wall passes in 30 s","Line 3 yards (9 ft) from a solid wall. Two touches max each time, any foot, every touch behind the line. Count passes that hit the wall. Best of 2."],
+ ["Figure-8 in 30 s","Two markers 3 yards apart. Dribble a figure 8 and count every marker you go around. Best of 2."]
+];
+
+/* ---------- Build a session ---------- */
+function demo(key){const u=DEMOS[key];return (typeof u==="string"&&u.startsWith("https://"))?u:"";}
+function blocksFor(s){
+  const p=phaseOf(s.w),pp=Math.min(p,3),test=TESTS.includes(s.code),out=[];
+  const W=WARM[pp];
+  out.push({title:"Ball mastery warm-up",min:6,rx:W.rx,timer:W.timer,text:W.note||"",items:W.items});
+  if(test){
+    const which=s.w===1?"Baseline":s.w===7?"Midpoint":"Final";
+    out.push({title:which+" tests",min:15,focus:"Test day",rx:"Four tests, same setup every time. Rest a minute between attempts.",steps:TEST_ITEMS,timer:{work:30,rest:60,rounds:2},timerLabel:"30-second test timer",text:"Log every number in the form today; the test fields are at the bottom."});
+  }
+  if(s.d==="Mon"){
+    const m=MON[s.w],r=MON_RX[pp];
+    out.push({title:m.name,min:test?10:10,focus:"Touch of the week",rx:test?"3 sets × 2 min, 30 s rest.":(m.rx||r[0]),timer:test?{work:120,rest:30,rounds:3}:(m.timer||r[1]),text:m.text,cues:m.cues,demo:demo("mon-"+s.w),setup:"Solid wall, 3–6 yards away."});
+    if(!test){const b=MON_B[pp];out.push({title:b.name,min:8,rx:b.rx,timer:b.timer,text:b.text,cues:b.cues});
+      out.push(jug(s,5));}
+  } else if(s.d==="Tue"){
+    const t=TUE[s.w],r=TUE_RX[pp];
+    out.push({title:"Square up, sell, escape",min:12,focus:"Move of the week: "+t.name,rx:r[0],timer:r[1],sse:true,text:t.text,cues:t.cues,demo:demo("tue-"+s.w),setup:"A chair is the defender. Start 5 yards away, or as far as your space allows."});
+    const b=TUE_B[pp];out.push({title:b.name,min:8,rx:b.rx,timer:b.timer,text:b.text,cues:b.cues});
+    out.push(jug(s,5));
+  } else {
+    if(test){
+      out.push({title:"Showcase",min:8,text:"Film one rep each: your best 1v1 move on each foot and your best turn. Send the clips to Coach.",cues:["Square up, sell, escape","Compare it to your first week; you’ll see it"]});
+    } else {
+      const t=THU[s.w],r=THU_RX[pp];
+      out.push({title:t.name,min:10,focus:"Turn of the week",rx:r[0],timer:r[1],text:t.text,cues:t.cues,demo:demo("thu-"+s.w),setup:"Two lines (tape, shoes or towels) 5 yards apart."});
+      out.push({pos:true,min:6,pp});
+      out.push(jug(s,8));
+    }
+  }
+  return out;
+}
+function jug(s,min){
+  const thu=s.d==="Thu";
+  return {title:"Juggling",min,focus:"Juggling challenge of the week",
+    rx:thu?"Record day: 4 min on the challenge, then 3 attempts at your max and 3 at your weak-foot max.":"5 minutes on the weekly challenge.",
+    timer:thu?{work:90,rest:30,rounds:4}:{work:60,rest:15,rounds:4},
+    text:JUG[s.w],cues:["Log your best juggle of the day, every session"]};
+}
+
+return {FORM_PREFILL,SESSIONS,blocksFor,phaseOf,PHASES,THEMES,POS,SSE,TESTS,TEST_ITEMS};
+})();
+
+/* =========================================================
+   STORAGE + DATE HELPERS
+   ========================================================= */
+const store={get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const $=s=>document.querySelector(s);
+const MON3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONFULL=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAYFULL=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const D=(y,m,d)=>new Date(y,m-1,d);
+const K=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+const short=d=>MON3[d.getMonth()]+" "+d.getDate();
+const longDate=d=>DAYFULL[d.getDay()]+", "+MONFULL[d.getMonth()]+" "+d.getDate();
+const mondayOf=d=>{const x=new Date(d);const k=(x.getDay()+6)%7;x.setDate(x.getDate()-k);x.setHours(0,0,0,0);return x;};
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+const START=D(2026,11,30), END=D(2027,2,28);
+const TODAY=(()=>{const t=new Date();t.setHours(0,0,0,0);return t;})();
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+let S=Object.assign({grade:"",group:"",lane:"pre",indoor:"",futsal:"",tech:"yes",pos:""},store.get("hub-settings",{}));
+function saveS(){store.set("hub-settings",S);}
+const isMS=()=>["6","7","8"].includes(String(S.grade||""));
+const G=()=>isMS()?"none":S.group;
+const IN=()=>isMS()?"none":S.indoor;
+
+/* =========================================================
+   SCHOOL CALENDAR NOTES
+   ========================================================= */
+const NOSCHOOL={"2027-01-04":"No school","2027-01-18":"Martin Luther King Jr. Day: no school"};
+function isBreak(d){return d>=D(2026,12,21)&&d<=D(2027,1,3);}
+
+/* =========================================================
+   STRENGTH & SPEED: shared pieces
+   ========================================================= */
+const WU_LOWER="Bike or jump rope 2 min, leg swings 10 each direction, walking knee hug, quad pull and spider lunge 5 each, bodyweight squat ×10, glute bridge ×10.";
+const WU_UPPER="Band pull-aparts 2×15, band shoulder dislocates 2×10, push-up plus 2×10, scap push-ups 2×8, thoracic rotations 8 per side.";
+const WU_RUN="200yd easy jog, leg swings 10 each direction, knee hug, quad pull and spider lunge 5 each, A-skip 2×20yd, lateral shuffle 2×20yd, build-ups 3×20yd at 60, 75 and 90%.";
+const MOB="2 rounds: 90/90 hip switch ×8, adductor rock-back ×8, knee-to-wall ankle ×10 per side, couch stretch 30 sec per side, cat-cow ×8.";
+const PREHAB="Banded ankle eversion 2×15, pogo hops 2×20, single-leg balance with 3-way reach 2×5 per side.";
+const CORE="Front plank 30 sec, side plank 20 sec each side, bird dog ×8 each side, glute bridge march ×10 each side.";
+const CHECK="Daily check before you start: rate sleep, soreness, energy and mood out of 5 each. A total of 10 or below means no lift today, and the flush replaces that day’s run. Tell a coach.";
+
+/* ---------- December prep (Nov 30 – Dec 18), Friday off ---------- */
+const I=(n,rx,cue)=>({n,rx,cue});
+const WRWU={label:"Warm-up",time:"0–6 min",items:[I("Weight-room warm-up","1 round",WU_LOWER)]};
+const UPWU={label:"Warm-up",time:"0–6 min",items:[I("Upper warm-up","1 round",WU_UPPER)]};
+const RWU=["0–6 min","Run warm-up",WU_RUN];
+const CARD=I("Reading the card","5 min","Set-by-set percentages climb to a top set. “2 reps in reserve” means stop with 2 good reps left. Do the daily check every day.");
+const DEC={
+1:{phase:"Learn it",rule:"This week: no barbell loading. PVC, dumbbells and the empty bar only. The goal is the pattern, not the weight.",
+ Mon:{title:"Lower 1: Squat pattern",blocks:[WRWU,
+   {label:"Jumps",time:"6–10 min",items:[I("Box jump, low box","3×3","Land soft and quiet, hips back, knees over toes, freeze 1 sec. Step down, never jump down.")]},
+   {label:"Learn the squat",time:"10–25 min",items:[I("Bodyweight box squat","2×8","Sit back to the box, chest tall, knees track over toes, stand by driving the floor away."),I("Goblet squat, light dumbbell","3×8","Elbows inside the knees at the bottom, heels down, big breath and brace before every rep."),I("PVC back squat","2×5","Bar on the upper back, not the neck. Hands just outside the shoulders. Squeeze the shoulder blades together.")]},
+   {label:"Pod 1",time:"25–35 min",items:[I("Rear-foot elevated split squat, bodyweight","2×8 each leg","Front foot far enough out that the front heel stays down. Torso tall."),I("Nordic hamstring curl, partner held","2×3, 5-sec lower","Lower only as far as you can control, then catch yourself with your hands. Partner pins your ankles."),I("Copenhagen side plank, short lever","2×15 sec each side","Knee on the bench, hips up in a straight line, bottom leg off the floor.")]},
+   {label:"Pod 2",time:"35–45 min",items:[I("Pallof press","2×10 each side","Press straight out and hold 1 sec. Don’t let the band rotate you."),I("Hip and ankle mobility","1 round","Couch stretch 30 sec per side, knee-to-wall ankle 10 per side."),CARD]}],
+  run:{title:"Tempo intro",rows:[RWU,["6–12 min","Learn the warm-up","Walk through each drill of the run warm-up, then run it at speed."],["12–24 min","Tempo intro","1 × (6 × 100yd) at about 65–70% effort, walk back in about 40 sec. You should be able to talk at the end of each rep."],["24–30 min","Cool-down","2 min walk, couch stretch 30 sec per side."]]}},
+ Tue:{title:"Upper 1: Bench pattern",blocks:[UPWU,
+   {label:"Learn the bench",time:"6–22 min",items:[I("Push-up","3×8","Straight line head to heels, elbows about 45 degrees, chest touches a fist on the floor."),I("Dumbbell bench press, light","3×8","Feet flat, shoulder blades pinched and down. Lower to the chest, press up and slightly back."),I("Barbell bench, empty bar, plus spotting","2×5","Five points of contact: head, shoulders, butt, both feet. Spotter: hands near the bar, help the lift-off, “take” command, help rack.")]},
+   {label:"Pod 1",time:"22–32 min",items:[I("One-arm dumbbell row","3×10 each arm","Flat back, pull the elbow to your hip pocket, no twisting."),I("Inverted row","3×8","Body rigid like a plank, pull chest to the bar. Bend your knees to make it easier.")]},
+   {label:"Pod 2",time:"32–40 min",items:[I("Face pull","2×15","Pull to the eyes, thumbs back, squeeze the shoulder blades."),I("Dead bug","2×8 each side","Low back pressed into the floor the whole time. Exhale as your arms and legs reach.")]}],
+  run:{title:"Speed intro",rows:[RWU,["6–14 min","Acceleration","Wall drill: marching 3×5 each leg, single exchanges 3×3 each leg. Then falling starts 4 × 10yd."],["14–24 min","Change of direction","5-10-5 walk-through: start stance, hand touches the line, hips low on the turn. 4 slow reps, then 2 at 75%."],["24–30 min","Cool-down","Walk, then hip and hamstring mobility."]]}},
+ Wed:{title:"Lower 2: Hinge and clean pattern",blocks:[WRWU,
+   {label:"Jumps",time:"6–10 min",items:[I("Broad jump, stick the landing","3×3","Swing your arms back, jump out, land balanced and freeze 1 sec. No stepping forward.")]},
+   {label:"Learn the hinge",time:"10–22 min",items:[I("PVC hip hinge","2×8","The dowel touches your head, upper back and tailbone the whole rep. Push the hips back, soft knees."),I("Dumbbell Romanian deadlift","3×8","Same hinge as the dowel. Dumbbells slide down the thighs. Stop when your hips stop moving back."),I("Trap bar deadlift, high handles, light","3×5","Hinge down to the handles, brace and pull the slack out, push the floor away, stand tall with no lean back.")]},
+   {label:"Learn the clean (PVC, then empty bar)",time:"22–37 min",items:[I("Hang position","3×5 hold and reset","Bar just above the knees, shoulders over the bar, flat back, arms long."),I("Jump and shrug","3×5","Jump straight up and shrug hard. Bar stays close, arms stay long."),I("High pull","3×3","Jump, shrug, then elbows high and out. Bar to the chest."),I("Catch to front rack","3×3","Fast elbows around and up. Land in a quarter squat, feet flat. The bar sits on your shoulders, not your hands.")]},
+   {label:"Pod 1",time:"37–45 min",items:[I("Glute bridge","2×10","Squeeze the glutes to lock out. Ribs down, don’t arch the low back."),I("Side plank","2×20 sec each side","Straight line from ear to ankle. Push the floor away with your forearm.")]}],
+  run:{title:"Flush and prehab",rows:[["0–12 min","Easy aerobic","12 min continuous run or bike at a pace you can talk at."],["12–20 min","Prehab",PREHAB],["20–30 min","Mobility",MOB]]}},
+ Thu:{title:"Upper 2: Push/pull and core",blocks:[UPWU,
+   {label:"Learn the push press",time:"6–16 min",items:[I("Dumbbell push press, light","3×6","Short dip with the legs, drive up, then press. Finish with your biceps by your ears.")]},
+   {label:"Pod 1",time:"16–30 min",items:[I("Band-assisted pull-up or inverted row","3×6","Start from a dead hang, chin over the bar, control the way down."),I("Chest-supported row","3×10","Chest stays on the pad. Pull and pause 1 sec."),I("Farmer carry","2×30yd","Tall posture, shoulders back, short quick steps.")]},
+   {label:"Pod 2",time:"30–40 min",items:[I("Core circuit","2 rounds",CORE)]}],
+  run:{title:"Intervals intro",rows:[RWU,["6–24 min","Intervals intro","3 × 2 min at about 75–80% effort, 2 min easy jog between."],["24–30 min","Cool-down","3 min walk, hip and hamstring stretch."]]}}},
+2:{phase:"Load it",rule:"This week: a lift gets loaded only after a coach signs it off. Working weight = you could still do 3 more clean reps.",
+ Mon:{title:"Lower 1: Squat, find working weights",blocks:[WRWU,
+   {label:"Jumps",time:"6–10 min",items:[I("Box jump","3×4","Same landing as last week. Reset between reps.")]},
+   {label:"Core lift",time:"10–25 min",items:[I("Goblet squat, warm-up","1×8","Groove the pattern before the bar."),I("Back squat, barbell","Work up in sets of 5, then 3×5","Add weight only while every rep looks the same. Working weight = 3+ clean reps left in the tank. Coach signs off your squat.")]},
+   {label:"Pod 1",time:"25–35 min",items:[I("Rear-foot elevated split squat, dumbbells","3×8 each leg","Light dumbbells, front heel down."),I("Nordic hamstring curl","2×4, 5-sec lower","Control further than last week. Catch with your hands."),I("Copenhagen side plank, short lever","2×20 sec each side","Hips stay up the whole hold.")]},
+   {label:"Pod 2",time:"35–45 min",items:[I("Pallof press","3×10 each side","Hold 1 sec at full extension."),I("Hip and ankle mobility","1 round","Couch stretch 30 sec per side, knee-to-wall ankle 10 per side.")]}],
+  run:{title:"Tempo",rows:[RWU,["6–20 min","Tempo","2 × (5 × 100yd) at about 70%, walk back in about 40 sec, 2 min between sets."],["20–30 min","Prehab",PREHAB]]}},
+ Tue:{title:"Upper 1: Bench, find working weights",blocks:[UPWU,
+   {label:"Core lift",time:"6–22 min",items:[I("Bench press, barbell, with a spotter","Work up in sets of 5, then 3×5","Feet, butt and shoulders stay put. Bar touches the lower chest under control. Working weight = 3+ clean reps left. Coach signs off your bench.")]},
+   {label:"Pod 1",time:"22–32 min",items:[I("One-arm dumbbell row","3×10 each arm","Flat back, elbow to the hip pocket."),I("Incline dumbbell press","3×10","Shoulder blades pinched, press up over your eyes.")]},
+   {label:"Pod 2",time:"32–40 min",items:[I("Band-assisted chin-up","3×5","Full hang to chin over the bar."),I("Face pull","2×15","Thumbs back."),I("Dead bug","3×8 each side","Low back flat.")]}],
+  run:{title:"Speed",rows:[RWU,["6–14 min","Acceleration","6 × 20yd from a 2-point stance, walk back (45–60 sec). Max effort."],["14–24 min","Change of direction","5-10-5 ×3 at full speed with full recovery. Coach checks the touch and the turn."],["24–30 min","Cool-down","Walk, then hip and hamstring mobility."]]}},
+ Wed:{title:"Lower 2: Clean and deadlift, find working weights",blocks:[WRWU,
+   {label:"Jumps",time:"6–10 min",items:[I("Broad jump","3×3","Stick each landing."),I("Lateral bound","3×3 each side","Land on one foot and freeze.")]},
+   {label:"Core lift",time:"10–22 min",items:[I("Hang clean, empty bar then light","5×3","Add weight only with a coach’s OK. Every rep: jump, shrug, fast elbows. Coach signs off your clean.")]},
+   {label:"Core lift",time:"22–32 min",items:[I("Trap bar deadlift","Work up in sets of 5, then 3×5","Back stays flat from floor to lockout. Hips and shoulders rise together. Coach signs off your deadlift.")]},
+   {label:"Pod 1",time:"32–45 min",items:[I("Single-leg dumbbell RDL","2×8 each leg","Hips square, reach the back heel to the wall."),I("Barbell hip thrust","3×10","Chin tucked, ribs down, 1-sec squeeze."),I("Side plank with row","2×8 each side","Hips stay up while the arm rows.")]}],
+  run:{title:"Flush and prehab",rows:[["0–12 min","Easy aerobic","12 min continuous run or bike at a pace you can talk at."],["12–20 min","Prehab",PREHAB],["20–30 min","Mobility",MOB]]}},
+ Thu:{title:"Upper 2: Push/pull and core",blocks:[UPWU,
+   {label:"Pod 1",time:"6–16 min",items:[I("Dumbbell push press","3×6","Dip and drive, biceps by the ears."),I("Pull-up, band if needed","3 sets, stop 2 short of failure","Dead hang every rep.")]},
+   {label:"Pod 2",time:"16–28 min",items:[I("Chest-supported row","3×10","Pause 1 sec."),I("Landmine press","2×8 each side","Half kneeling, ribs down."),I("Farmer carry","3×30yd heavy","Tall and tight.")]},
+   {label:"Pod 3",time:"28–38 min",items:[I("Core circuit","3 rounds",CORE)]}],
+  run:{title:"Intervals",rows:[RWU,["6–24 min","Intervals","4 × 2 min at about 85% max heart rate, 2 min easy jog between."],["24–30 min","Cool-down","The pace is right if your last rep matches your first. 3 min walk and stretch."]]}}},
+3:{phase:"Test it",rule:"Testing week. Group B (new lifters): 5-rep technique maxes on squat, bench and trap bar, plus a coach-approved set of 3 on the hang clean. Group A tests 3-rep maxes in class (Fall Week 17). Sprint and jump tests come on bench day and the fitness test comes on a no-lift day, so nobody sprints right after a heavy leg test.",
+ Mon:{title:"Test: Squat 5-rep technique max",blocks:[WRWU,
+   {label:"Test",time:"6–30 min",items:[I("Back squat, 5-rep technique max","Work up in sets of 5","A coach approves every jump in weight. Stop when the bar slows or form breaks. Your heaviest clean set of 5 counts. Record it.")]},
+   {label:"Pod 1",time:"30–42 min",items:[I("Nordic hamstring curl","2×5, 5-sec lower","Control."),I("Copenhagen side plank","2×20 sec each side","Short or long lever."),I("Pallof press","2×10 each side","Hold 1 sec.")]}],
+  run:{title:"Easy tempo",rows:[RWU,["6–18 min","Easy tempo","1 × (6 × 100yd) at about 65–70%, walk back. Group B just tested squat, so keep it easy."],["18–30 min","Prehab + mobility",PREHAB+" Then: "+MOB]]}},
+ Tue:{title:"Test: Bench 5-rep technique max",blocks:[UPWU,
+   {label:"Test",time:"6–30 min",items:[I("Bench press, 5-rep technique max, with a spotter","Work up in sets of 5","Same rules: a coach approves each jump. Stop when the bar slows or your butt comes up. Heaviest clean set of 5 counts.")]},
+   {label:"Pod 1",time:"30–40 min",items:[I("One-arm dumbbell row","3×8 each arm","Flat back."),I("Face pull","2×15","Thumbs back.")]}],
+  run:{title:"Baseline testing: jumps and sprints",rows:[RWU,["6–14 min","Jump test","Vertical jump ×3 and broad jump ×3. Record the best of each."],["14–28 min","Sprint test","10-yd dash ×3 (best time), pro agility (5-10-5) ×2 each direction (best time). Full recovery between every rep."],["28–30 min","Cool-down","Walk, then hip and hamstring mobility."]]}},
+ Wed:{title:"Test: Deadlift 5-rep max and hang clean 3-rep",blocks:[WRWU,
+   {label:"Test",time:"6–18 min",items:[I("Hang clean, heaviest coach-approved set of 3","Work up in sets of 3","Only if you’re signed off on the clean. If not, technique work with the empty bar. No misses, no grinding catches.")]},
+   {label:"Test",time:"18–35 min",items:[I("Trap bar deadlift, 5-rep technique max","Work up in sets of 5","Stop when your back rounds or the bar slows. Heaviest clean set of 5 counts.")]},
+   {label:"Pod 1",time:"35–42 min",items:[I("Glute bridge march","2×10 each side","Hips level."),I("Side plank","2×20 sec each side","Straight line.")]}],
+  run:{title:"Flush",rows:[["0–12 min","Easy aerobic","12 min easy run or bike."],["12–20 min","Prehab",PREHAB],["20–30 min","Mobility",MOB]]}},
+ Thu:{title:"Record maxes and fitness test (no lift)",blocks:[WRWU,
+   {label:"Record",time:"6–25 min",items:[I("January maxes","Every athlete","A coach records your test numbers and turns them into your January maxes. Put yours in the My numbers tab too.")]},
+   {label:"Mobility",time:"25–40 min",items:[I("Mobility flow and foam roll","2 rounds + 5 min",MOB)]}],
+  run:{title:"Baseline testing: fitness",rows:[RWU,["6–26 min","Fitness test","Yo-Yo IR1 or 120yd shuttle, one effort to completion."],["26–30 min","Cool-down","Walk and stretch."]]}}}
+};
+const DEC_START=[D(2026,11,30),D(2026,12,7),D(2026,12,14)];
+const FALLWK={1:"Fall Week 15",2:"Fall Week 16",3:"Fall Week 17 (3-rep max testing)"};
+
+/* ---------- January–February block (from EHS_Winter_2026-Early_Spring_2027.xlsx), Friday off ---------- */
+const SC=[{"sheet": "Spring Week 1 15-18 - Reload 1", "title": "SPRING WEEK 1  ·  1/4 - 1/8  ·  Reload 1", "notes": ["3-DAY WEEK: Monday is a no-school day and Friday is off, so Lower 1 runs Tuesday, Upper 1 Wednesday, Lower 2 Thursday. Upper 2 is dropped this week."], "days": [{"date": "2027-01-04", "dow": "Monday", "title": "NO SCHOOL", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}, {"date": "2027-01-05", "dow": "Tuesday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Box Jumps", "v": ["2×4", "3×5", "4×5"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT", "sets": ["2×6", "4×6", "5×6"], "pct": [[62.5, 65.0], [65.0, 67.5, 70.0, 70.0], [62.5, 65.0, 67.5, 70.0, 70.0]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×20sec each side", "3×20 sec each side", "4×20 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (43-48 min) (After school only)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-20 min", "Tempo runs", "2 x (6×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["20-30 min", "Cool-down", "2 min walk + couch stretch 30 sec per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-01-06", "dow": "Wednesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS", "sets": ["2×6", "4×6", "5×6"], "pct": [[62.5, 65.0], [65.0, 67.5, 70.0, 70.0], [62.5, 65.0, 67.5, 70.0, 70.0]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×10 each arm", "3×10 each arm", "4×10 each arm"]}, {"n": "Incline DB Press", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Pull-Ups", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Speed", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-14 min", "Acceleration", "6×20yd from a 2-point stance, walk back (45-60 sec). Max effort every rep or it does not count."], ["14-24 min", "Change of direction", "5-10-5 pro agility ×6, full recovery"], ["24-30 min", "Cool-down", "Walk + hip and hamstring mobility. If the session runs long, cut change-of-direction reps."]], "note": null}, "notes": []}, {"date": "2027-01-07", "dow": "Thursday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Broad Jumps - stick each landing 1 sec", "v": ["3×3", null, null]}, {"n": "Lateral Bound - stick each one", "v": ["3×4 each side", null, null]}]}, {"time": "11-28 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×3", "4×3", "5×3"], "pct": [[60.0, 62.5, 65.0], [65.0, 67.5, 70.0, 70.0], [62.5, 65.0, 67.5, 70.0, 70.0]]}, {"core": true, "n": "DEAD LIFT", "sets": ["2×6", "4×6", "5×6"], "pct": [[62.5, 65.0], [65.0, 67.5, 70.0, 70.0], [62.5, 65.0, 67.5, 70.0, 70.0]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Reverse Lunge", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×10", "3×10", "4×10"]}, {"n": "Side Plank w/ Row", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "41-45 min", "label": "Pod 3", "items": [{"n": "Calf Raise - Straight Knee", "v": ["1×15", "2×15", "3×15"]}, {"n": "Calf Raise - Bent Knee", "v": ["1×15", "2×15", "3×15"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Flush (re-entry week)", "rows": [["0-15 min", "Easy aerobic", "15 min continuous run or bike at conversational pace"], ["15-22 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"], ["22-30 min", "Mobility", "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8"]], "note": null}, "notes": []}, {"date": "2027-01-08", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}, {"sheet": "Spring Week 2 111-115 - Reload", "title": "SPRING WEEK 2  ·  1/11 - 1/15  ·  Reload 2", "notes": [], "days": [{"date": "2027-01-11", "dow": "Monday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Box Jumps", "v": ["2×4", "3×5", "4×5"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT", "sets": ["2×6", "4×6", "5×6"], "pct": [[65.0, 67.5], [67.5, 70.0, 72.5, 72.5], [65.0, 67.5, 70.0, 72.5, 72.5]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×20sec each side", "3×20 sec each side", "4×20 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (43-48 min)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-22 min", "Tempo runs", "2 x (7×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["22-30 min", "Cool-down", "2 min walk + couch stretch 30 sec per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-01-12", "dow": "Tuesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS", "sets": ["2×6", "4×6", "5×6"], "pct": [[65.0, 67.5], [67.5, 70.0, 72.5, 72.5], [65.0, 67.5, 70.0, 72.5, 72.5]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×10 each arm", "3×10 each arm", "4×10 each arm"]}, {"n": "Incline DB Press", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Pull-Ups", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Speed", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-14 min", "Acceleration", "6×20yd from a 2-point stance, walk back (45-60 sec). Max effort every rep or it does not count."], ["14-24 min", "Change of direction", "5-10-5×4, then L-drill ×3, full recovery"], ["24-30 min", "Cool-down", "Walk + hip and hamstring mobility. If the session runs long, cut change-of-direction reps."]], "note": null}, "notes": []}, {"date": "2027-01-13", "dow": "Wednesday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Broad Jumps - stick each landing 1 sec", "v": ["3×3", null, null]}, {"n": "Lateral Bound - stick each one", "v": ["3×4 each side", null, null]}]}, {"time": "11-28 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×3", "4×3", "4×3"], "pct": [[62.5, 65.0, 67.5], [67.5, 70.0, 72.5, 72.5], [67.5, 70.0, 72.5, 72.5]]}, {"core": true, "n": "DEAD LIFT", "sets": ["2×6", "4×6", "5×6"], "pct": [[65.0, 67.5], [67.5, 70.0, 72.5, 72.5], [65.0, 67.5, 70.0, 72.5, 72.5]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Reverse Lunge", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×10", "3×10", "4×10"]}, {"n": "Side Plank w/ Row", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "41-45 min", "label": "Pod 3", "items": [{"n": "Calf Raise - Straight Knee", "v": ["1×15", "2×15", "3×15"]}, {"n": "Calf Raise - Bent Knee", "v": ["1×15", "2×15", "3×15"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Flush + prehab", "rows": [["0-15 min", "Easy aerobic", "15 min continuous run or bike at conversational pace"], ["15-22 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"], ["22-30 min", "Mobility", "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8"]], "note": null}, "notes": []}, {"date": "2027-01-14", "dow": "Thursday", "title": "Upper 2: Push/Pull and Core", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-14 min", "label": "Pod 1", "items": [{"n": "Standing DB Push Press", "v": ["2×6", "4×6", "5×6"], "pct": ["70%", "75%", "75%"]}, {"n": "Pull Up", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}]}, {"time": "15-21 min", "label": "Pod 2", "items": [{"n": "Chest-Supported Row", "v": ["2×10", "3×10", "4×10"]}, {"n": "Landmine Press", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "22-28 min", "label": "Pod 3", "items": [{"n": "Farmer Carry", "v": ["2×30yd heavy", "3×30 yd heavy", "4×30yd heavy"]}, {"n": "Hanging Knee Raise", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "29-37 min", "label": "Pod 4", "items": [{"n": "Core Circuit: front plank 30 sec · side plank 20 sec each side · bird dog ×8 each side · glute bridge march ×10 each side", "v": ["2 rounds", "3 rounds", "3 rounds"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["DB Lateral Raise - 2×15", null], ["Face Pull - 2×20", null], ["Side Plank Reach Through - 2×10 each side", null]]}, "run": {"title": "Intervals", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-27 min", "Intervals", "5×3 min @ ~85% max HR, 90 sec easy jog between (~21 min)"], ["27-30 min", "Cool-down", "Pace is right if the last rep matches the first. Close with a 3 min walk + hip and hamstring stretch."]], "note": null}, "notes": []}, {"date": "2027-01-15", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}, {"sheet": "Spring Week 3 119-122 - Reload ", "title": "SPRING WEEK 3  ·  1/18 - 1/22  ·  Reload 3", "notes": ["3-DAY WEEK: Monday is a no-school day and Friday is off, so Lower 1 runs Tuesday, Upper 1 Wednesday, Lower 2 Thursday. Upper 2 is dropped this week."], "days": [{"date": "2027-01-18", "dow": "Monday", "title": "MLK DAY - NO SCHOOL", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}, {"date": "2027-01-19", "dow": "Tuesday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Hurdle Hops - 6\" hurdles", "v": ["2×4", "3×5", "4×5"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT", "sets": ["3×5", "5×5", "6×5"], "pct": [[67.5, 70.0, 72.5], [67.5, 70.0, 72.5, 75.0, 75.0], [67.5, 70.0, 72.5, 75.0, 75.0, 75.0]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×20sec each side", "3×20 sec each side", "4×20 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (43-48 min)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-24 min", "Tempo runs", "2 x (8×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["24-30 min", "Cool-down", "2 min walk + couch stretch 30 sec per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-01-20", "dow": "Wednesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS", "sets": ["3×5", "5×5", "6×5"], "pct": [[67.5, 70.0, 72.5], [67.5, 70.0, 72.5, 75.0, 75.0], [67.5, 70.0, 72.5, 75.0, 75.0, 75.0]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×10 each arm", "3×10 each arm", "4×10 each arm"]}, {"n": "Incline DB Press", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Pull-Ups", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Speed", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-14 min", "Acceleration", "6×20yd from a 2-point stance, walk back (45-60 sec). Max effort every rep or it does not count."], ["14-24 min", "Change of direction", "Lateral shuffle into sprint ×6 · backpedal into sprint ×4"], ["24-30 min", "Cool-down", "Walk + hip and hamstring mobility. If the session runs long, cut change-of-direction reps."]], "note": null}, "notes": []}, {"date": "2027-01-21", "dow": "Thursday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Broad Jumps - stick each landing 1 sec", "v": ["3×3", null, null]}, {"n": "Lateral Bound - stick each one", "v": ["3×4 each side", null, null]}]}, {"time": "11-28 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×3", "4×3", "4×3"], "pct": [[65.0, 67.5, 70.0], [70.0, 72.5, 75.0, 75.0], [70.0, 72.5, 75.0, 75.0]]}, {"core": true, "n": "DEAD LIFT", "sets": ["3×5", "4×5", "6×5"], "pct": [[67.5, 70.0, 72.5], [72.5, 75.0, 77.5, 77.5], [70.0, 72.5, 75.0, 77.5, 77.5, 77.5]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Reverse Lunge", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×10", "3×10", "4×10"]}, {"n": "Side Plank w/ Row", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "41-45 min", "label": "Pod 3", "items": [{"n": "Calf Raise - Straight Knee", "v": ["1×15", "2×15", "3×15"]}, {"n": "Calf Raise - Bent Knee", "v": ["1×15", "2×15", "3×15"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Intervals", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-27 min", "Intervals", "6×2 min @ ~85%, slightly faster, 90 sec easy jog between (~20 min)"], ["27-30 min", "Cool-down", "Pace is right if the last rep matches the first. Close with a 3 min walk + hip and hamstring stretch."]], "note": null}, "notes": []}, {"date": "2027-01-22", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}, {"sheet": "Spring Week 4 125-129 - Reload ", "title": "SPRING WEEK 4  ·  1/25 - 1/29  ·  Reload 4", "notes": [], "days": [{"date": "2027-01-25", "dow": "Monday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Hurdle Hops - 6\" hurdles", "v": ["2×4", "3×5", "4×5"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT", "sets": ["2×5", "4×5", "5×5"], "pct": [[72.5, 75.0], [75.0, 77.5, 80.0, 80.0], [72.5, 75.0, 77.5, 80.0, 80.0]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×20sec each side", "3×20 sec each side", "4×20 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (43-48 min)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-28 min", "Tempo runs", "2 x (10×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["28-30 min", "Cool-down", "2 min walk + couch stretch 30 sec per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-01-26", "dow": "Tuesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS", "sets": ["3×5", "5×5", "6×5"], "pct": [[67.5, 70.0, 72.5], [67.5, 70.0, 72.5, 75.0, 75.0], [67.5, 70.0, 72.5, 75.0, 75.0, 75.0]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×10 each arm", "3×10 each arm", "4×10 each arm"]}, {"n": "Incline DB Press", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Pull-Ups", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Speed", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-14 min", "Acceleration", "6×20yd from a 2-point stance, walk back (45-60 sec). Max effort every rep or it does not count."], ["14-24 min", "Change of direction", "Partner mirror drill 6×6 sec"], ["24-30 min", "Cool-down", "Walk + hip and hamstring mobility. If the session runs long, cut change-of-direction reps."]], "note": null}, "notes": []}, {"date": "2027-01-27", "dow": "Wednesday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Broad Jumps - stick each landing 1 sec", "v": ["3×3", null, null]}, {"n": "Lateral Bound - stick each one", "v": ["3×4 each side", null, null]}]}, {"time": "11-19 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×2", "5×2", "4×3"], "pct": [[67.5, 70.0, 72.5], [70.0, 72.5, 75.0, 77.5, 77.5], [72.5, 75.0, 77.5, 77.5]]}, {"core": true, "n": "DEAD LIFT", "sets": ["2×5", "4×5", "5×5"], "pct": [[72.5, 75.0], [75.0, 77.5, 80.0, 80.0], [72.5, 75.0, 77.5, 80.0, 80.0]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Reverse Lunge", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×10", "3×10", "4×10"]}, {"n": "Side Plank w/ Row", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "41-45 min", "label": "Pod 3", "items": [{"n": "Calf Raise - Straight Knee", "v": ["1×15", "2×15", "3×15"]}, {"n": "Calf Raise - Bent Knee", "v": ["1×15", "2×15", "3×15"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Flush + prehab", "rows": [["0-15 min", "Easy aerobic", "15 min continuous run or bike at conversational pace"], ["15-22 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"], ["22-30 min", "Mobility", "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8"]], "note": null}, "notes": []}, {"date": "2027-01-28", "dow": "Thursday", "title": "Upper 2: Push/Pull and Core", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-14 min", "label": "Pod 1", "items": [{"n": "Standing DB Push Press", "v": ["2×6", "4×6", "5×6"], "pct": ["70%", "75%", "75%"]}, {"n": "Pull Up", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}]}, {"time": "15-21 min", "label": "Pod 2", "items": [{"n": "Chest-Supported Row", "v": ["2×10", "3×10", "4×10"]}, {"n": "Landmine Press", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "22-28 min", "label": "Pod 3", "items": [{"n": "Farmer Carry", "v": ["2×30yd heavy", "3×30 yd heavy", "4×30yd heavy"]}, {"n": "Hanging Knee Raise", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "29-37 min", "label": "Pod 4", "items": [{"n": "Core Circuit: front plank 30 sec · side plank 20 sec each side · bird dog ×8 each side · glute bridge march ×10 each side", "v": ["2 rounds", "3 rounds", "3 rounds"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["DB Lateral Raise - 2×15", null], ["Face Pull - 2×20", null], ["Side Plank Reach Through - 2×10 each side", null]]}, "run": {"title": "Intervals", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-27 min", "Intervals", "10 x (1 min hard / 1 min easy), continuous (20 min)"], ["27-30 min", "Cool-down", "Pace is right if the last rep matches the first. Close with a 3 min walk + hip and hamstring stretch."]], "note": null}, "notes": []}, {"date": "2027-01-29", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}, {"sheet": "Spring Week 5 21-25 - Drive 1", "title": "SPRING WEEK 5  ·  2/1 - 2/5  ·  Drive 1", "notes": [], "days": [{"date": "2027-02-01", "dow": "Monday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Depth Drop Stick - 12-18\" box", "v": ["2×3", "3×4", "4×4"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT", "sets": ["2×4", "4×4", "5×4"], "pct": [[72.5, 75.0], [77.5, 80.0, 82.5, 82.5], [75.0, 77.5, 80.0, 82.5, 82.5]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×6 each leg - heavier", "3×6 each leg - heavier", "4×6 each leg - heavier"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×25 sec each side", "3×25 sec each side", "4×25 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-20 min", "Tempo runs", "2 x (6×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["20-30 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-02-02", "dow": "Tuesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS", "sets": ["2×4", "4×4", "5×4"], "pct": [[72.5, 75.0], [77.5, 80.0, 82.5, 82.5], [75.0, 77.5, 80.0, 82.5, 82.5]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×8 each arm", "3×8 each arm", "4×8 each arm"]}, {"n": "Weighted Chin Up", "v": ["2×5 (BW if needed)", "4×5 (BW if needed)", "5×5 (BW if needed)"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Incline Bench Press", "v": ["2×8", "3×8", "4×8"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Speed", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-14 min", "Acceleration", "4×20yd resisted sled push (~10% bodyweight), then 4×20yd free"], ["14-24 min", "Change of direction", "5-10-5×4, timed, full recovery"], ["24-30 min", "Cool-down", "Walk + hip and hamstring mobility. If the session runs long, cut change-of-direction reps."]], "note": null}, "notes": []}, {"date": "2027-02-03", "dow": "Wednesday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Hurdle Hops - 6\" hurdles (no sprint in class)", "v": ["4×3", null, null]}, {"n": "Lateral Bound to a Stick", "v": ["3×4 each side", null, null]}]}, {"time": "11-19 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×2", "5×2", "6×2"], "pct": [[70.0, 72.5, 75.0], [72.5, 75.0, 77.5, 80.0, 80.0], [72.5, 75.0, 77.5, 80.0, 80.0, 80.0]]}, {"core": true, "n": "DEAD LIFT", "sets": ["3×3", "4×4", "5×4"], "pct": [[70.0, 72.5, 75.0], [75.0, 77.5, 80.0, 80.0], [72.5, 75.0, 77.5, 80.0, 80.0]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}, {"n": "Step Ups", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×8", "3×8", "4×8"]}, {"n": "Anti-Rotation Chop", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Flush + ball work", "rows": [["0-10 min", "Ball work", "Small-sided possession, two-touch, nothing competitive"], ["10-18 min", "Mobility", "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8"], ["18-23 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"], ["23-30 min", "Easy aerobic", "6-8 min easy bike or run"]], "note": null}, "notes": []}, {"date": "2027-02-04", "dow": "Thursday", "title": "Upper 2: Push/Pull and Core", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-14 min", "label": "Pod 1", "items": [{"n": "Standing DB Push Press", "v": ["2×5", "3×5", "4×5"], "pct": ["70%", "75%", "75%"]}, {"n": "Pull Up", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}]}, {"time": "15-21 min", "label": "Pod 2", "items": [{"n": "DB Row", "v": ["2×8", "3×8", "4×8"]}, {"n": "Farmer Carry", "v": ["2×30yd heavy", "3×30yd heavy", "4×30yd heavy"]}]}, {"time": "22-28 min", "label": "Pod 3", "items": [{"n": "Core Circuit: front plank 30 sec · side plank 20 sec each side · bird dog ×8 each side · glute bridge march ×10 each side", "v": ["2 rounds", "3 rounds", "3 rounds"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["DB Lateral Raise - 2×15", null], ["Face Pull - 2×20", null], ["Side Plank Reach Through - 2×10 each side", null]]}, "run": {"title": "Repeat sprints", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-27 min", "Repeat sprints", "2 x (8×30 sec hard / 30 sec walk), 3 min between sets (~19 min)"], ["27-30 min", "Cool-down", "Track the drop-off: if sprint 6 is more than 10% slower than sprint 1, recovery is the limiter."]], "note": null}, "notes": []}, {"date": "2027-02-05", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}, {"sheet": "Spring Week 6 28-212 - Drive 2", "title": "SPRING WEEK 6  ·  2/8 - 2/12  ·  Drive 2", "notes": [], "days": [{"date": "2027-02-08", "dow": "Monday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Depth Drop Stick - 12-18\" box", "v": ["2×3", "3×4", "4×4"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT", "sets": ["3×3", "5×3", "6×3"], "pct": [[72.5, 75.0, 77.5], [77.5, 80.0, 82.5, 85.0, 85.0], [77.5, 80.0, 82.5, 85.0, 85.0, 85.0]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×20sec each side", "3×20 sec each side", "4×20 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (43-48 min)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-20 min", "Tempo runs", "2 x (6×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["20-30 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-02-09", "dow": "Tuesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS", "sets": ["3×5", "5×3", "6×3"], "pct": [[67.5, 70.0, 72.5], [77.5, 80.0, 82.5, 85.0, 85.0], [77.5, 80.0, 82.5, 85.0, 85.0, 85.0]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×10 each arm", "3×10 each arm", "4×10 each arm"]}, {"n": "Incline DB Press", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Pull-Ups", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Speed", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-14 min", "Acceleration", "6×20yd alternating 2-point and 3-point starts"], ["14-24 min", "Change of direction", "Curved sprints 4×25yd, then 5-10-5×3"], ["24-30 min", "Cool-down", "Walk + hip and hamstring mobility. If the session runs long, cut change-of-direction reps."]], "note": null}, "notes": []}, {"date": "2027-02-10", "dow": "Wednesday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Hurdle Hops - 6\" hurdles (no sprint in class)", "v": ["4×3", null, null]}, {"n": "Lateral Bound to a Stick", "v": ["3×4 each side", null, null]}]}, {"time": "11-19 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×2", "5×2", "6×2"], "pct": [[72.5, 75.0, 77.5], [75.0, 77.5, 80.0, 82.5, 82.5], [75.0, 77.5, 80.0, 82.5, 82.5, 82.5]]}, {"core": true, "n": "DEAD LIFT", "sets": ["3×3", "4×3", "5×3"], "pct": [[72.5, 75.0, 77.5], [80.0, 82.5, 85.0, 85.0], [77.5, 80.0, 82.5, 85.0, 85.0]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}, {"n": "Step Ups", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×8", "3×8", "4×8"]}, {"n": "Anti-Rotation Chop", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Flush + ball work", "rows": [["0-10 min", "Ball work", "Small-sided possession, two-touch, nothing competitive"], ["10-18 min", "Mobility", "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8"], ["18-23 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"], ["23-30 min", "Easy aerobic", "6-8 min easy bike or run"]], "note": null}, "notes": []}, {"date": "2027-02-11", "dow": "Thursday", "title": "Upper 2: Push/Pull and Core", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-14 min", "label": "Pod 1", "items": [{"n": "Standing DB Push Press", "v": ["2×6", "4×6", "5×6"], "pct": ["70%", "75%", "75%"]}, {"n": "Pull Up", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}]}, {"time": "15-21 min", "label": "Pod 2", "items": [{"n": "Chest-Supported Row", "v": ["2×10", "3×10", "4×10"]}, {"n": "Landmine Press", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "22-28 min", "label": "Pod 3", "items": [{"n": "Farmer Carry", "v": ["2×30yd heavy", "3×30 yd heavy", "4×30yd heavy"]}, {"n": "Hanging Knee Raise", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "29-37 min", "label": "Pod 4", "items": [{"n": "Core Circuit: front plank 30 sec · side plank 20 sec each side · bird dog ×8 each side · glute bridge march ×10 each side", "v": ["2 rounds", "3 rounds", "3 rounds"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["DB Lateral Raise - 2×15", null], ["Face Pull - 2×20", null], ["Side Plank Reach Through - 2×10 each side", null]]}, "run": {"title": "Repeat sprints", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-27 min", "Repeat sprints", "3 x (6×30yd sprint, 25 sec rest), 3 min between sets (~15 min)"], ["27-30 min", "Cool-down", "Track the drop-off: if sprint 6 is more than 10% slower than sprint 1, recovery is the limiter."]], "note": null}, "notes": []}, {"date": "2027-02-12", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}, {"sheet": "Spring Week 7 215-219 - Drive 3", "title": "SPRING WEEK 7  ·  2/15 - 2/19  ·  Drive 3", "notes": ["CONFIRM PRESIDENTS DAY (2/15): if there is no school Monday, run the 3-day template - Lower 1 Tue + tempo, Upper 1 Wed + speed, Lower 2 Thu + shuttles. Drop Upper 2."], "days": [{"date": "2027-02-15", "dow": "Monday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Depth Jump 18\" - land and go back up asap", "v": ["2×3", "3×4", "4×4"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT", "sets": ["2×3", "4×3", "5×3"], "pct": [[80.0, 82.5], [82.5, 85.0, 87.5, 87.5], [80.0, 82.5, 85.0, 87.5, 87.5]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×20sec each side", "3×20 sec each side", "4×20 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (43-48 min)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-20 min", "Tempo runs", "2 x (6×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["20-30 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-02-16", "dow": "Tuesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS", "sets": ["2×3", "4×3", "5×3"], "pct": [[80.0, 82.5], [82.5, 85.0, 87.5, 87.5], [80.0, 82.5, 85.0, 87.5, 87.5]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×10 each arm", "3×10 each arm", "4×10 each arm"]}, {"n": "Incline DB Press", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Pull-Ups", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Speed", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-14 min", "Acceleration", "5×30yd - full recovery between every rep"], ["14-24 min", "Change of direction", "Reactive cut on coach’s call 6×6 sec"], ["24-30 min", "Cool-down", "Walk + hip and hamstring mobility. If the session runs long, cut change-of-direction reps."]], "note": null}, "notes": []}, {"date": "2027-02-17", "dow": "Wednesday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Hurdle Hops - 6\" hurdles (no sprint in class)", "v": ["4×3", null, null]}, {"n": "Lateral Bound to a Stick", "v": ["3×4 each side", null, null]}]}, {"time": "11-19 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×2", "4×2", "5×2"], "pct": [[72.5, 75.0, 77.5], [80.0, 82.5, 85.0, 85.0], [77.5, 80.0, 82.5, 85.0, 85.0]]}, {"core": true, "n": "DEAD LIFT", "sets": ["2×3", "4×3", "5×3"], "pct": [[80.0, 82.5], [80.0, 82.5, 85.0, 85.0], [77.5, 80.0, 82.5, 85.0, 85.0]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}, {"n": "Step Ups", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×8", "3×8", "4×8"]}, {"n": "Anti-Rotation Chop", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Flush + ball work", "rows": [["0-10 min", "Ball work", "Small-sided possession, two-touch, nothing competitive"], ["10-18 min", "Mobility", "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8"], ["18-23 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"], ["23-30 min", "Easy aerobic", "6-8 min easy bike or run"]], "note": null}, "notes": []}, {"date": "2027-02-18", "dow": "Thursday", "title": "Upper 2: Push/Pull and Core", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-14 min", "label": "Pod 1", "items": [{"n": "Standing DB Push Press", "v": ["2×6", "4×6", "5×6"], "pct": ["70%", "75%", "75%"]}, {"n": "Pull Up", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}]}, {"time": "15-21 min", "label": "Pod 2", "items": [{"n": "Chest-Supported Row", "v": ["2×10", "3×10", "4×10"]}, {"n": "Landmine Press", "v": ["2×8 each side", "3×8 each side", "4×8 each side"]}]}, {"time": "22-28 min", "label": "Pod 3", "items": [{"n": "Farmer Carry", "v": ["2×30yd heavy", "3×30 yd heavy", "4×30yd heavy"]}, {"n": "Hanging Knee Raise", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "29-37 min", "label": "Pod 4", "items": [{"n": "Core Circuit: front plank 30 sec · side plank 20 sec each side · bird dog ×8 each side · glute bridge march ×10 each side", "v": ["2 rounds", "3 rounds", "3 rounds"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["DB Lateral Raise - 2×15", null], ["Face Pull - 2×20", null], ["Side Plank Reach Through - 2×10 each side", null]]}, "run": {"title": "Repeat sprints", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-27 min", "Repeat sprints", "4 x (4×40yd shuttle: 20 out / 20 back, 20 sec rest), 3 min between sets (~17 min)"], ["27-30 min", "Cool-down", "Track the drop-off: if sprint 6 is more than 10% slower than sprint 1, recovery is the limiter."]], "note": null}, "notes": []}, {"date": "2027-02-19", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}, {"sheet": "Spring Week 8 222-226 - Deload", "title": "SPRING WEEK 8  ·  2/22 - 2/26  ·  Deload + Retest", "notes": ["RETEST SPREAD OVER THE WEEK: sprint tests Tuesday after school · jump tests Thursday in class (Group B 3:30) · fitness test Thursday after school."], "days": [{"date": "2027-02-22", "dow": "Monday", "title": "Lower 1: Lower Power and Squat Strength", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Depth Jump", "v": ["2×2", "3×3", "4×3"]}]}, {"time": "11-23 min", "label": "Core Lift", "items": [{"core": true, "n": "BACK SQUAT - every rep fast", "sets": ["2×3", "3×3", "4×3"], "pct": [[67.5, 70.0], [72.5, 75.0, 77.5], [72.5, 75.0, 77.5, 77.5]]}]}, {"time": "24-30 min", "label": "Pod 1", "items": [{"n": "Rear Foot Elevated Split Squat", "v": ["2×8 each leg", "3×8 each leg", "4×8 each leg"]}, {"n": "Nordic Hamstring Curl", "v": ["3×5 with 5 second lower", "3×5 with 5 second lower", "4×5 with 5 second lower"]}]}, {"time": "31-37 min", "label": "Pod 2", "items": [{"n": "Copenhagen Side Plank", "v": ["3×20sec each side", "3×20 sec each side", "4×20 sec each side"]}, {"n": "Pallof Press", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}, {"time": "38-42 min", "label": "Pod 3", "items": [{"n": "Hip and Ankle Mobility", "v": ["Couch Stretch 30 sec per side · Knee-to-Wall Ankle 10 per side", null, null]}]}], "fin": {"title": "OFF-SEASON FINISHER (43-48 min)", "items": [["Goblet Squat", "2×15"], ["Calf Raise - Straight Knee", "2×20"], ["Calf Raise - Bent Knee", "2×20"]]}, "run": {"title": "Tempo", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-20 min", "Tempo runs", "Easy tempo 2 x (6×100yd) @ ~70% effort (18-20 sec per 100), walk back ~40 sec, 2 min between sets. Relaxed jaw and hands - able to talk at the end of each rep."], ["20-30 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"]], "note": "Group B comes straight off a squat session - this is submaximal on purpose. If a player’s stride falls apart, he is running too fast."}, "notes": []}, {"date": "2027-02-23", "dow": "Tuesday", "title": "Upper 1: Upper Strength (Bench)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Upper warm-up", "v": ["6 min", null, null], "cue": "Band pull-aparts 2×15 · band shoulder dislocate 2×10 · push-up plus 2×10 · scapular push-ups 2×8 · thoracic rotations 8 per side"}]}, {"time": "7-17 min", "label": "Core Lift", "items": [{"core": true, "n": "BENCH PRESS - every rep fast", "sets": ["2×3", "3×3", "4×3"], "pct": [[67.5, 70.0], [72.5, 75.0, 77.5], [72.5, 75.0, 77.5, 77.5]]}]}, {"time": "18-24 min", "label": "Pod 1", "items": [{"n": "One-Arm DB Row", "v": ["2×10 each arm", "3×10 each arm", "4×10 each arm"]}, {"n": "Incline DB Press", "v": ["2×10", "3×10", "4×10"]}]}, {"time": "25-31 min", "label": "Pod 2", "items": [{"n": "Pull-Ups", "v": ["2 sets to 2 before failure", "3 sets to 2 before failure", "4 sets to 2 before failure"]}, {"n": "Face Pulls", "v": ["2×15", "3×15", "4×15"]}]}, {"time": "32-38 min", "label": "Pod 3", "items": [{"n": "Dead Bugs", "v": ["2×8 per side", "3×8 per side", "4×8 per side"]}, {"n": "Hollow Holds", "v": ["2×20 sec", "3×20 sec", "4×20 sec"]}]}], "fin": {"title": "OFF-SEASON - FINISHER (After School Only)", "items": [["DB Curl", "2×12"], ["Tricep Extension", "2×12"], ["Reverse Crunch", "2×15"]]}, "run": {"title": "Sprint retest", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-26 min", "Retest", "10-yd dash ×3 (best time) · pro agility (5-10-5) ×2 each direction (best time). Full recovery between every rep."], ["26-30 min", "Cool-down", "Walk + hip and hamstring mobility"]], "note": null}, "notes": []}, {"date": "2027-02-24", "dow": "Wednesday", "title": "Lower 2: Hinge and Clean", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-10 min", "label": "Jumps", "items": [{"n": "Hurdle Hops - 6\" hurdles (no sprint in class)", "v": ["4×3", null, null]}, {"n": "Lateral Bound to a Stick", "v": ["3×4 each side", null, null]}]}, {"time": "11-28 min", "label": "Core Lift", "items": [{"core": true, "n": "HANG CLEAN", "sets": ["3×2", "4×2", "4×2"], "pct": [[65.0, 67.5, 70.0], [70.0, 72.5, 75.0, 75.0], [70.0, 72.5, 75.0, 75.0]]}, {"core": true, "n": "DEAD LIFT - every rep fast", "sets": ["2×3", "3×3", "4×3"], "pct": [[67.5, 70.0], [70.0, 72.5, 75.0], [70.0, 72.5, 75.0, 75.0]]}]}, {"time": "29-34 min", "label": "Pod 1", "items": [{"n": "SL RDL w/ DBs", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}, {"n": "Step Ups", "v": ["2×6 each leg", "3×6 each leg", "4×6 each leg"]}]}, {"time": "35-40 min", "label": "Pod 2", "items": [{"n": "Barbell Hip Thrust", "v": ["2×8", "3×8", "4×8"]}, {"n": "Anti-Rotation Chop", "v": ["2×10 each side", "3×10 each side", "4×10 each side"]}]}], "fin": {"title": "OFF-SEASON FINISHER (After School Only)", "items": [["Barbell Shrug", "2×12"], ["Rear-Delt Raise", "2×15"], ["Dead Hang", "2×30 seconds"]]}, "run": {"title": "Flush + ball work", "rows": [["0-10 min", "Ball work", "Small-sided possession, two-touch, nothing competitive"], ["10-18 min", "Mobility", "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8"], ["18-23 min", "Prehab", "Banded ankle eversion 2×15 · pogo hops 2×20 · single-leg balance w/ 3-way reach 2×5 per side"], ["23-30 min", "Easy aerobic", "6-8 min easy bike or run"]], "note": null}, "notes": []}, {"date": "2027-02-25", "dow": "Thursday", "title": "Jump Testing (no lift)", "blocks": [{"time": "0-6 min", "label": "Warm-Up", "items": [{"n": "Weight-room warm-up (top of sheet)", "v": ["6 min", null, null], "cue": null}]}, {"time": "6-25 min", "label": "Testing", "items": [{"n": "Vertical Jump - 3 attempts, record best", "v": ["3 attempts", null, null]}, {"n": "Broad Jump - 3 attempts, record best", "v": ["3 attempts", null, null]}]}, {"time": "25-40 min", "label": "Mobility", "items": [{"n": "2 rounds: 90/90 hip switch ×8 · adductor rock-back ×8 · knee-to-wall ankle ×10 per side · couch stretch 30 sec per side · cat-cow ×8 · then foam roll 5 min", "v": [null, null, null]}]}], "fin": null, "run": {"title": "Fitness retest", "rows": [["0-6 min", "Warm-up", "Run warm-up (top of sheet)"], ["6-26 min", "Retest", "Yo-Yo IR1 or 120yd shuttle - single effort to completion"], ["26-30 min", "Cool-down", "Walk + stretch"]], "note": null}, "notes": ["No lift today. Group B runs the jump tests in the weight room 3:30-4:15, then the fitness test at 4:15."]}, {"date": "2027-02-26", "dow": "Friday", "title": "OFF", "blocks": [], "fin": null, "run": null, "notes": [], "off": true}]}];
+const SCDAY={};SC.forEach((w,wi)=>w.days.forEach(d=>{SCDAY[d.date]={w,wi,d};}));
+const W_START=SC.map(w=>{const [y,m,dd]=w.days[0].date.split("-").map(Number);return new Date(y,m-1,dd);});
+const LANES=[["in","In-Season"],["pre","Pre-Season"],["off","Off-Season"]];
+const laneIdx=()=>Math.max(0,LANES.findIndex(x=>x[0]===(S.lane||"pre")));
+const laneName=()=>LANES[laneIdx()][1];
+function liftKey(n){n=n.toUpperCase();return /SQUAT/.test(n)?"squat":/BENCH/.test(n)?"bench":/CLEAN/.test(n)?"clean":/DEAD/.test(n)?"trap":"";}
+const LIFTNAME={squat:"Back squat",bench:"Bench press",clean:"Hang clean",trap:"Deadlift"};
+function weekPhase(w){const m=w.title.split("·");return "Spring week "+(SC.indexOf(w)+1)+" of 8: "+(m[2]||"").trim();}
+function runFix(run){
+  return {title:run.title,note:run.note,rows:run.rows.map(([t,l,x])=>[t.replace("-","–"),l,/top of sheet/i.test(x)?WU_RUN:x])};
+}
+function scFor(d){
+  const dow=d.getDay(); // 0 Sun
+  if(dow===0||dow===6)return null;
+  const k=K(d);
+  // December prep
+  for(let i=0;i<3;i++){
+    const s=DEC_START[i];
+    if(d>=s&&d<=add(s,4)){
+      const dn=["","Mon","Tue","Wed","Thu","Fri"][dow];
+      const wk=DEC[i+1];
+      if(dn==="Fri")return {off:true,why:"Friday: no lifting or after-school running. Chess is 3:30–4:15 in Room B001."};
+      const day=wk[dn];
+      return {era:"dec",wk:i+1,phase:"December prep week "+(i+1)+": "+wk.phase,rule:wk.rule,lift:{title:day.title,blocks:day.blocks},run:day.run,groupA:"Lift in class from your "+FALLWK[i+1]+" card"};
+    }
+  }
+  if(isBreak(d))return {off:true,why:"Winter break: no after-school sessions."};
+  if(NOSCHOOL[k])return {off:true,why:NOSCHOOL[k]+". No after-school session."};
+  const e=SCDAY[k];if(!e)return null;
+  const {w,d:day}=e;
+  if(day.off)return {off:true,why:dow===5?"Friday: no lifting or after-school running. Chess is 3:30–4:15 in Room B001.":"No school, so no after-school session."};
+  const blocks=day.blocks.map(b=>({label:b.label.charAt(0)+b.label.slice(1).toLowerCase(),time:b.time.replace("-","–"),items:b.items.map(it=>it.n?Object.assign({},it,{n:it.n.replace(/ \(top of sheet\)/i,"")}):it)}));
+  if(day.fin&&laneIdx()===2)blocks.push({label:"Off-season finisher (after school only)",items:day.fin.items.map(([n,rx])=>rx?{n,v:[rx]}:{n:n.split(" - ")[0],v:[n.split(" - ").slice(1).join(" - ")]})});
+  return {era:"jan",wk:e.wi+1,phase:weekPhase(w),notes:w.notes.concat(day.notes),lift:{title:day.title,blocks},run:runFix(day.run),groupA:"Lift in class"};
+}
+
+/* =========================================================
+   FUTSAL (EHS Winter Futsal, Session 1) — Wednesdays
+   ========================================================= */
+const FTEAMS=["Bayern Munich","Real Madrid","PSG","Leeds United","Barcelona","Arsenal"];
+const SLOTS=["7:00–7:40","7:45–8:25","8:30–9:10"];
+const FUTSAL=[
+ {md:1,date:D(2026,11,4),games:[["Barcelona",7,"Arsenal",3],["Real Madrid",4,"PSG",5],["Bayern Munich",7,"Leeds United",7]]},
+ {md:2,date:D(2026,11,11),games:[["PSG",8,"Leeds United",6],["Real Madrid",4,"Barcelona",2],["Arsenal",4,"Bayern Munich",13]]},
+ {md:3,date:D(2026,11,18),games:[["Arsenal",4,"Real Madrid",5],["Leeds United",11,"Barcelona",7],["Bayern Munich",9,"PSG",7]]},
+ {md:4,date:D(2026,12,2),games:[["Real Madrid",null,"Bayern Munich",null],["Barcelona",null,"PSG",null],["Leeds United",null,"Arsenal",null]]},
+ {md:5,date:D(2026,12,9),games:[["Leeds United",null,"Real Madrid",null],["PSG",null,"Arsenal",null],["Bayern Munich",null,"Barcelona",null]]},
+ {md:6,date:D(2026,12,16),playoff:true,games:[["Seed 5",null,"Seed 6",null],["Seed 3",null,"Seed 4",null],["Seed 1",null,"Seed 2",null]]}
+];
+const FROSTER={
+ "Bayern Munich":[["Tristan Pritchard",12],["Alex Sharko",12],["Quentin Bretey",11],["Artem Pastukhov",10],["Cameron Ringenberg",9],["Roberto Villegas",9],["Jackson Heitland",8]],
+ "Barcelona":[["Isaac Beitel",12],["Gavin Wilson",12],["Stone Waggoner",10],["Eli Hataway",9],["Surya Krishnanunny",9],["Mohammad Yaqoub",9],["Keagan Dyer",8]],
+ "Real Madrid":[["Amaan Vakkayil",12],["Landon Van Auken",12],["Grady Harnisch",10],["Wyatt Schulz",9],["Roydel Garcia-Gonzalez",9],["Dexter Wagner",9],["Caleb Armstrong",8]],
+ "PSG":[["Micah Holtam",12],["Trey Pacas",12],["Nikita Bielov",10],["Evan Harries",10],["Myron Weaver",9],["Sawyer Bailey",8],["Israel Maworera",8]],
+ "Arsenal":[["Dylan Somchana",12],["Cameron Turner",11],["Carson Wutzke",10],["Adaan Vakkayil",10],["Logan Thomas",9],["Owen Edwards",9],["Pablo Velez",8],["Vincent Woods",8]],
+ "Leeds United":[["Pearson Gamerl",12],["Micah Timm",12],["Oliver Gordon",10],["Jesus Mendoza",9],["Eli Nguyen",9],["Lucas Da Silva",8],["Owen Sutton",8],["Graham Dinsdale",8]]
+};
+function standings(){
+  const t={};FTEAMS.forEach(n=>t[n]={n,g:0,w:0,d:0,l:0,gf:0,ga:0});
+  let regPlayed=0,regTotal=0;
+  FUTSAL.filter(m=>!m.playoff).forEach(m=>m.games.forEach(([h,hs,a,as])=>{regTotal++;if(hs==null||as==null)return;regPlayed++;
+    const H=t[h],A=t[a];H.g++;A.g++;H.gf+=hs;H.ga+=as;A.gf+=as;A.ga+=hs;
+    if(hs>as){H.w++;A.l++;}else if(hs<as){A.w++;H.l++;}else{H.d++;A.d++;}}));
+  const arr=Object.values(t).map(x=>Object.assign(x,{pts:x.w*3+x.d,gd:x.gf-x.ga}));
+  arr.sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf||a.n.localeCompare(b.n));
+  return {arr,final:regPlayed===regTotal};
+}
+function seedName(label){
+  const m=/^Seed (\d)$/.exec(label);if(!m)return label;
+  const st=standings();const team=st.arr[+m[1]-1].n;
+  return st.final?team+" ("+label.toLowerCase()+")":label+" <span class=\"note\">(right now: "+esc(team)+")</span>";
+}
+
+/* =========================================================
+   INDOOR (Winter 2026, 1st session) — weekends
+   ========================================================= */
+const INDOOR=[
+ {date:D(2026,12,5),level:"Junior Varsity",opp:"Papio South",time:"1:00 PM",h:13,field:2},
+ {date:D(2026,12,12),level:"Varsity",opp:"Omaha Central",time:"7:00 PM",h:19,field:2},
+ {date:D(2026,12,12),level:"Junior Varsity",opp:"Omaha Westview",time:"8:00 PM",h:20,field:2},
+ {date:D(2026,12,13),level:"Varsity",opp:"Millard North",time:"10:00 AM",h:10,field:2},
+ {date:D(2026,12,13),level:"Junior Varsity",opp:"Sioux City North",time:"12:00 PM",h:12,field:2},
+ {date:D(2026,12,19),level:"Varsity",opp:"Sioux City North",time:"12:00 PM",h:12,field:2},
+ {date:D(2026,12,19),level:"Junior Varsity",opp:"Sporting NE FC B Gold",time:"4:00 PM",h:16,field:1}
+];
+const IROSTER={
+ "Varsity":[[12,"Isaac Beitel"],[11,"Quentin Bretey"],[12,"Pearson Gamerl"],[10,"Oliver Gordon"],[12,"Micah Holtam"],[12,"Matthew Ott",1],[12,"Trey Pacas"],[12,"Tristan Pritchard"],[11,"Noah Schluchter"],[12,"Alex Sharko"],[12,"Dylan Somchana"],[12,"Micah Timm"],[12,"Amaan Vakkayil"],[12,"Landon Van Auken"],[10,"Stone Waggoner"],[12,"Gavin Wilson"]],
+ "Junior Varsity":[[9,"Kamron Connor"],[9,"Owen Edwards"],[9,"Roydel Garcia Gonzalez"],[10,"Grady Harnisch"],[10,"Evan Harries"],[9,"Eli Hataway"],[9,"Surya Krishnanunny"],[9,"Peter Muhlbauer",1],[10,"Thomas Ott",1],[9,"Cameron Ringenberg"],[9,"Wyatt Schulz"],[9,"Logan Thomas"],[10,"Adaan Vakkayil"],[9,"Roberto Villegas"],[9,"Dexter Wagner"],[10,"Carson Wutzke"]]
+};
+const ISUBS=["Nikita Bielov"];
+
+/* =========================================================
+   CHESS — Fridays 3:30–4:15 on school days
+   ========================================================= */
+function chessOn(d){
+  if(d.getDay()!==5)return false;
+  if(d<D(2026,12,4)||d>D(2027,2,26))return false;
+  if(isBreak(d)||NOSCHOOL[K(d)])return false;
+  return true;
+}
+
+/* =========================================================
+   TECHNICAL lookup
+   ========================================================= */
+const TECHBY={};TECH.SESSIONS.forEach(s=>TECHBY[K(s.date)]=s);
+let tDone=store.get("hub-tdone",{}),tChecks=store.get("hub-tchecks",{});
+
+/* =========================================================
+   EVENTS FOR A DATE
+   ========================================================= */
+function kindsFor(d){
+  const k=K(d),out=[];
+  const sc=G()==="none"?null:scFor(d);if(sc&&!sc.off)out.push("sc");
+  if(S.tech!=="no"&&TECHBY[k])out.push("tech");
+  if(chessOn(d))out.push("chess");
+  if(S.futsal!=="none"&&FUTSAL.some(m=>K(m.date)===k))out.push("futsal");
+  if(IN()!=="none"&&INDOOR.some(g=>K(g.date)===k&&(!IN()||g.level===IN())))out.push("indoor");
+  return out;
+}
+const KCOLOR={sc:"var(--c-sc)",tech:"var(--c-tech)",chess:"var(--c-chess)",futsal:"var(--c-futsal)",indoor:"var(--c-indoor)"};
+const KNAME={sc:"Strength + speed",tech:"Technical (home)",chess:"Chess",futsal:"Futsal",indoor:"Indoor game"};
+
+/* =========================================================
+   RENDER: DAY VIEW
+   ========================================================= */
+let view="day";
+function firstActiveFrom(d){let x=new Date(d);for(let i=0;i<120;i++){if(x>END)break;if(kindsFor(x).length)return x;x=add(x,1);}return new Date(START);}
+let sel=(TODAY>=START&&TODAY<=END)?new Date(TODAY):(TODAY<START?new Date(START):new Date(END));
+let weekStart=mondayOf(sel);
+
+function weekStrip(){
+  let h='<div class="weekbar"><div class="wl">Week of '+short(weekStart)+'</div><div class="nav">';
+  h+='<button id="prevW" '+(add(weekStart,-1)<START?"disabled":"")+' aria-label="Previous week">Prev</button>';
+  h+='<button id="todayW">Today</button>';
+  h+='<button id="nextW" '+(add(weekStart,7)>END?"disabled":"")+' aria-label="Next week">Next</button></div></div>';
+  h+='<div class="week">';
+  for(let i=0;i<7;i++){
+    const d=add(weekStart,i),inR=d>=START&&d<=END;
+    const ks=inR?kindsFor(d):[];
+    const cls=["day"];if(K(d)===K(TODAY))cls.push("today");if(K(d)===K(sel))cls.push("sel");if(!inR)cls.push("out");
+    h+='<button class="'+cls.join(" ")+'" data-date="'+K(d)+'" '+(inR?"":"disabled")+' aria-label="'+longDate(d)+(ks.length?": "+ks.map(x=>KNAME[x]).join(", "):": nothing scheduled")+'"'+(K(d)===K(sel)?' aria-current="date"':'')+'>';
+    h+='<span class="dn">'+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]+'</span><span class="dd">'+d.getDate()+'</span><span class="pips">';
+    for(const x of ks)h+='<i class="k-'+x+'" style="background:'+KCOLOR[x]+'"></i>';
+    h+='</span></button>';
+  }
+  h+='</div><div class="key">';
+  for(const x of ["sc","tech","chess","futsal","indoor"])if(!(x==="tech"&&S.tech==="no")&&!(x==="sc"&&G()==="none")&&!(x==="futsal"&&S.futsal==="none")&&!(x==="indoor"&&IN()==="none"))h+='<span><i style="background:'+KCOLOR[x]+'"></i>'+KNAME[x]+'</span>';
+  h+='</div>';
+  return h;
+}
+
+function cap(n){return n===n.toUpperCase()?n.charAt(0)+n.slice(1).toLowerCase():n;}
+function itemHTML(it){
+  const li=laneIdx();
+  if(it.core){
+    const key=liftKey(it.n),fast=/every rep fast/i.test(it.n);
+    const nm=LIFTNAME[key]||cap(it.n.replace(/ - every rep fast/i,""));
+    const sets=it.sets[li]||it.sets[0],pct=(it.pct[li]&&it.pct[li].length)?it.pct[li]:it.pct[0];
+    const max=+(store.get("hub-max",{})[key]||0);
+    let h='<div class="it"><div class="nm">'+esc(nm)+' <span class="rx">'+esc(sets)+'</span>'+(fast?' <span class="note">every rep fast</span>':'')+'</div><div class="sets">';
+    pct.forEach((p,i)=>{h+='<span>Set '+(i+1)+': <b>'+p+'%</b>'+(max?' = <b>'+(Math.round(max*p/100/5)*5)+' lb</b>':'')+'</span>';});
+    h+='</div><div class="cue">'+(max?'Based on your '+nm.toLowerCase()+' max of '+max+' lb.':'Add your max in the My numbers tab to see pounds.')+' Leave 2 clean reps in reserve on every set. A set that slows down is your last set.</div></div>';
+    return h;
+  }
+  if(it.v){
+    const rx=it.v[li]||it.v[0]||"";
+    const pc=it.pct?(it.pct[li]||it.pct[0]):"";
+    let cue=it.cue||"";
+    if(/^Weight-room warm-up/.test(it.n))cue=WU_LOWER;
+    let n=it.n,r=rx;
+    if(!r&&n.length>60){r="";}
+    return '<div class="it"><div class="nm">'+esc(n)+(r?' <span class="rx">'+esc(r)+(pc?' at '+esc(pc):'')+'</span>':'')+'</div>'+(cue?'<div class="cue">'+esc(cue)+'</div>':'')+'</div>';
+  }
+  return '<div class="it"><div class="nm">'+esc(it.n)+' <span class="rx">'+esc(it.rx)+'</span></div>'+(it.cue?'<div class="cue">'+esc(it.cue)+'</div>':'')+'</div>';
+}
+function liftHTML(lift){
+  let h='';
+  for(const b of lift.blocks){
+    h+='<div class="blk"><h4>'+esc(b.label)+(b.time?' <span>'+b.time+'</span>':'')+'</h4>';
+    for(const it of b.items)h+=itemHTML(it);
+    h+='</div>';
+  }
+  if(lift.note)h+='<p class="note">'+esc(lift.note)+'</p>';
+  return h;
+}
+function runHTML(run){
+  let h='<div class="rows">';
+  for(const [t,l,x] of run.rows)h+='<div class="r"><div class="rt">'+t+'</div><div><span class="rl">'+esc(l)+'</span>'+esc(x)+'</div></div>';
+  h+='</div>';
+  if(run.note)h+='<p class="note">'+esc(run.note)+'</p>';
+  return h;
+}
+
+function scHTML(d,sc){
+  const g=G();
+  let h='<article class="ev" style="--k:var(--c-sc)"><div class="t"><b>3:30</b><small>After school</small></div><div>';
+  h+='<p class="kind">Strength + speed</p><h3>'+esc(sc.lift.title)+' + '+esc(sc.run.title.toLowerCase())+'</h3>';
+  h+='<p class="note">'+esc(sc.phase)+'</p>';
+  h+='<ul class="who">';
+  const aLine='<b>Group A</b> (you lift in class): '+esc(sc.groupA)+'. Run '+esc(sc.run.title.toLowerCase())+' 3:30–4:00.';
+  const bLine='<b>Group B</b> (you don’t lift in class): weight room 3:30–4:15, then run 4:15–4:45.';
+  if(!g){h+='<li>'+aLine+'</li><li>'+bLine+'</li>';}
+  else h+='<li class="me">'+(g==="A"?aLine:bLine)+'</li>';
+  h+='</ul>';
+  if(sc.rule)h+='<div class="alert">'+esc(sc.rule)+'</div>';
+  (sc.notes||[]).forEach(n=>h+='<div class="alert">'+esc(n)+'</div>');
+  h+='<p class="note">'+esc(CHECK)+'</p>';
+  if(sc.era==="jan")h+='<p class="note">Showing the <strong>'+laneName()+'</strong> lane. Change it in My settings.</p>';
+  // lift
+  const liftOpen=g!=="A";
+  let liftLabel;
+  if(sc.era==="dec")liftLabel=g==="A"?"Weight room plan (Group B new lifters)":"Weight room, 3:30–4:15";
+  else liftLabel=g==="A"?"The lift (you do this in class)":(g==="B"?"The lift, 3:30–4:15":"The lift (in class for A, 3:30 for B)");
+  h+='<details class="part" style="--k:var(--c-sc)"'+(liftOpen?" open":"")+'><summary><span class="st">'+esc(liftLabel)+'</span><span class="sm">'+esc(sc.lift.title.split(":")[0])+'</span></summary><div class="pbody">'+liftHTML(sc.lift)+'</div></details>';
+  const runTime=g==="A"?"3:30–4:00":(g==="B"?"4:15–4:45":"3:30 or 4:15");
+  h+='<details class="part" open style="--k:var(--c-sc)"><summary><span class="st">Run: '+esc(sc.run.title)+'</span><span class="sm">'+runTime+', 30 min</span></summary><div class="pbody">'+runHTML(sc.run)+'</div></details>';
+  h+='</div></article>';
+  return h;
+}
+
+function chessHTML(){
+  return '<article class="ev" style="--k:var(--c-chess)"><div class="t"><b>3:30</b><small>until 4:15</small></div><div>'+
+   '<p class="kind">Chess</p><h3>Friday chess, Room B001</h3>'+
+   '<p>Chess for soccer: same thinking, no ball. Every move gets the same question we ask on the field: what does this take away, and what does it give up?</p>'+
+   '<div class="rows"><div class="r"><div class="rt">3:30</div><div><span class="rl">Call and response</span>2-minute review of last week’s idea in our language.</div></div>'+
+   '<div class="r"><div class="rt">3:32</div><div><span class="rl">Lesson</span>This week’s concept on the demo board.</div></div>'+
+   '<div class="r"><div class="rt">3:50</div><div><span class="rl">Play</span>Games with a partner, using the concept.</div></div>'+
+   '<div class="r"><div class="rt">4:10</div><div><span class="rl">Debrief</span>One question, quick answers, out the door at 4:15.</div></div></div>'+
+   '</div></article>';
+}
+
+function futsalHTML(m){
+  const mine=S.futsal;
+  let h='<article class="ev" style="--k:var(--c-futsal)"><div class="t"><b>7:00</b><small>until 9:10</small></div><div>';
+  h+='<p class="kind">Futsal, Main Gym</p><h3>Futsal matchday '+m.md+(m.playoff?': seeding games':'')+'</h3>';
+  if(m.playoff)h+='<p class="note">Final night. Teams play by their seed after matchday 5: 5 vs 6, 3 vs 4, then 1 vs 2.</p>';
+  h+='<ul class="who">';
+  m.games.forEach(([a,as,b,bs],i)=>{
+    const an=m.playoff?seedName(a):esc(a),bn=m.playoff?seedName(b):esc(b);
+    const isMe=mine&&(a===mine||b===mine||(m.playoff&&(an.startsWith(esc(mine))||bn.startsWith(esc(mine)))));
+    h+='<li'+(isMe?' class="me"':'')+'><b>'+SLOTS[i]+'</b>&nbsp; '+an+' vs '+bn+(as!=null?' <span class="score">'+as+'–'+bs+'</span>':'')+'</li>';
+  });
+  h+='</ul>';
+  if(!mine)h+='<p class="note">Set your futsal team in My settings to highlight your game, or mark yourself as not participating to hide futsal.</p>';
+  h+='<p class="note">Standings and rosters are on the Futsal tab.</p>';
+  h+='</div></article>';
+  return h;
+}
+function indoorHTML(g){
+  const mine=IN()===g.level;
+  const [t,ap]=g.time.split(" ");
+  return '<article class="ev" style="--k:var(--c-indoor)"><div class="t"><b>'+t+'</b><small>'+ap+', Field '+g.field+'</small></div><div>'+
+    '<p class="kind">Indoor game, '+esc(g.level)+'</p><h3>'+(g.level==="Varsity"?"Varsity":"JV")+' vs '+esc(g.opp)+'</h3>'+
+    '<p>Kickoff '+esc(g.time)+' on Field '+g.field+'.'+(mine?' This is your team.':'')+'</p>'+
+    '<p class="note">Roster is on the Indoor games tab.</p></div></article>';
+}
+
+/* technical */
+function techHTML(s){
+  const P=TECH.PHASES[TECH.phaseOf(s.w)];
+  let h='<article class="ev" style="--k:var(--c-tech)"><div class="t"><b style="font-size:22px">Home</b><small>About 30 min, any time today</small></div><div>';
+  h+='<p class="kind">Winter technical program</p><h3>'+esc(TECH.THEMES[s.d])+'</h3>';
+  h+='<p class="note">Session '+s.code+', week '+s.w+' of 13, '+P.name+' phase. '+esc(P.note)+'</p>';
+  if(s.w===5)h+='<div class="alert">Holiday week: do the three sessions on any three days this week, and log each one by its name.</div>';
+  if(TECH.TESTS.includes(s.code))h+='<div class="alert">Test day. Have a wall, a ball and markers ready. Tests are listed in the session.</div>';
+  const blocks=TECH.blocksFor(s);let total=0;blocks.forEach(b=>total+=b.min);
+  h+='<details class="part" style="--k:var(--c-tech)"><summary><span class="st">Open the session</span><span class="sm">'+blocks.length+' blocks, about '+total+' min</span></summary><div class="pbody">';
+  blocks.forEach((b,n)=>h+=tblockHTML(b,n+1,s));
+  h+='<div class="tblock"><h4>Log it</h4><p>When you finish, log <strong>'+esc(s.label)+'</strong> with your best juggle of the day. Coach sees every log.</p>';
+  if(TECH.FORM_PREFILL.startsWith("https://"))h+='<div class="row"><a class="btn primary" data-log="'+s.code+'" href="'+TECH.FORM_PREFILL+encodeURIComponent(s.label)+'" target="_blank" rel="noopener">Log this session</a>'+(tDone[s.code]?'<span class="note">Logged on this phone.</span>':'')+'</div>';
+  h+='</div></div></details></div></article>';
+  return h;
+}
+function tblockHTML(b,n,s){
+  const key=s.code+"#"+n;
+  const ck='<label class="check"><input type="checkbox" data-ck="'+key+'"'+(tChecks[key]?" checked":"")+'> Done</label>';
+  if(b.pos){
+    const P=TECH.POS[S.pos];
+    if(!P){
+      let pk='<div class="picker">';for(const k of Object.keys(TECH.POS))pk+='<button class="btn" data-pick="'+k+'">'+TECH.POS[k].label+'</button>';pk+='</div>';
+      return '<div class="tblock"><span class="focus">Block '+n+', '+b.min+' min, position block</span><h4>Pick your position</h4><p><strong>Central channel:</strong> center backs, center mids, attacking mids and strikers. <strong>Wide channel:</strong> wingers and outside backs. Play more than one spot? Pick the one you play most. This phone remembers it.</p>'+pk+'</div>';
+    }
+    const x=P[b.pp];
+    b={title:x.name,min:6,focus:"Position block: "+P.label,rx:"3 × 90 s, 30 s rest"+(x.random?", random-cue mode":""),timer:{work:90,rest:30,rounds:3,random:!!x.random},text:x.text,cues:x.cues};
+  }
+  let h='<div class="tblock"><span class="focus">Block '+n+', '+b.min+' min'+(b.focus?': '+b.focus:'')+'</span><h4>'+b.title+'</h4>';
+  if(b.rx)h+='<p class="rx">'+b.rx+'</p>';
+  if(b.setup)h+='<p class="note">Setup: '+b.setup+'</p>';
+  if(b.sse){h+='<ol>';for(const [a,t] of TECH.SSE)h+='<li><strong>'+a+'.</strong> '+t+'</li>';h+='</ol><p><strong>This week’s move.</strong> '+b.text+'</p>';}
+  else if(b.text)h+='<p>'+b.text+'</p>';
+  if(b.items){h+='<ol>';for(const it of b.items)h+='<li>'+it+'</li>';h+='</ol>';}
+  if(b.steps){h+='<ol>';for(const [a,t] of b.steps)h+='<li><strong>'+a+'.</strong> '+t+'</li>';h+='</ol>';}
+  if(b.cues&&b.cues.length){h+='<div class="cues">';for(const c of b.cues)h+='<div>'+c+'</div>';h+='</div>';}
+  h+='<div class="row">';
+  if(b.timer)h+='<button class="btn" data-timer=\''+JSON.stringify(b.timer)+'\' data-title="'+String(b.title).replace(/"/g,"&quot;")+'">'+(b.timerLabel||"Start timer")+(b.timer.random?" (random cues)":"")+'</button>';
+  if(b.demo)h+='<a class="btn" href="'+b.demo+'" target="_blank" rel="noopener">Watch demo</a>';
+  h+=ck+'</div></div>';
+  return h;
+}
+
+function renderDay(){
+  const d=sel,k=K(d);
+  let h=weekStrip();
+  h+='<div class="dayhead"><h2>'+longDate(d)+'</h2>';
+  const ctx=[];
+  const sc=G()==="none"?null:scFor(d);
+  if(sc&&!sc.off)ctx.push(sc.phase);
+  if(S.tech!=="no"&&TECHBY[k])ctx.push("Technical week "+TECHBY[k].w);
+  if(ctx.length)h+='<p>'+esc(ctx.join(". "))+'.</p>';
+  h+='</div>';
+  if(K(TODAY)<K(START)&&K(d)===K(START))h+='<p class="flag">Everything starts Monday, November 30. Here’s day one.</p>';
+  let ev='';
+  if(sc&&!sc.off)ev+=scHTML(d,sc);
+  if(chessOn(d))ev+=chessHTML();
+  const games=IN()==="none"?[]:INDOOR.filter(g=>K(g.date)===k&&(!IN()||g.level===IN())).sort((a,b)=>a.h-b.h);
+  const fm=S.futsal==="none"?null:FUTSAL.find(m=>K(m.date)===k);
+  if(fm)ev+=futsalHTML(fm);
+  games.forEach(g=>ev+=indoorHTML(g));
+  if(S.tech!=="no"&&TECHBY[k])ev+=techHTML(TECHBY[k]);
+  if(!ev){
+    const nxt=firstActiveFrom(add(d,1));
+    const why=(sc&&sc.off)?sc.why:(d.getDay()===0||d.getDay()===6?"Nothing on the schedule this "+DAYFULL[d.getDay()]+".":"Nothing on the schedule today.");
+    h+='<div class="empty"><h3>Rest day</h3><p>'+esc(why)+' Sleep, eat well, and get some easy movement in.</p>'+(nxt>d&&nxt<=END?'<button class="btn" data-goto="'+K(nxt)+'">Go to next: '+longDate(nxt)+'</button>':'')+'</div>';
+  } else {
+    if(sc&&sc.off&&!chessOn(d))h+='<p class="flag">'+esc(sc.why)+'</p>';
+    h+=ev;
+  }
+  $("#main").innerHTML=h;
+}
+
+/* =========================================================
+   RENDER: FUTSAL
+   ========================================================= */
+function renderFutsal(){
+  const st=standings(),mine=S.futsal;
+  let h='<div class="prose"><h2>Wednesday futsal</h2><p>Session 1 runs six Wednesdays in the Main Gym, three games a night: 7:00–7:40, 7:45–8:25 and 8:30–9:10. Win 3 points, tie 1. Ties in the table are broken by goal difference, then goals scored. The last night is seeding games: 5 vs 6, 3 vs 4, then 1 vs 2.</p>';
+  h+='<h3>Standings'+(st.final?'':' after the games played so far')+'</h3><div class="tablewrap"><table><thead><tr><th>#</th><th>Team</th><th class="num">GP</th><th class="num">W</th><th class="num">T</th><th class="num">L</th><th class="num">GF</th><th class="num">GA</th><th class="num">GD</th><th class="num">Pts</th></tr></thead><tbody>';
+  st.arr.forEach((x,i)=>{h+='<tr'+(x.n===mine?' class="me"':'')+'><td>'+(i+1)+'</td><td><strong>'+esc(x.n)+'</strong></td><td class="num">'+x.g+'</td><td class="num">'+x.w+'</td><td class="num">'+x.d+'</td><td class="num">'+x.l+'</td><td class="num">'+x.gf+'</td><td class="num">'+x.ga+'</td><td class="num">'+(x.gd>0?"+":"")+x.gd+'</td><td class="num"><strong>'+x.pts+'</strong></td></tr>';});
+  h+='</tbody></table></div>';
+  h+='<h3>Schedule and results</h3>';
+  FUTSAL.forEach(m=>{
+    h+='<p class="md">Matchday '+m.md+', '+longDate(m.date)+'</p><div class="tablewrap"><table><tbody>';
+    m.games.forEach(([a,as,b,bs],i)=>{
+      const an=m.playoff?seedName(a):esc(a),bn=m.playoff?seedName(b):esc(b);
+      const me=mine&&(a===mine||b===mine);
+      h+='<tr'+(me?' class="me"':'')+'><td style="width:96px">'+SLOTS[i]+'</td><td>'+an+'</td><td class="num"><span class="score">'+(as!=null?as+'–'+bs:'vs')+'</span></td><td>'+bn+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  });
+  h+='<h3>Rosters</h3><div class="rosters">';
+  FTEAMS.forEach(t=>{h+='<div><h3>'+esc(t)+'</h3><ol>';FROSTER[t].forEach(([n,g])=>h+='<li>'+esc(n)+' <span class="grade">gr. '+g+'</span></li>');h+='</ol></div>';});
+  h+='</div></div>';
+  $("#main").innerHTML=h;
+}
+
+/* =========================================================
+   RENDER: INDOOR
+   ========================================================= */
+function renderIndoor(){
+  let h='<div class="prose"><h2>Weekend indoor games</h2><p>Winter session 1. Times and fields are below. '+(IN()&&IN()!=="none"?'Your team is highlighted.':(isMS()?'Indoor games are for high school players, so they’re hidden from your day-by-day view.':IN()==="none"?'You’re set as not participating, so these games are hidden from your day-by-day view.':'Set your team in My settings to highlight your games.'))+'</p>';
+  h+='<div class="tablewrap"><table><thead><tr><th>Date</th><th>Team</th><th>Opponent</th><th>Kickoff</th><th>Field</th></tr></thead><tbody>';
+  INDOOR.forEach(g=>{h+='<tr'+(IN()===g.level?' class="me"':'')+'><td>'+DAYFULL[g.date.getDay()].slice(0,3)+', '+short(g.date)+'</td><td>'+(g.level==="Varsity"?"Varsity":"JV")+'</td><td><strong>'+esc(g.opp)+'</strong></td><td>'+g.time+'</td><td>'+g.field+'</td></tr>';});
+  h+='</tbody></table></div><h3>Rosters</h3><div class="rosters">';
+  for(const lv of ["Varsity","Junior Varsity"]){
+    h+='<div><h3>'+lv+'</h3><ol>';
+    IROSTER[lv].forEach(([gr,n,gk])=>h+='<li>'+esc(n)+(gk?'<span class="gk">GK</span>':'')+' <span class="grade">gr. '+gr+'</span></li>');
+    h+='</ol><p class="note">Sub: '+ISUBS.join(", ")+'</p></div>';
+  }
+  h+='</div></div>';
+  $("#main").innerHTML=h;
+}
+
+/* =========================================================
+   RENDER: GUIDE
+   ========================================================= */
+function renderGuide(){
+  let tests='';for(const [a,b] of TECH.TEST_ITEMS)tests+='<li><strong>'+a+'.</strong> '+b+'</li>';
+  $("#main").innerHTML=`<div class="prose">
+<h2>Your normal week</h2>
+<div class="tablewrap"><table><thead><tr><th>Day</th><th>After school</th><th>At home</th><th>Night or weekend</th></tr></thead><tbody>
+<tr><td><strong>Monday</strong></td><td>Lower 1 (squat) + tempo run</td><td>Technical: first touch</td><td></td></tr>
+<tr><td><strong>Tuesday</strong></td><td>Upper 1 (bench) + speed</td><td>Technical: 1v1</td><td></td></tr>
+<tr><td><strong>Wednesday</strong></td><td>Lower 2 (hang clean, deadlift) + flush</td><td></td><td>Futsal 7:00–9:10, Main Gym (through Dec 16)</td></tr>
+<tr><td><strong>Thursday</strong></td><td>Upper 2 (push/pull) + intervals</td><td>Technical: turns, position, juggling</td><td></td></tr>
+<tr><td><strong>Friday</strong></td><td>Chess 3:30–4:15, Room B001</td><td></td><td></td></tr>
+<tr><td><strong>Weekend</strong></td><td></td><td>Make up a missed technical session</td><td>Indoor games (through Dec 19)</td></tr>
+</tbody></table></div>
+<p>Short weeks shift the lifts. When a Monday has no school, the week runs Lower 1 Tuesday, Upper 1 Wednesday and Lower 2 Thursday. The day-by-day tab always shows the right one.</p>
+
+<h2>Strength + speed after school</h2>
+<h3>Which group are you?</h3>
+<ul><li><strong>Group A:</strong> you’re in weight training class. You lift during the school day, then run at 3:30–4:00.</li>
+<li><strong>Group B:</strong> you’re not in the class. You lift in the weight room 3:30–4:15, then run 4:15–4:45.</li></ul>
+<p>Both groups do the same lift and the same run each day. Only the clock changes. Missed your class lift? Lift with Group B at 3:30 and run at 4:15.</p>
+<h3>Which lane are you?</h3>
+<p>From January on, every lift has three lanes: In-Season, Pre-Season and Off-Season. Each lane has its own sets and percentages. Pick yours in My settings and the page shows only your lane. Off-Season adds a short finisher after school.</p>
+<h3>The calendar</h3>
+<ul><li><strong>Nov 30–Dec 4, Learn it:</strong> new lifters learn every lift with PVC, dumbbells and the empty bar.</li>
+<li><strong>Dec 7–11, Load it:</strong> find working weights once a coach signs off each lift.</li>
+<li><strong>Dec 14–18, Test it:</strong> baseline lifting, jump, sprint and fitness tests.</li>
+<li><strong>Dec 21–Jan 4:</strong> winter break, no after-school sessions.</li>
+<li><strong>Jan 5–29, Reload:</strong> build strength and an aerobic base.</li>
+<li><strong>Feb 1–19, Drive:</strong> heavier lifts, faster speed work, repeat sprints.</li>
+<li><strong>Feb 22–25, Unload and retest:</strong> light lifts, then retest everything before tryouts.</li></ul>
+<h3>Rules that never change</h3>
+<ul><li>${CHECK}</li>
+<li>Leave 2 clean reps in reserve on every set. A set that slows down is your last set.</li>
+<li>Each core lift climbs set by set to its top percentage. Put your maxes in My numbers and the page shows your weights.</li>
+<li>Nordic curls and Copenhagen planks are on every Lower 1 day and never get cut. They protect your hamstrings and groin.</li>
+<li>Hard sprinting only comes on fresh legs. If your stride falls apart on a tempo run, you’re going too fast.</li></ul>
+<h3>Warm-ups</h3>
+<p><strong>Weight room, lower days (6 min):</strong> ${WU_LOWER}</p>
+<p><strong>Weight room, upper days (6 min):</strong> ${WU_UPPER}</p>
+<p><strong>Before every run (6 min):</strong> ${WU_RUN}</p>
+
+<h2>Winter technical program</h2>
+<p>Three sessions a week at home, about 30 minutes each, Monday, Nov 30 through Thursday, Feb 25. Mondays are first touch. Tuesdays are 1v1: square up, sell the fake, escape with the outside of the foot. Thursdays are turns, a block for your position and a juggling record attempt.</p>
+<p>You need about 4×4 yards, a ball, a solid wall, a chair and six markers. Every block has a timer: it beeps high to start each set and low to rest, and a quick double beep in random-cue mode means react. Turn your volume up.</p>
+<p>Log every session within 24 hours with the button at the bottom of the session. Missed a day? Make it up Wednesday, Friday or the weekend and log the session you made up.</p>
+<h3>Which position block?</h3>
+<ul><li><strong>Central channel:</strong> center backs, center mids, attacking mids and strikers. Receiving on the half-turn, playing forward, and holding or turning with your back to pressure.</li>
+<li><strong>Wide channel:</strong> wingers and outside backs. Receiving down the line, beating the press, 1v1 into a cross or a cut inside.</li></ul>
+<p>Play more than one spot? Pick the one Coach uses you at most. Set it once in My settings.</p>
+<h3>Middle school players</h3>
+<p>Grades 6–8 take part in chess, futsal and the winter technical program. Pick your grade in My settings and the page shows only those.</p>
+<h3>Not in a program?</h3>
+<p>Open My settings and choose Not participating for lifting, indoor, futsal or the technical program. It disappears from your day-by-day view.</p>
+<h3>Test days: Nov 30, Jan 11 and Feb 25</h3>
+<ul>${tests}</ul>
+<h3>Juggling club</h3>
+<div class="tablewrap"><table><thead><tr><th>Tier</th><th>Total juggles</th><th>Weak foot only</th><th>Proof</th></tr></thead><tbody>
+<tr><td>White</td><td>25</td><td>none</td><td>Log it</td></tr>
+<tr><td>Grey</td><td>50</td><td>10</td><td>Log it</td></tr>
+<tr><td>Red</td><td>100</td><td>25</td><td>Video</td></tr>
+<tr><td>Black</td><td>200</td><td>50</td><td>Video</td></tr></tbody></table></div>
+
+<h2>Varsity standards</h2>
+<p>The Varsity standards tab lists what we expect by March 1 in fitness, juggling, first touch, passing and 1v1 moves. Put your best numbers in as you test and it shows how close you are.</p>
+
+<h2>Friday chess</h2>
+<p>Fridays 3:30–4:15 in Room B001 on school days. A short lesson, then games. The point isn’t to become a chess player. It’s practice at the same question we ask on the field: what does this move take away, and what does it give up?</p>
+
+<h2>Futsal and indoor</h2>
+<p>Futsal is Wednesday nights 7:00–9:10 in the Main Gym through Dec 16. Indoor games are on weekends through Dec 19. Both tabs have the full schedule and rosters.</p>
+</div>`;
+}
+
+/* =========================================================
+   RENDER: MY NUMBERS
+   ========================================================= */
+function renderNumbers(){
+  const mx=store.get("hub-max",{});
+  let h='<div class="prose"><h2>My numbers</h2><p>Enter your January maxes in pounds. The day-by-day lifts then show the weight for every set, rounded to the nearest 5 lb. Saved on this phone only.</p><div class="numgrid">';
+  for(const k of ["squat","bench","trap","clean"])h+='<label>'+LIFTNAME[k]+' max (lb)<input type="number" inputmode="numeric" min="0" step="5" data-max="'+k+'" value="'+(mx[k]||"")+'"></label>';
+  h+='</div><p class="note">New lifters: your hang clean “max” is your heaviest coach-approved set of 3 from December, as is.</p>';
+  h+='<h3>Turn a test into a max</h3><p>From December testing: a 5-rep test is about 87% of your max, and a 3-rep test is about 93%. Rounded down to 5 lb.</p>';
+  h+='<div class="conv"><label>Weight lifted (lb)<input type="number" inputmode="numeric" id="cW" min="0" step="5"></label><label>Reps<select id="cR"><option value="5">5 reps</option><option value="3">3 reps</option></select></label><div><div class="note">Your max</div><div class="convout" id="cOut">–</div></div></div>';
+  h+='<h3>This winter’s top sets</h3><div id="topsets">'+topSetsHTML()+'</div></div>';
+  $("#main").innerHTML=h;
+}
+function topSetsHTML(){
+  const mx=store.get("hub-max",{}),li=laneIdx();
+  let h='<p class="note">'+laneName()+' lane, heaviest set of the week.</p><div class="tablewrap"><table><thead><tr><th>Week</th><th>Squat</th><th>Bench</th><th>Hang clean</th><th>Deadlift</th></tr></thead><tbody>';
+  SC.forEach((w,wi)=>{
+    const found={};
+    w.days.forEach(d=>(d.blocks||[]).forEach(b=>b.items.forEach(it=>{if(it.core){const k=liftKey(it.n);if(k&&!found[k])found[k]=it;}})));
+    h+='<tr><td>'+(wi+1)+' <span class="grade">'+short(W_START[wi])+'</span></td>';
+    for(const k of ["squat","bench","clean","trap"]){
+      const it=found[k];if(!it){h+='<td>–</td>';continue;}
+      const p=(it.pct[li]&&it.pct[li].length)?it.pct[li]:it.pct[0],top=Math.max(...p);
+      h+='<td>'+esc(it.sets[li]||it.sets[0])+' to '+top+'%'+(mx[k]?' <span class="grade">'+Math.round(mx[k]*top/100/5)*5+' lb</span>':'')+'</td>';
+    }
+    h+='</tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+
+
+/* =========================================================
+   VARSITY STANDARDS
+   ========================================================= */
+/* dir: "low" = lower is better, "high" = higher is better, "check" = coach sign-off */
+const STD=[
+ {id:"fit",title:"Fitness tests",intro:"Tested in the pre-season testing week, with the same setup as our Dec 14–18 baseline and Feb 22–25 retest.",
+  where:"Built by the after-school strength and speed program.",
+  tests:[
+   {id:"dash",t:"10-yard dash",how:"Best of 3, from a 2-point stance. Electronic timing.",dir:"low",v:1.70,e:1.62,u:"s",step:0.01},
+   {id:"pro",t:"Pro agility (5-10-5)",how:"Best of 2 each direction. Hand touches every line.",dir:"low",v:4.70,e:4.50,u:"s",step:0.01},
+   {id:"vert",t:"Vertical jump",how:"Best of 3, with an arm swing.",dir:"high",v:20,e:24,u:"in",step:0.5},
+   {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:90,e:100,u:"in",step:1,show:{v:"7′6″ (90 in)",e:"8′4″ (100 in)"}},
+   {id:"yoyo",t:"Yo-Yo IR1",how:"One effort to completion. Enter the last level you completed, like 17.1.",dir:"high",v:17.1,e:18.1,u:"",step:0.1,show:{v:"Level 17.1 (1,440 m)",e:"Level 18.1 (1,760 m)"}}
+  ],note:"Goalkeepers: same jump and agility standards, Yo-Yo one level lower (16.1). Coach Dally has your technical standards."},
+ {id:"jug",title:"Juggling",intro:"Ball from your hands, no hands or arms after that. Best of 3 attempts.",
+  where:"Practiced every technical session. Record attempts on Thursdays.",
+  tests:[
+   {id:"jtot",t:"Total juggles",how:"Any surface. This is the Red tier of juggling club.",dir:"high",v:100,e:200,u:"",step:1},
+   {id:"jweak",t:"Weak foot only",how:"Weak foot only, no thighs.",dir:"high",v:25,e:50,u:"",step:1},
+   {id:"jalt",t:"Alternating feet",how:"Right, left, right, left. A touch with the same foot twice ends the attempt.",dir:"high",v:30,e:60,u:"",step:1},
+   {id:"jcyc",t:"Full cycles",how:"Laces, thigh, head, thigh, laces = 1 cycle.",dir:"high",v:5,e:10,u:"cycles",step:1}
+  ]},
+ {id:"touch",title:"First touch",intro:"Your first touch is a weapon, not a stop. Every test counts only clean reps: the ball ends within one step of you and goes where you meant it to.",
+  where:"Practiced on Monday technical sessions.",
+  tests:[
+   {id:"air",t:"Out of the air",how:"A partner tosses 10 balls from 10 yards. Kill each one within one step using laces, thigh or the inside of your foot. Count the clean ones.",dir:"high",v:8,e:10,u:"of 10",step:1},
+   {id:"half",t:"Half-turn through a gate",how:"10 passes from 15 yards. Receive on your back foot and take your first touch forward through a 2-yard gate set 2 yards to the side. 5 each direction.",dir:"high",v:8,e:10,u:"of 10",step:1},
+   {id:"weakrec",t:"Weak-foot receive",how:"10 firm passes from 10 yards, received with your weak foot only and set into space for a pass.",dir:"high",v:7,e:9,u:"of 10",step:1},
+   {id:"fig8",t:"Figure-8 in 30 seconds",how:"Two markers 3 yards apart. Count every marker you go around. Best of 2. Same as our winter test.",dir:"high",v:13,e:16,u:"markers",step:1}
+  ]},
+ {id:"pass",title:"Passing",intro:"Firm, on the ground, to the correct foot. A pass that makes your teammate stop the ball is a bad pass.",
+  where:"Practiced on Monday technical sessions and in futsal.",
+  tests:[
+   {id:"wall",t:"Wall passes in 30 seconds",how:"Line 3 yards from the wall. Two touches max, any foot, every touch behind the line. Best of 2. Same as our winter test.",dir:"high",v:22,e:26,u:"passes",step:1},
+   {id:"gate15",t:"15-yard gate, strong foot",how:"10 ground passes through a 1-yard gate from 15 yards.",dir:"high",v:8,e:10,u:"of 10",step:1},
+   {id:"gate15w",t:"15-yard gate, weak foot",how:"Same test with your weak foot.",dir:"high",v:7,e:9,u:"of 10",step:1},
+   {id:"drive",t:"30-yard driven pass",how:"10 driven passes into a 10×10-yard box, 5 with each foot. Must land in the box or roll through it below knee height.",dir:"high",v:6,e:8,u:"of 10",step:1}
+  ]},
+ {id:"onev1",title:"1v1 moves",intro:"Every rep: square up, sell it, escape with the outside of the foot. A move that doesn’t change your speed isn’t a move.",
+  where:"Practiced on Tuesday technical sessions and in King of the Court.",
+  tests:[
+   {id:"bank",t:"Move bank",how:"Three moves you can hit at full speed on both feet, signed off by a coach: shoulder drop, scissors, fake cross, Matthews, stop and go, double scissors, croqueta, pull-V.",dir:"check",v:"3 moves, both feet",e:"5 moves, both feet"},
+   {id:"counter",t:"Move and counter",how:"When the defender doesn’t bite, hit a second move the other way before you escape. Coach sign-off.",dir:"check",v:"1 counter combo",e:"2 counter combos"},
+   {id:"channel",t:"1v1 channel",how:"10 attacks in a 10×20-yard channel against a live defender. Win = dribble through the 2-yard end gate under control.",dir:"high",v:5,e:7,u:"of 10",step:1},
+   {id:"tax",t:"Ball tax",how:"Your 10-yard dash time with a ball minus your time without one. Smaller is better: it means the ball isn’t slowing you down.",dir:"low",v:0.5,e:0.35,u:"s",step:0.01}
+  ]}
+];
+let stdMine=store.get("hub-std",{});
+function fmtStd(x,t,which){if(t.show)return t.show[which];if(typeof x==="string")return x;return (t.dir==="low"&&t.u==="s"?x.toFixed(2):x)+(t.u?" "+t.u:"");}
+function stdStatus(t){
+  const m=stdMine[t.id];
+  if(t.dir==="check"){
+    const lv=m||"";return lv==="e"?'<span class="status elite">Elite</span>':lv==="v"?'<span class="status ok">Varsity standard met</span>':'<span class="status gap">Not signed off yet</span>';
+  }
+  if(m===undefined||m===""||isNaN(+m))return '<span class="status gap">Enter your best</span>';
+  const x=+m;
+  const meets=t.dir==="low"?x<=t.v:x>=t.v, elite=t.dir==="low"?x<=t.e:x>=t.e;
+  if(elite)return '<span class="status elite">Elite</span>';
+  if(meets)return '<span class="status ok">Varsity standard met</span>';
+  const gap=Math.abs(x-t.v);
+  const g=(t.step<1?gap.toFixed(t.step<0.1?2:1):Math.ceil(gap));
+  return '<span class="status gap">'+g+(t.u&&t.u!=="of 10"?" "+t.u:"")+(t.dir==="low"?" to cut":" to go")+'</span>';
+}
+function stdCounts(){
+  let met=0,total=0;
+  STD.forEach(sec=>sec.tests.forEach(t=>{total++;const m=stdMine[t.id];
+    if(t.dir==="check"){if(m==="v"||m==="e")met++;return;}
+    if(m===undefined||m===""||isNaN(+m))return;const x=+m;if(t.dir==="low"?x<=t.v:x>=t.v)met++;}));
+  return [met,total];
+}
+function renderStandards(){
+  const [met,total]=stdCounts();
+  let h='<div class="prose std-intro"><h2>Varsity standards</h2><p>This is what a varsity player is expected to show by March 1. Meeting a standard doesn’t make the team on its own, and missing one doesn’t cut you. It tells you where you stand and what to work on before tryouts.</p><p>Enter your best numbers as you test. They’re saved on this phone only, and the page shows how far you are from each standard.</p></div>';
+  h+='<div class="score-sum" id="stdSum"><b>'+met+' of '+total+'</b> varsity standards met</div>';
+  for(const sec of STD){
+    h+='<section class="stdsec"><h2>'+sec.title+'</h2><p>'+sec.intro+'</p><p class="where">'+sec.where+'</p>';
+    for(const t of sec.tests){
+      h+='<div class="test"><div><h3>'+t.t+'</h3><p class="how">'+t.how+'</p><div class="bar"><span class="v">Varsity: <b>'+fmtStd(t.v,t,"v")+'</b></span><span>Elite: <b>'+fmtStd(t.e,t,"e")+'</b></span></div></div>';
+      h+='<div class="mine-in">';
+      if(t.dir==="check"){
+        const m=stdMine[t.id]||"";
+        h+='<label>Coach sign-off<select data-std="'+t.id+'" style="display:block;width:100%;margin-top:3px;font:500 16px Barlow,sans-serif;color:var(--ink);background:var(--surface);border:1.5px solid var(--rule);border-radius:6px;padding:7px 8px"><option value=""'+(m===""?" selected":"")+'>Not yet</option><option value="v"'+(m==="v"?" selected":"")+'>Varsity standard</option><option value="e"'+(m==="e"?" selected":"")+'>Elite</option></select></label>';
+      } else {
+        h+='<label>My best'+(t.u?" ("+t.u+")":"")+'<input type="number" inputmode="decimal" step="'+t.step+'" min="0" data-std="'+t.id+'" value="'+(stdMine[t.id]!==undefined?esc(stdMine[t.id]):"")+'"></label>';
+      }
+      h+='<div data-stat="'+t.id+'">'+stdStatus(t)+'</div></div></div>';
+    }
+    if(sec.note)h+='<p class="note">'+sec.note+'</p>';
+    h+='</section>';
+  }
+  h+='<p class="note" style="margin-top:24px">Hand-timed sprints usually read 0.1–0.2 s faster than electronic timing, so coaches adjust hand times before comparing.</p>';
+  $("#main").innerHTML=h;
+}
+function stdUpdate(id,val){
+  if(val===""||val===undefined)delete stdMine[id];else stdMine[id]=val;
+  store.set("hub-std",stdMine);
+  const t=STD.flatMap(x=>x.tests).find(x=>x.id===id);
+  const el=document.querySelector('[data-stat="'+id+'"]');if(el&&t)el.innerHTML=stdStatus(t);
+  const [met,total]=stdCounts();const su=$("#stdSum");if(su)su.innerHTML='<b>'+met+' of '+total+'</b> varsity standards met';
+}
+
+/* =========================================================
+   ROUTING + EVENTS
+   ========================================================= */
+const VIEWS=["day","futsal","indoor","standards","guide","numbers"];
+function render(){
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));
+  if(view==="day")renderDay();else if(view==="futsal")renderFutsal();else if(view==="indoor")renderIndoor();else if(view==="standards")renderStandards();else if(view==="guide")renderGuide();else renderNumbers();
+}
+function fromHash(){const h=(location.hash||"").replace("#","");view=VIEWS.includes(h)?h:"day";}
+fromHash();
+window.addEventListener("hashchange",()=>{fromHash();render();});
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{view=b.dataset.view;if(location.hash!=="#"+view)location.hash=view;else render();}));
+
+/* settings */
+const sF=$("#sFutsal");FTEAMS.slice().sort().forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;sF.appendChild(o);});
+function mineLine(){
+  const p=[];
+  if(S.grade)p.push(S.grade+"th grade"+(isMS()?" (middle school)":""));
+  if(G()&&G()!=="none")p.push("Group "+G()+", "+(LANES.find(x=>x[0]===(S.lane||"pre"))||LANES[1])[1]+" lane");
+  if(IN()&&IN()!=="none")p.push(IN()==="Varsity"?"Varsity indoor":"JV indoor");
+  if(S.futsal&&S.futsal!=="none")p.push(S.futsal+" futsal");
+  if(S.tech!=="no")p.push("technical program"+(S.pos?" ("+S.pos+" channel)":""));
+  const off=[];if(G()==="none")off.push("lifting");if(IN()==="none")off.push("indoor");if(S.futsal==="none")off.push("futsal");if(S.tech==="no")off.push("technical");
+  $("#mine").textContent=(p.length?"Showing: "+p.join(", ")+". ":"")+(off.length?"Hidden: "+off.join(", ")+".":"");
+}
+function syncSettings(){$("#sGrade").value=S.grade||"";const ms=isMS();["sGroup","sLane","sIndoor"].forEach(id=>{const el=$("#"+id);el.disabled=ms;el.closest("label").style.opacity=ms?".45":"";});$("#msNote").hidden=!ms;$("#sLane").value=S.lane||"pre";$("#sGroup").value=ms?"none":S.group;$("#sIndoor").value=ms?"none":S.indoor;$("#sFutsal").value=S.futsal;$("#sTech").value=S.tech;$("#sPos").value=S.pos;mineLine();}
+syncSettings();
+[["sGrade","grade"],["sGroup","group"],["sLane","lane"],["sIndoor","indoor"],["sFutsal","futsal"],["sTech","tech"],["sPos","pos"]].forEach(([id,key])=>$("#"+id).addEventListener("change",e=>{S[key]=e.target.value;saveS();syncSettings();render();}));
+$("#setBtn").addEventListener("click",()=>{const s=$("#settings"),on=!s.classList.contains("on");s.classList.toggle("on",on);$("#setBtn").setAttribute("aria-expanded",String(on));});
+if(!S.group&&!S.indoor&&!S.futsal&&!store.get("hub-settings",null)){$("#settings").classList.add("on");$("#setBtn").setAttribute("aria-expanded","true");}
+
+$("#main").addEventListener("click",e=>{
+  const dd=e.target.closest("[data-date]");if(dd&&!dd.disabled){const [y,m,d]=dd.dataset.date.split("-").map(Number);sel=new Date(y,m-1,d);render();return;}
+  const go=e.target.closest("[data-goto]");if(go){const [y,m,d]=go.dataset.goto.split("-").map(Number);sel=new Date(y,m-1,d);weekStart=mondayOf(sel);render();window.scrollTo(0,0);return;}
+  if(e.target.id==="prevW"){weekStart=add(weekStart,-7);sel=add(weekStart,0)<START?new Date(START):new Date(weekStart);render();return;}
+  if(e.target.id==="nextW"){weekStart=add(weekStart,7);sel=new Date(weekStart);render();return;}
+  if(e.target.id==="todayW"){sel=(TODAY>=START&&TODAY<=END)?new Date(TODAY):new Date(START);weekStart=mondayOf(sel);render();return;}
+  const pk=e.target.closest("[data-pick]");if(pk){S.pos=pk.dataset.pick;saveS();syncSettings();render();return;}
+  const tb=e.target.closest("[data-timer]");if(tb){try{startTimer(JSON.parse(tb.dataset.timer),tb.dataset.title)}catch(err){}return;}
+  const lg=e.target.closest("[data-log]");if(lg){tDone[lg.dataset.log]=true;store.set("hub-tdone",tDone);}
+});
+$("#main").addEventListener("change",e=>{
+  const k=e.target.dataset&&e.target.dataset.ck;if(k){tChecks[k]=e.target.checked;store.set("hub-tchecks",tChecks);}
+});
+$("#main").addEventListener("input",e=>{
+  const sd=e.target.dataset&&e.target.dataset.std;if(sd){stdUpdate(sd,e.target.value);return;}
+  const mk=e.target.dataset&&e.target.dataset.max;
+  if(mk){const mx=store.get("hub-max",{});const v=parseFloat(e.target.value);if(v>0)mx[mk]=v;else delete mx[mk];store.set("hub-max",mx);const ts=$("#topsets");if(ts)ts.innerHTML=topSetsHTML();return;}
+  if(e.target.id==="cW"||e.target.id==="cR"){conv();}
+});
+$("#main").addEventListener("change",e=>{if(e.target.id==="cR")conv();const sd=e.target.dataset&&e.target.dataset.std;if(sd&&e.target.tagName==="SELECT")stdUpdate(sd,e.target.value);});
+function conv(){const w=parseFloat(($("#cW")||{}).value),r=+(($("#cR")||{}).value);const o=$("#cOut");if(!o)return;if(!(w>0)){o.textContent="–";return;}o.textContent=Math.floor(w/(r===5?0.87:0.93)/5)*5+" lb";}
+
+/* =========================================================
+   INTERVAL TIMER (from the technical program page)
+   ========================================================= */
+let T=null,ac=null,wake=null;
+function audio(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();}catch(e){ac=null;}}
+function beep(f,d,times){if(!ac)return;times=times||1;for(let k=0;k<times;k++){try{const o=ac.createOscillator(),g=ac.createGain(),t0=ac.currentTime+k*(d+0.07);o.type="square";o.frequency.value=f;g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.22,t0+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t0+d);o.connect(g);g.connect(ac.destination);o.start(t0);o.stop(t0+d+0.02);}catch(e){}}}
+function wakeOn(){try{if(navigator.wakeLock)navigator.wakeLock.request("screen").then(w=>{wake=w}).catch(()=>{});}catch(e){}}
+function wakeOff(){try{if(wake)wake.release();}catch(e){}wake=null;}
+function startTimer(cfg,title){
+  stopTimer();audio();wakeOn();
+  T={work:cfg.work,rest:cfg.rest,rounds:cfg.rounds,random:!!cfg.random,title,round:1,phase:"ready",end:performance.now()+5000,paused:false,rem:0,nextCue:0,lastSec:null,iv:null};
+  $("#tTitle").textContent=title+(T.random?" (random cues)":"");
+  $("#tPause").textContent="Pause";
+  $("#timer").classList.add("on");
+  T.iv=setInterval(tick,100);tick();
+}
+function tick(){
+  if(!T||T.paused)return;
+  const now=performance.now();let rem=T.end-now;
+  if(T.phase==="work"&&T.random&&now>=T.nextCue&&rem>1500){cue();T.nextCue=now+3000+Math.random()*4000;}
+  const sec=Math.ceil(rem/1000);
+  if(T.phase!=="work"&&sec>0&&sec<=3&&sec!==T.lastSec)beep(660,0.08);
+  T.lastSec=sec;
+  if(rem<=0){
+    if(T.phase==="work"){if(T.round>=T.rounds){finish();return;}T.phase="rest";T.end=now+T.rest*1000;beep(440,0.35);}
+    else{if(T.phase==="rest")T.round++;T.phase="work";T.end=now+T.work*1000;T.nextCue=now+2500+Math.random()*3500;beep(990,0.25);}
+    rem=T.end-now;
+  }
+  draw(Math.max(0,rem));
+}
+function cue(){beep(1320,0.09,2);const el=$("#timer");el.classList.add("cue");setTimeout(()=>el.classList.remove("cue"),350);}
+function draw(rem){
+  const s=Math.ceil(rem/1000);$("#tClock").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+  $("#timer").classList.toggle("work",T.phase==="work");
+  $("#tPhase").textContent=T.phase==="ready"?"Get ready":(T.phase==="work"?"Work":"Rest")+", set "+T.round+" of "+T.rounds;
+}
+function finish(){clearInterval(T.iv);beep(990,0.18,3);$("#tPhase").textContent="Block done";$("#tClock").textContent="0:00";$("#timer").classList.remove("work");T.done=true;wakeOff();}
+function stopTimer(){if(T&&T.iv)clearInterval(T.iv);T=null;$("#timer").classList.remove("on","work","cue");wakeOff();}
+$("#tStop").addEventListener("click",stopTimer);
+$("#tPause").addEventListener("click",()=>{
+  if(!T||T.done)return;
+  if(!T.paused){T.paused=true;T.rem=T.end-performance.now();$("#tPause").textContent="Resume";}
+  else{T.paused=false;T.end=performance.now()+T.rem;$("#tPause").textContent="Pause";}
+});
+
+render();
+</script>
+</body>
+</html>
