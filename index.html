@@ -326,11 +326,11 @@ tr.me td{background:var(--hl)}
   </section>
 
   <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-view="guide">Guide</button>
     <button class="tab" role="tab" data-view="day">Day by day</button>
     <button class="tab" role="tab" data-view="futsal">Futsal</button>
     <button class="tab" role="tab" data-view="indoor">Indoor</button>
     <button class="tab" role="tab" data-view="standards">Varsity standards</button>
-    <button class="tab" role="tab" data-view="guide">Guide</button>
     <button class="tab" role="tab" data-view="numbers">My numbers</button>
     <button class="tab" role="tab" data-view="coach">Coach view</button>
   </nav>
@@ -723,10 +723,60 @@ const FROSTER={
  "Arsenal":[["Dylan Somchana",12],["Cameron Turner",11],["Carson Wutzke",10],["Adaan Vakkayil",10],["Logan Thomas",9],["Owen Edwards",9],["Pablo Velez",8],["Vincent Woods",8]],
  "Leeds United":[["Pearson Gamerl",12],["Micah Timm",12],["Oliver Gordon",10],["Jesus Mendoza",9],["Eli Nguyen",9],["Lucas Da Silva",8],["Owen Sutton",8],["Graham Dinsdale",8]]
 };
+
+/* ---------- Live futsal scores from the published Google Sheet ---------- */
+const FUTSAL_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vTWzN5qA01gih_WYUHFef_7-vExkBvQRDSAbXJJ_f2ll0b9x4TK8lmR_p2zy_I7x6CqtmaC5DopBrg4/pub?gid=0&single=true&output=csv";
+const PLAYOFF_FROM=6; /* matchday 6 and later = seeding games, not counted in the table */
+let futsalSource="saved";
+function parseCSV(text){
+  const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}
+    else if(c==='"')q=true;
+    else if(c===','){row.push(f);f="";}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f="";}
+    else f+=c;
+  }
+  if(f!==""||row.length){row.push(f);rows.push(row);}
+  return rows;
+}
+function futsalFromCSV(text){
+  const R=parseCSV(text),out=[];
+  const cell=(r,c)=>((R[r]||[])[c]||"").trim();
+  const num=v=>{v=String(v).trim();return v===""||isNaN(+v)?null:+v;};
+  const team=v=>v.replace(/^Seed\s*#\s*(\d)/i,"Seed $1");
+  for(let r=0;r<R.length;r++)for(let c=0;c<(R[r]||[]).length;c++){
+    const m=/^Matchday\s+(\d+)\s*\((\d{1,2})\/(\d{1,2})\/(\d{2,4})\)/i.exec(cell(r,c));
+    if(!m)continue;
+    const md=+m[1],y=+m[4]<100?2000+ +m[4]:+m[4];
+    const games=[];
+    for(let k=r+2;k<r+8&&k<R.length;k++){
+      const h=team(cell(k,c+1)),a=team(cell(k,c+3));
+      if(!h||!a||/^Team/i.test(h))break;
+      games.push([h,num(cell(k,c+2)),a,num(cell(k,c+4))]);
+    }
+    if(games.length)out.push({md,date:new Date(y,+m[2]-1,+m[3]),games,playoff:md>=PLAYOFF_FROM||games.some(g=>/^Seed /.test(g[0]))});
+  }
+  return out.sort((a,b)=>a.md-b.md);
+}
+async function loadFutsal(){
+  try{
+    const r=await fetch(FUTSAL_CSV,{cache:"no-store"});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const live=futsalFromCSV(await r.text());
+    if(live.length<3)throw new Error("Sheet layout not recognized");
+    FUTSAL.length=0;live.forEach(m=>FUTSAL.push(m));
+    futsalSource="live";
+  }catch(e){futsalSource="saved";}
+  if(["day","futsal","coach"].includes(view))render();
+}
+
 function standings(){
   const t={};FTEAMS.forEach(n=>t[n]={n,g:0,w:0,d:0,l:0,gf:0,ga:0});
   let regPlayed=0,regTotal=0;
   FUTSAL.filter(m=>!m.playoff).forEach(m=>m.games.forEach(([h,hs,a,as])=>{regTotal++;if(hs==null||as==null)return;regPlayed++;
+    for(const n of [h,a])if(!t[n])t[n]={n,g:0,w:0,d:0,l:0,gf:0,ga:0};
     const H=t[h],A=t[a];H.g++;A.g++;H.gf+=hs;H.ga+=as;A.gf+=as;A.ga+=hs;
     if(hs>as){H.w++;A.l++;}else if(hs<as){A.w++;H.l++;}else{H.d++;A.d++;}}));
   const arr=Object.values(t).map(x=>Object.assign(x,{pts:x.w*3+x.d,gd:x.gf-x.ga}));
@@ -1002,6 +1052,7 @@ function renderDay(){
 function renderFutsal(){
   const st=standings(),mine=S.futsal;
   let h='<div class="prose"><h2>Wednesday futsal</h2><p>Session 1 runs six Wednesdays in the Main Gym, three games a night: 7:00–7:40, 7:45–8:25 and 8:30–9:10. Win 3 points, tie 1. Ties in the table are broken by goal difference, then goals scored. The last night is seeding games: 5 vs 6, 3 vs 4, then 1 vs 2.</p>';
+  h+='<p class="note">'+(futsalSource==="live"?'Scores come straight from Coach’s futsal sheet and update when you open or refresh this page.':'Showing the last saved scores. Refresh the page to check for new results.')+'</p>';
   h+='<h3>Standings'+(st.final?'':' after the games played so far')+'</h3><div class="tablewrap"><table><thead><tr><th>#</th><th>Team</th><th class="num">GP</th><th class="num">W</th><th class="num">T</th><th class="num">L</th><th class="num">GF</th><th class="num">GA</th><th class="num">GD</th><th class="num">Pts</th></tr></thead><tbody>';
   st.arr.forEach((x,i)=>{h+='<tr'+(x.n===mine?' class="me"':'')+'><td>'+(i+1)+'</td><td><strong>'+esc(x.n)+'</strong></td><td class="num">'+x.g+'</td><td class="num">'+x.w+'</td><td class="num">'+x.d+'</td><td class="num">'+x.l+'</td><td class="num">'+x.gf+'</td><td class="num">'+x.ga+'</td><td class="num">'+(x.gd>0?"+":"")+x.gd+'</td><td class="num"><strong>'+x.pts+'</strong></td></tr>';});
   h+='</tbody></table></div>';
@@ -1424,6 +1475,7 @@ $("#tPause").addEventListener("click",()=>{
 });
 
 render();
+loadFutsal();
 </script>
 </body>
 </html>
