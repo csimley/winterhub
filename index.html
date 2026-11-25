@@ -316,12 +316,6 @@ tr.me td{background:var(--hl)}
       <label>Futsal team
         <select id="sFutsal"><option value="">Not set</option><option value="none">Not participating</option></select>
       </label>
-      <label>Winter technical program
-        <select id="sTech">
-          <option value="yes">I’m in it (show my sessions)</option>
-          <option value="no">Not participating</option>
-        </select>
-      </label>
       <label>Technical position block
         <select id="sPos">
           <option value="">Choose</option>
@@ -585,6 +579,7 @@ const TODAY=(()=>{const t=new Date();t.setHours(0,0,0,0);return t;})();
    SETTINGS
    ========================================================= */
 let S=Object.assign({grade:"",group:"",lane:"pre",indoor:"",futsal:"",tech:"yes",pos:""},store.get("hub-settings",{}));
+S.tech="yes";
 function saveS(){store.set("hub-settings",S);}
 const isMS=()=>["6","7","8"].includes(String(S.grade||""));
 const G=()=>isMS()?"none":S.group;
@@ -847,7 +842,7 @@ let tDone=store.get("hub-tdone",{}),tChecks=store.get("hub-tchecks",{});
 function kindsFor(d){
   const k=K(d),out=[];
   const sc=G()==="none"?null:scFor(d);if(sc&&!sc.off)out.push("sc");
-  if(S.tech!=="no"&&TECHBY[k])out.push("tech");
+  if(TECHBY[k])out.push("tech");
   if(chessOn(d))out.push("chess");
   if(S.futsal!=="none"&&FUTSAL.some(m=>K(m.date)===k))out.push("futsal");
   if(IN()!=="none"&&INDOOR.some(g=>K(g.date)===k&&(!IN()||g.level===IN())))out.push("indoor");
@@ -880,7 +875,7 @@ function weekStrip(){
     h+='</span></button>';
   }
   h+='</div><div class="key">';
-  for(const x of ["sc","tech","chess","futsal","indoor"])if(!(x==="tech"&&S.tech==="no")&&!(x==="sc"&&G()==="none")&&!(x==="futsal"&&S.futsal==="none")&&!(x==="indoor"&&IN()==="none"))h+='<span><i style="background:'+KCOLOR[x]+'"></i>'+KNAME[x]+'</span>';
+  for(const x of ["sc","tech","chess","futsal","indoor"])if(!(x==="sc"&&G()==="none")&&!(x==="futsal"&&S.futsal==="none")&&!(x==="indoor"&&IN()==="none"))h+='<span><i style="background:'+KCOLOR[x]+'"></i>'+KNAME[x]+'</span>';
   h+='</div>';
   return h;
 }
@@ -1003,7 +998,6 @@ function renderTech(){
   const SS=TECH.SESSIONS,s=SS[techSel],P=TECH.PHASES[TECH.phaseOf(s.w)];
   const todayS=SS.find(x=>x.date.getTime()===TODAY.getTime());
   let h='';
-  if(S.tech==="no")h+='<p class="flag">You’re set as not in the technical program, so these sessions don’t show on your day-by-day view. Change it in My settings.</p>';
   h+='<div class="tsess"><h2>'+longDate(s.date)+'</h2><p class="kick">'+esc(TECH.THEMES[s.d])+'</p><p class="note">Session '+s.code+', week '+s.w+' of 13, '+P.name+' phase. '+esc(P.note)+'</p>';
   let st;
   if(todayS&&todayS.i===s.i)st="Today’s session.";
@@ -1069,7 +1063,7 @@ function renderDay(){
   const ctx=[];
   const sc=G()==="none"?null:scFor(d);
   if(sc&&!sc.off)ctx.push(sc.phase);
-  if(S.tech!=="no"&&TECHBY[k])ctx.push("Technical week "+TECHBY[k].w);
+  if(TECHBY[k])ctx.push("Technical week "+TECHBY[k].w);
   if(ctx.length)h+='<p>'+esc(ctx.join(". "))+'.</p>';
   h+='</div>';
   if(K(TODAY)<K(START)&&K(d)===K(START))h+='<p class="flag">Everything starts Monday, November 30. Here’s day one.</p>';
@@ -1080,7 +1074,7 @@ function renderDay(){
   const fm=S.futsal==="none"?null:FUTSAL.find(m=>K(m.date)===k);
   if(fm)ev+=futsalHTML(fm);
   games.forEach(g=>ev+=indoorHTML(g));
-  if(S.tech!=="no"&&TECHBY[k])ev+=techHTML(TECHBY[k]);
+  if(TECHBY[k])ev+=techHTML(TECHBY[k]);
   if(!ev){
     const nxt=firstActiveFrom(add(d,1));
     const why=(sc&&sc.off)?sc.why:(d.getDay()===0||d.getDay()===6?"Nothing on the schedule this "+DAYFULL[d.getDay()]+".":"Nothing on the schedule today.");
@@ -1179,9 +1173,9 @@ function renderGuide(){
 <li><strong>Wide channel:</strong> wingers and outside backs. Receiving down the line, beating the press, 1v1 into a cross or a cut inside.</li></ul>
 <p>Play more than one spot? Pick the one Coach uses you at most. Set it once in My settings.</p>
 <h3>Middle school players</h3>
-<p>Grades 6–8 take part in chess, futsal and the winter technical program. Pick your grade in My settings and the page shows only those.</p>
+<p>Grades 6–8 take part in chess, futsal and the winter technical program, which every player does. Pick your grade in My settings and the page shows only those.</p>
 <h3>Not in a program?</h3>
-<p>Open My settings and choose Not participating for lifting, indoor, futsal or the technical program. It disappears from your day-by-day view.</p>
+<p>Open My settings and choose Not participating for lifting, indoor or futsal. It disappears from your day-by-day view. The technical program is for every player.</p>
 <h3>Test days: Nov 30, Jan 11 and Feb 25</h3>
 <ul>${tests}</ul>
 <h3>Juggling club</h3>
@@ -1434,13 +1428,13 @@ function mineLine(){
   if(G()&&G()!=="none")p.push("Group "+G());
   if(IN()&&IN()!=="none")p.push(IN()==="Varsity"?"Varsity indoor":"JV indoor");
   if(S.futsal&&S.futsal!=="none")p.push(S.futsal+" futsal");
-  if(S.tech!=="no")p.push("technical program"+(S.pos?" ("+S.pos+" channel)":""));
-  const off=[];if(G()==="none")off.push("lifting");if(IN()==="none")off.push("indoor");if(S.futsal==="none")off.push("futsal");if(S.tech==="no")off.push("technical");
+  p.push("technical program"+(S.pos?" ("+S.pos+" channel)":""));
+  const off=[];if(G()==="none")off.push("lifting");if(IN()==="none")off.push("indoor");if(S.futsal==="none")off.push("futsal");
   $("#mine").textContent=(p.length?"Showing: "+p.join(", ")+". ":"")+(off.length?"Hidden: "+off.join(", ")+".":"");
 }
-function syncSettings(){$("#sGrade").value=S.grade||"";const ms=isMS();["sGroup","sIndoor"].forEach(id=>{const el=$("#"+id);el.disabled=ms;el.closest("label").style.opacity=ms?".45":"";});$("#msNote").hidden=!ms;$("#sGroup").value=ms?"none":S.group;$("#sIndoor").value=ms?"none":S.indoor;$("#sFutsal").value=S.futsal;$("#sTech").value=S.tech;$("#sPos").value=S.pos;mineLine();}
+function syncSettings(){$("#sGrade").value=S.grade||"";const ms=isMS();["sGroup","sIndoor"].forEach(id=>{const el=$("#"+id);el.disabled=ms;el.closest("label").style.opacity=ms?".45":"";});$("#msNote").hidden=!ms;$("#sGroup").value=ms?"none":S.group;$("#sIndoor").value=ms?"none":S.indoor;$("#sFutsal").value=S.futsal;$("#sPos").value=S.pos;mineLine();}
 syncSettings();
-[["sGrade","grade"],["sGroup","group"],["sIndoor","indoor"],["sFutsal","futsal"],["sTech","tech"],["sPos","pos"]].forEach(([id,key])=>$("#"+id).addEventListener("change",e=>{S[key]=e.target.value;saveS();syncSettings();render();}));
+[["sGrade","grade"],["sGroup","group"],["sIndoor","indoor"],["sFutsal","futsal"],["sPos","pos"]].forEach(([id,key])=>$("#"+id).addEventListener("change",e=>{S[key]=e.target.value;saveS();syncSettings();render();}));
 $("#setBtn").addEventListener("click",()=>{const s=$("#settings"),on=!s.classList.contains("on");s.classList.toggle("on",on);$("#setBtn").setAttribute("aria-expanded",String(on));});
 if(!S.group&&!S.indoor&&!S.futsal&&!store.get("hub-settings",null)){$("#settings").classList.add("on");$("#setBtn").setAttribute("aria-expanded","true");}
 
