@@ -280,13 +280,6 @@ tr.me td{background:var(--hl)}
           <option value="none">Not participating</option>
         </select>
       </label>
-      <label>Weight room lane (Jan–Feb)
-        <select id="sLane">
-          <option value="pre">Pre-Season</option>
-          <option value="in">In-Season</option>
-          <option value="off">Off-Season</option>
-        </select>
-      </label>
       <label>Indoor team
         <select id="sIndoor">
           <option value="">Not set (show both)</option>
@@ -331,8 +324,7 @@ tr.me td{background:var(--hl)}
     <button class="tab" role="tab" data-view="futsal">Futsal</button>
     <button class="tab" role="tab" data-view="indoor">Indoor</button>
     <button class="tab" role="tab" data-view="standards">Varsity standards</button>
-    <button class="tab" role="tab" data-view="numbers">My numbers</button>
-    <button class="tab" role="tab" data-view="coach">Coach view</button>
+    <button class="tab" role="tab" data-view="coach" id="coachTab" hidden>Coach view</button>
   </nav>
   <main id="main"></main>
 </div>
@@ -909,29 +901,23 @@ function runHTML(run){
   return h;
 }
 
+const DEC_PLAYER={1:"Learn it week: new lifters learn every lift.",2:"Load it week: new lifters find their working weights.",3:"Testing week. Group B tests squat Monday, bench Tuesday, and hang clean and deadlift Wednesday. Group A tests in class. Jump and sprint tests are Tuesday after school, and the fitness test is Thursday after school."};
 function scHTML(d,sc){
   const g=G();
+  const lift=sc.lift.title, run=sc.run.title;
   let h='<article class="ev" style="--k:var(--c-sc)"><div class="t"><b>3:30</b><small>After school</small></div><div>';
-  h+='<p class="kind">Strength + speed</p><h3>'+esc(sc.lift.title)+' + '+esc(sc.run.title.toLowerCase())+'</h3>';
-  h+='<p class="note">'+esc(sc.phase)+'</p>';
+  h+='<p class="kind">Strength + speed</p><h3>'+esc(lift)+'</h3>';
+  h+='<p>Run: <strong>'+esc(run)+'</strong></p>';
+  const classLine=sc.era==="dec"?"lift during class, "+esc(FALLWK[sc.wk]):"lift during class";
+  const aLine='<b>Group A</b> (in weight training class): '+classLine+', then run at <b>3:30–4:00</b>.';
+  const bLine='<b>Group B</b> (not in the class): <b>weight room 3:30–4:15</b>, then run at <b>4:15–4:45</b>.';
   h+='<ul class="who">';
-  const aLine='<b>Group A</b> (you lift in class): '+esc(sc.groupA)+'. Run '+esc(sc.run.title.toLowerCase())+' 3:30–4:00.';
-  const bLine='<b>Group B</b> (you don’t lift in class): weight room 3:30–4:15, then run 4:15–4:45.';
   if(!g){h+='<li>'+aLine+'</li><li>'+bLine+'</li>';}
   else h+='<li class="me">'+(g==="A"?aLine:bLine)+'</li>';
   h+='</ul>';
-  if(sc.rule)h+='<div class="alert">'+esc(sc.rule)+'</div>';
-  (sc.notes||[]).forEach(n=>h+='<div class="alert">'+esc(n)+'</div>');
-  h+='<p class="note">'+esc(CHECK)+'</p>';
-  if(sc.era==="jan")h+='<p class="note">Showing the <strong>'+laneName()+'</strong> lane. Change it in My settings.</p>';
-  // lift
-  const liftOpen=g!=="A";
-  let liftLabel;
-  if(sc.era==="dec")liftLabel=g==="A"?"Weight room plan (Group B new lifters)":"Weight room, 3:30–4:15";
-  else liftLabel=g==="A"?"The lift (you do this in class)":(g==="B"?"The lift, 3:30–4:15":"The lift (in class for A, 3:30 for B)");
-  h+='<details class="part" style="--k:var(--c-sc)"'+(liftOpen?" open":"")+'><summary><span class="st">'+esc(liftLabel)+'</span><span class="sm">'+esc(sc.lift.title.split(":")[0])+'</span></summary><div class="pbody">'+liftHTML(sc.lift)+'</div></details>';
-  const runTime=g==="A"?"3:30–4:00":(g==="B"?"4:15–4:45":"3:30 or 4:15");
-  h+='<details class="part" open style="--k:var(--c-sc)"><summary><span class="st">Run: '+esc(sc.run.title)+'</span><span class="sm">'+runTime+', 30 min</span></summary><div class="pbody">'+runHTML(sc.run)+'</div></details>';
+  const notes=(sc.era==="dec"?[DEC_PLAYER[sc.wk]]:[]).concat(sc.notes||[]).filter(Boolean);
+  notes.forEach(n=>h+='<div class="alert">'+esc(n)+'</div>');
+  h+='<p class="note">Coaches post the workout in the weight room. Do the daily check when you arrive: rate sleep, soreness, energy and mood. If your total is 10 or below, tell a coach.</p>';
   h+='</div></article>';
   return h;
 }
@@ -1111,26 +1097,18 @@ function renderGuide(){
 <ul><li><strong>Group A:</strong> you’re in weight training class. You lift during the school day, then run at 3:30–4:00.</li>
 <li><strong>Group B:</strong> you’re not in the class. You lift in the weight room 3:30–4:15, then run 4:15–4:45.</li></ul>
 <p>Both groups do the same lift and the same run each day. Only the clock changes. Missed your class lift? Lift with Group B at 3:30 and run at 4:15.</p>
-<h3>Which lane are you?</h3>
-<p>From January on, every lift has three lanes: In-Season, Pre-Season and Off-Season. Each lane has its own sets and percentages. Pick yours in My settings and the page shows only your lane. Off-Season adds a short finisher after school.</p>
 <h3>The calendar</h3>
-<ul><li><strong>Nov 30–Dec 4, Learn it:</strong> new lifters learn every lift with PVC, dumbbells and the empty bar.</li>
-<li><strong>Dec 7–11, Load it:</strong> find working weights once a coach signs off each lift.</li>
+<ul><li><strong>Nov 30–Dec 4, Learn it:</strong> new lifters learn every lift.</li>
+<li><strong>Dec 7–11, Load it:</strong> new lifters find their working weights.</li>
 <li><strong>Dec 14–18, Test it:</strong> baseline lifting, jump, sprint and fitness tests.</li>
 <li><strong>Dec 21–Jan 4:</strong> winter break, no after-school sessions.</li>
 <li><strong>Jan 5–29, Reload:</strong> build strength and an aerobic base.</li>
 <li><strong>Feb 1–19, Drive:</strong> heavier lifts, faster speed work, repeat sprints.</li>
-<li><strong>Feb 22–25, Unload and retest:</strong> light lifts, then retest everything before tryouts.</li></ul>
-<h3>Rules that never change</h3>
-<ul><li>${CHECK}</li>
-<li>Leave 2 clean reps in reserve on every set. A set that slows down is your last set.</li>
-<li>Each core lift climbs set by set to its top percentage. Put your maxes in My numbers and the page shows your weights.</li>
-<li>Nordic curls and Copenhagen planks are on every Lower 1 day and never get cut. They protect your hamstrings and groin.</li>
-<li>Hard sprinting only comes on fresh legs. If your stride falls apart on a tempo run, you’re going too fast.</li></ul>
-<h3>Warm-ups</h3>
-<p><strong>Weight room, lower days (6 min):</strong> ${WU_LOWER}</p>
-<p><strong>Weight room, upper days (6 min):</strong> ${WU_UPPER}</p>
-<p><strong>Before every run (6 min):</strong> ${WU_RUN}</p>
+<li><strong>Feb 22–25, Unload and retest:</strong> lighter lifts, then retest everything before tryouts.</li></ul>
+<h3>Every day</h3>
+<ul><li>The day-by-day tab tells you what kind of day it is and where to be. Coaches post the actual workout in the weight room.</li>
+<li>Do the daily check when you arrive: rate sleep, soreness, energy and mood out of 5 each. A total of 10 or below means tell a coach before you start.</li>
+<li>Monday–Thursday only. Fridays have no lifting or running.</li></ul>
 
 <h2>Winter technical program</h2>
 <p>Three sessions a week at home, about 30 minutes each, Monday, Nov 30 through Thursday, Feb 25. Mondays are first touch. Tuesdays are 1v1: square up, sell the fake, escape with the outside of the foot. Thursdays are turns, a block for your position and a juggling record attempt.</p>
@@ -1157,7 +1135,7 @@ function renderGuide(){
 <p>The Varsity standards tab lists what we expect by March 1 in fitness, juggling, first touch, passing and 1v1 moves. Put your best numbers in as you test and it shows how close you are.</p>
 
 <h2>Coaches</h2>
-<p>The Coach view tab shows everything at every level, day by day: lifts for all three lanes, runs, chess, futsal, indoor games and technical sessions. Pick a week, or print it.</p>
+<p>Coaches have their own view with the full detail for every level. Ask Coach Simley for the link.</p>
 
 <h2>Friday chess</h2>
 <p>Fridays 3:30–4:15 in Room B001 on school days. A short lesson, then games. The point isn’t to become a chess player. It’s practice at the same question we ask on the field: what does this move take away, and what does it give up?</p>
@@ -1375,8 +1353,11 @@ function renderCoach(){
 /* =========================================================
    ROUTING + EVENTS
    ========================================================= */
-const VIEWS=["day","futsal","indoor","standards","guide","numbers","coach"];
+const VIEWS=["day","futsal","indoor","standards","guide","coach"];
 function render(){
+  if(view==="coach"){try{sessionStorage.setItem("hub-coach","1")}catch(e){}}
+  let coach=false;try{coach=sessionStorage.getItem("hub-coach")==="1"}catch(e){}
+  $("#coachTab").hidden=!(coach||view==="coach");
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));
   if(view==="day")renderDay();else if(view==="futsal")renderFutsal();else if(view==="indoor")renderIndoor();else if(view==="standards")renderStandards();else if(view==="guide")renderGuide();else if(view==="coach")renderCoach();else renderNumbers();
 }
@@ -1390,16 +1371,16 @@ const sF=$("#sFutsal");FTEAMS.slice().sort().forEach(t=>{const o=document.create
 function mineLine(){
   const p=[];
   if(S.grade)p.push(S.grade+"th grade"+(isMS()?" (middle school)":""));
-  if(G()&&G()!=="none")p.push("Group "+G()+", "+(LANES.find(x=>x[0]===(S.lane||"pre"))||LANES[1])[1]+" lane");
+  if(G()&&G()!=="none")p.push("Group "+G());
   if(IN()&&IN()!=="none")p.push(IN()==="Varsity"?"Varsity indoor":"JV indoor");
   if(S.futsal&&S.futsal!=="none")p.push(S.futsal+" futsal");
   if(S.tech!=="no")p.push("technical program"+(S.pos?" ("+S.pos+" channel)":""));
   const off=[];if(G()==="none")off.push("lifting");if(IN()==="none")off.push("indoor");if(S.futsal==="none")off.push("futsal");if(S.tech==="no")off.push("technical");
   $("#mine").textContent=(p.length?"Showing: "+p.join(", ")+". ":"")+(off.length?"Hidden: "+off.join(", ")+".":"");
 }
-function syncSettings(){$("#sGrade").value=S.grade||"";const ms=isMS();["sGroup","sLane","sIndoor"].forEach(id=>{const el=$("#"+id);el.disabled=ms;el.closest("label").style.opacity=ms?".45":"";});$("#msNote").hidden=!ms;$("#sLane").value=S.lane||"pre";$("#sGroup").value=ms?"none":S.group;$("#sIndoor").value=ms?"none":S.indoor;$("#sFutsal").value=S.futsal;$("#sTech").value=S.tech;$("#sPos").value=S.pos;mineLine();}
+function syncSettings(){$("#sGrade").value=S.grade||"";const ms=isMS();["sGroup","sIndoor"].forEach(id=>{const el=$("#"+id);el.disabled=ms;el.closest("label").style.opacity=ms?".45":"";});$("#msNote").hidden=!ms;$("#sGroup").value=ms?"none":S.group;$("#sIndoor").value=ms?"none":S.indoor;$("#sFutsal").value=S.futsal;$("#sTech").value=S.tech;$("#sPos").value=S.pos;mineLine();}
 syncSettings();
-[["sGrade","grade"],["sGroup","group"],["sLane","lane"],["sIndoor","indoor"],["sFutsal","futsal"],["sTech","tech"],["sPos","pos"]].forEach(([id,key])=>$("#"+id).addEventListener("change",e=>{S[key]=e.target.value;saveS();syncSettings();render();}));
+[["sGrade","grade"],["sGroup","group"],["sIndoor","indoor"],["sFutsal","futsal"],["sTech","tech"],["sPos","pos"]].forEach(([id,key])=>$("#"+id).addEventListener("change",e=>{S[key]=e.target.value;saveS();syncSettings();render();}));
 $("#setBtn").addEventListener("click",()=>{const s=$("#settings"),on=!s.classList.contains("on");s.classList.toggle("on",on);$("#setBtn").setAttribute("aria-expanded",String(on));});
 if(!S.group&&!S.indoor&&!S.futsal&&!store.get("hub-settings",null)){$("#settings").classList.add("on");$("#setBtn").setAttribute("aria-expanded","true");}
 
