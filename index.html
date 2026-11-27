@@ -536,7 +536,7 @@ function evalHTML(){
   let g='';for(const [a,b,c] of EVAL_GROUPS)g+='<tr><td><strong>'+a+'</strong></td><td>'+b+'</td><td>'+c+'</td></tr>';
   let t='';for(const [n,l,f,q,j] of EVAL_TARGETS)t+='<tr><td><strong>'+n+'</strong> ('+l+')</td><td>'+f+'</td><td>'+q+'</td><td>'+j+'</td></tr>';
   return '<h2>Your technical evaluation</h2>'+
-  '<p>This program builds toward the team’s technical evaluation: 20 tests in four groups, each scored from 0 to 10. On most tests, 5 is the middle of high-school-age players nationally, 9 is the top 5% (about an average D1 college player) and 10 is the top 5% of D1 players. Coaches run the full evaluation in person, and you get a player card with every level. The varsity standard is Good (6.5) on every test, and elite is Great (8.0). Every block in your sessions says which tests it builds.</p>'+
+  '<p>This program builds toward the team’s technical evaluation: 20 tests in four groups, each scored from 0 to 10. On most tests, 5 is the middle of high-school-age players nationally, 9 is the top 5% (about an average D1 college player) and 10 is the top 5% of D1 players. Coaches run the full evaluation in person, and you get a player card with every level. The varsity standard is level 7.0 on every test, and elite is Excellent (9.0). Every block in your sessions says which tests it builds.</p>'+
   '<div class="tablewrap"><table><thead><tr><th>Group</th><th>Tests</th><th>Where you build it this winter</th></tr></thead><tbody>'+g+'</tbody></table></div>'+
   '<h3>Check yourself at home</h3><p>Three tests work exactly the same at home, so your numbers line up with the evaluation. Each number is the score you need to reach that rating.</p>'+
   '<div class="tablewrap"><table><thead><tr><th>Rating (level)</th><th>Foot Speed</th><th>Quick Touch</th><th>Juggling Record</th></tr></thead><tbody>'+t+'</tbody></table></div>'+
@@ -1237,7 +1237,7 @@ function renderGuide(){
 <tr><td>Black</td><td>200</td><td>50</td><td>Video</td><td>Good (7.2)</td></tr></tbody></table></div>
 ${TECH.evalHTML()}
 <h2>Varsity standards</h2>
-<p>The Varsity standards tab lists what we expect by March 1: fitness tests, the 20 technical evaluation tests and two 1v1 coach sign-offs. On the technical tests, varsity is Good (level 6.5) and elite is Great (level 8.0). Put your best numbers in as you test and it shows your level and how close you are.</p>
+<p>The Varsity standards tab lists what we expect by March 1: fitness tests, the 20 technical evaluation tests and two 1v1 coach sign-offs. On the technical tests, varsity is level 7.0 and elite is Excellent (level 9.0). Put your best numbers in as you test and it shows your level and how close you are.</p>
 
 <h2>Coaches</h2>
 <p>Coaches have their own view with the full detail for every level. Ask Coach Simley for the link.</p>
@@ -1287,72 +1287,72 @@ function topSetsHTML(){
 /* dir: "low" = lower is better, "high" = higher is better, "check" = coach sign-off */
 const STD=[
  /* Fitness standards come from our own players' most recent results (Max Records sheet):
-    varsity = better than about two-thirds of the program (65th percentile), elite = top 15% (85th percentile). */
- {id:"fit",title:"Fitness: speed and power",intro:"Tested at the end of winter and the start of the season, with the same setup every time. These standards come from our own players’ results: varsity is better than about two-thirds of our program, and elite is the top 15%.",
+    varsity = better than about three-quarters of the program (75th percentile), elite = top 10% (90th percentile), rounded to clean numbers. */
+ {id:"fit",title:"Fitness: speed and power",intro:"Tested at the end of winter and the start of the season, with the same setup every time. These standards come from our own players’ results: varsity is better than about three-quarters of our program, and elite is the top 10%.",
   where:"Built by the after-school strength and speed program.",
   tests:[
-   {id:"dash",t:"10-yard dash",how:"Best of 3, from a 2-point stance. Electronic timing.",dir:"low",v:1.63,e:1.59,u:"s",step:0.01},
-   {id:"forty",t:"40-yard dash",how:"Same start and timing as the 10-yard dash.",dir:"low",v:5.10,e:4.80,u:"s",step:0.01},
-   {id:"pro",t:"Pro agility (5-10-5)",how:"Best of 2 each direction. Hand touches every line.",dir:"low",v:4.60,e:4.50,u:"s",step:0.01},
-   {id:"vert",t:"Vertical jump",how:"Jump mat, best of 3, with an arm swing.",dir:"high",v:23.5,e:25,u:"in",step:0.1},
-   {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:92,e:96,u:"in",step:1,show:{v:"7′8″ (92 in)",e:"8′0″ (96 in)"}}
+   {id:"dash",t:"10-yard dash",how:"Best of 3, from a 2-point stance. Electronic timing.",dir:"low",v:1.62,e:1.55,u:"s",step:0.01},
+   {id:"forty",t:"40-yard dash",how:"Same start and timing as the 10-yard dash.",dir:"low",v:4.95,e:4.75,u:"s",step:0.01},
+   {id:"pro",t:"Pro agility (5-10-5)",how:"Best of 2 each direction. Hand touches every line.",dir:"low",v:4.55,e:4.45,u:"s",step:0.01},
+   {id:"vert",t:"Vertical jump",how:"Jump mat, best of 3, with an arm swing.",dir:"high",v:24,e:25.5,u:"in",step:0.1},
+   {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:94,e:98,u:"in",step:1,show:{v:"7′10″ (94 in)",e:"8′2″ (98 in)"}}
   ]},
  {id:"fitstr",title:"Fitness: strength",intro:"Most reps in 1 minute. Full range on every rep, or it doesn’t count.",
   where:"Built by the after-school strength and speed program.",
   tests:[
-   {id:"push",t:"Push-ups",how:"Most in 1 minute.",dir:"high",v:46,e:55,u:"reps",step:1},
-   {id:"pull",t:"Pull-ups",how:"Most in 1 minute. Start each rep from a dead hang and get your chin over the bar.",dir:"high",v:7,e:11,u:"reps",step:1}
+   {id:"push",t:"Push-ups",how:"Most in 1 minute.",dir:"high",v:50,e:60,u:"reps",step:1},
+   {id:"pull",t:"Pull-ups",how:"Most in 1 minute. Start each rep from a dead hang and get your chin over the bar.",dir:"high",v:10,e:13,u:"reps",step:1}
   ]},
  {id:"fitaer",title:"Fitness: endurance",intro:"Your engine for 80 minutes. Run every test to completion.",
   where:"Built by the after-school running sessions and futsal.",
   tests:[
-   {id:"bleep",t:"Bleep test",how:"20-meter shuttles in time with the beeps. Enter the total number of shuttles you complete.",dir:"high",v:98,e:105,u:"shuttles",step:1},
-   {id:"cooper",t:"Cooper test (12-minute run)",how:"As far as you can in 12 minutes, timed in three 4-minute splits. Enter your total laps of a 400-meter track; quarter laps count.",dir:"high",v:7,e:7.5,u:"laps",step:0.25,show:{v:"7 laps (2,800 m)",e:"7½ laps (3,000 m)"}},
-   {id:"yoyo",t:"Yo-Yo IR1",how:"One effort to completion. Enter the last level you completed, like 17.1.",dir:"high",v:17.1,e:18.1,u:"",step:0.1,show:{v:"Level 17.1 (1,440 m)",e:"Level 18.1 (1,760 m)"}}
-  ],note:"Goalkeepers: same speed, power and strength standards, Yo-Yo one level lower (16.1). Coach Dally has your technical standards."},
- /* Technical standards = technical evaluation levels. Varsity = Good (level 6.5), Elite = Great (level 8.0).
+   {id:"bleep",t:"Bleep test",how:"20-meter shuttles in time with the beeps. Enter the total number of shuttles you complete.",dir:"high",v:100,e:113,u:"shuttles",step:1},
+   {id:"cooper",t:"Cooper test (12-minute run)",how:"As far as you can in 12 minutes, timed in three 4-minute splits. Enter your total laps of a 400-meter track; quarter laps count.",dir:"high",v:7.25,e:7.75,u:"laps",step:0.25,show:{v:"7¼ laps (2,900 m)",e:"7¾ laps (3,100 m)"}},
+   {id:"yoyo",t:"Yo-Yo IR1",how:"One effort to completion. Enter the last level you completed, like 17.1.",dir:"high",v:17.3,e:18.5,u:"",step:0.1,show:{v:"Level 17.3 (1,520 m)",e:"Level 18.5 (1,920 m)"}}
+  ],note:"Goalkeepers: same speed, power and strength standards, Yo-Yo one level lower (16.3). Coach Dally has your technical standards."},
+ /* Technical standards = technical evaluation levels. Varsity = level 7.0, Elite = Excellent (level 9.0).
     a = the evaluation anchors (score needed for levels 0, 1.5, 3, 4, 5, 6.5, 8, 9, 10), copied from the Norms tab. */
  {id:"evdrib",title:"Dribbling",intro:"Speed with the ball, 1v1 moves and turns. Weak-foot tests use weak-foot standards.",
   where:"Built by the warm-up, the Monday speed check, Tuesday 1v1 and dribbling blocks, and Thursday turns.",
   tests:[
-   {id:"fs",t:"Foot Speed",how:"Toe taps for 30 seconds, counting every touch from both feet. Same as your Monday speed check.",dir:"high",v:130,e:144,u:"touches",step:1,a:[0,90,99,108,118,130,144,152,162]},
-   {id:"ad",t:"Attack Dribbling (1v1s)",how:"",dir:"high",v:12,e:14,u:"reps",step:1,a:[0,8,9,10,11,12,14,15,17]},
-   {id:"mds",t:"Master Dribbling, strong foot",how:"",dir:"high",v:15,e:17,u:"reps",step:1,a:[0,10,11,12,14,15,17,18,19]},
-   {id:"mdw",t:"Master Dribbling, weak foot",how:"",dir:"high",v:14,e:16,u:"reps",step:1,a:[0,9,10,11,13,14,16,17,19]},
-   {id:"st",t:"Sharp Turns",how:"",dir:"high",v:18,e:20,u:"turns",step:1,a:[0,11,12,14,16,18,20,21,23]}
+   {id:"fs",t:"Foot Speed",how:"Toe taps for 30 seconds, counting every touch from both feet. Same as your Monday speed check.",dir:"high",v:135,e:152,u:"touches",step:1,a:[0,90,99,108,118,130,144,152,162]},
+   {id:"ad",t:"Attack Dribbling (1v1s)",how:"",dir:"high",v:13,e:15,u:"reps",step:1,a:[0,8,9,10,11,12,14,15,17]},
+   {id:"mds",t:"Master Dribbling, strong foot",how:"",dir:"high",v:16,e:18,u:"reps",step:1,a:[0,10,11,12,14,15,17,18,19]},
+   {id:"mdw",t:"Master Dribbling, weak foot",how:"",dir:"high",v:15,e:17,u:"reps",step:1,a:[0,9,10,11,13,14,16,17,19]},
+   {id:"st",t:"Sharp Turns",how:"",dir:"high",v:19,e:21,u:"turns",step:1,a:[0,11,12,14,16,18,20,21,23]}
   ]},
  {id:"evpass",title:"Passing",intro:"Touch speed and wall passing with both feet. Firm, on the ground, to the correct foot.",
   where:"Built by the Monday speed check, Monday wall work and gates, and futsal.",
   tests:[
-   {id:"qt",t:"Quick Touch",how:"Foundations (inside-inside) for 30 seconds, counting every touch. Same as your Monday speed check.",dir:"high",v:75,e:84,u:"touches",step:1,a:[0,48,54,60,67,75,84,91,106]},
-   {id:"cps",t:"Control Passing (2-touch), strong foot",how:"",dir:"high",v:13,e:16,u:"passes",step:1,a:[0,7,8,10,11,13,16,17,19]},
-   {id:"cpw",t:"Control Passing (2-touch), weak foot",how:"",dir:"high",v:11,e:14,u:"passes",step:1,a:[0,5,6,8,10,11,14,15,18]},
-   {id:"pps",t:"Perfect Passing (1-touch), strong foot",how:"",dir:"high",v:16,e:20,u:"passes",step:1,a:[0,6,8,10,13,16,20,22,24]},
-   {id:"ppw",t:"Perfect Passing (1-touch), weak foot",how:"",dir:"high",v:14,e:18,u:"passes",step:1,a:[0,6,7,9,11,14,18,20,24]}
+   {id:"qt",t:"Quick Touch",how:"Foundations (inside-inside) for 30 seconds, counting every touch. Same as your Monday speed check.",dir:"high",v:78,e:91,u:"touches",step:1,a:[0,48,54,60,67,75,84,91,106]},
+   {id:"cps",t:"Control Passing (2-touch), strong foot",how:"",dir:"high",v:14,e:17,u:"passes",step:1,a:[0,7,8,10,11,13,16,17,19]},
+   {id:"cpw",t:"Control Passing (2-touch), weak foot",how:"",dir:"high",v:12,e:15,u:"passes",step:1,a:[0,5,6,8,10,11,14,15,18]},
+   {id:"pps",t:"Perfect Passing (1-touch), strong foot",how:"",dir:"high",v:18,e:22,u:"passes",step:1,a:[0,6,8,10,13,16,20,22,24]},
+   {id:"ppw",t:"Perfect Passing (1-touch), weak foot",how:"",dir:"high",v:16,e:20,u:"passes",step:1,a:[0,6,7,9,11,14,18,20,24]}
   ]},
  {id:"evstrike",title:"Ball striking",intro:"Accuracy on driven and bent strikes with both feet, plus free kicks.",
   where:"Built by the Thursday striking block. Long-range striking and free kicks come in spring team training.",
   tests:[
-   {id:"pss",t:"Pure Strike, strong foot",how:"",dir:"high",v:6,e:8,u:"of 10",step:1,a:[0,2,3,4,5,6,8,9,10]},
-   {id:"psw",t:"Pure Strike, weak foot",how:"",dir:"high",v:5,e:7,u:"of 10",step:1,a:[0,1,2,3,4,5,7,8,9]},
-   {id:"css",t:"Curved Strike, strong foot",how:"",dir:"high",v:5,e:7,u:"of 10",step:1,a:[0,1,2,3,4,5,7,8,10]},
-   {id:"csw",t:"Curved Strike, weak foot",how:"",dir:"high",v:5,e:6,u:"of 10",step:1,a:[0,1,2,3,4,5,6,7,9]},
-   {id:"fk",t:"Free Kick Placement",how:"Scored out of 16 points.",dir:"high",v:8,e:10,u:"points",step:1,a:[0,1,2,4,6,8,10,12,16]}
+   {id:"pss",t:"Pure Strike, strong foot",how:"",dir:"high",v:7,e:9,u:"of 10",step:1,a:[0,2,3,4,5,6,8,9,10]},
+   {id:"psw",t:"Pure Strike, weak foot",how:"",dir:"high",v:6,e:8,u:"of 10",step:1,a:[0,1,2,3,4,5,7,8,9]},
+   {id:"css",t:"Curved Strike, strong foot",how:"",dir:"high",v:6,e:8,u:"of 10",step:1,a:[0,1,2,3,4,5,7,8,10]},
+   {id:"csw",t:"Curved Strike, weak foot",how:"",dir:"high",v:6,e:7,u:"of 10",step:1,a:[0,1,2,3,4,5,6,7,9]},
+   {id:"fk",t:"Free Kick Placement",how:"Scored out of 16 points.",dir:"high",v:9,e:12,u:"points",step:1,a:[0,1,2,4,6,8,10,12,16]}
   ]},
  {id:"evjug",title:"Juggling and trapping",intro:"Timed juggling with your head and each foot, your all-time juggling max, and control out of the air.",
   where:"Built by juggling every technical session, with record attempts on Thursdays.",
   tests:[
-   {id:"jh",t:"Pro Juggling, heading",how:"",dir:"high",v:13,e:19,u:"juggles",step:1,a:[0,2,3,5,9,13,19,23,40]},
-   {id:"js",t:"Pro Juggling, strong foot",how:"",dir:"high",v:28,e:40,u:"juggles",step:1,a:[0,4,7,11,19,28,40,47,62]},
-   {id:"jw",t:"Pro Juggling, weak foot",how:"",dir:"high",v:15,e:22,u:"juggles",step:1,a:[0,1,3,5,10,15,22,27,45]},
-   {id:"jtot",t:"Juggling Record",how:"Your juggling max: ball from your hands, any surface except hands and arms, best of 3. Same as the winter juggling test.",dir:"high",v:150,e:250,u:"juggles",step:1,a:[0,10,25,50,90,150,250,400,750]},
-   {id:"tc",t:"Total Control",how:"Scored out of 16 points.",dir:"high",v:10,e:13,u:"points",step:1,a:[0,3,5,6,8,10,13,14,16]}
+   {id:"jh",t:"Pro Juggling, heading",how:"",dir:"high",v:15,e:23,u:"juggles",step:1,a:[0,2,3,5,9,13,19,23,40]},
+   {id:"js",t:"Pro Juggling, strong foot",how:"",dir:"high",v:32,e:47,u:"juggles",step:1,a:[0,4,7,11,19,28,40,47,62]},
+   {id:"jw",t:"Pro Juggling, weak foot",how:"",dir:"high",v:18,e:27,u:"juggles",step:1,a:[0,1,3,5,10,15,22,27,45]},
+   {id:"jtot",t:"Juggling Record",how:"Your juggling max: ball from your hands, any surface except hands and arms, best of 3. Same as the winter juggling test.",dir:"high",v:185,e:400,u:"juggles",step:1,a:[0,10,25,50,90,150,250,400,750]},
+   {id:"tc",t:"Total Control",how:"Scored out of 16 points.",dir:"high",v:11,e:14,u:"points",step:1,a:[0,3,5,6,8,10,13,14,16]}
   ]},
  {id:"onev1",title:"1v1 coach sign-offs",intro:"Not part of the evaluation scores. A coach signs these off when you show them at full speed: square up, sell it, escape with the outside of the foot.",
   where:"Practiced on Tuesday technical sessions and in King of the Court.",
   tests:[
-   {id:"bank",t:"Move bank",how:"Three moves you can hit at full speed on both feet, signed off by a coach: shoulder drop, scissors, fake cross, Matthews, stop and go, double scissors, croqueta, pull-V.",dir:"check",v:"3 moves, both feet",e:"5 moves, both feet"},
-   {id:"counter",t:"Move and counter",how:"When the defender doesn’t bite, hit a second move the other way before you escape. Coach sign-off.",dir:"check",v:"1 counter combo",e:"2 counter combos"}
+   {id:"bank",t:"Move bank",how:"Three moves you can hit at full speed on both feet, signed off by a coach: shoulder drop, scissors, fake cross, Matthews, stop and go, double scissors, croqueta, pull-V.",dir:"check",v:"4 moves, both feet",e:"6 moves, both feet"},
+   {id:"counter",t:"Move and counter",how:"When the defender doesn’t bite, hit a second move the other way before you escape. Coach sign-off.",dir:"check",v:"2 counter combos",e:"3 counter combos"}
   ]}
 ];
 let stdMine=store.get("hub-std",{});
@@ -1395,7 +1395,7 @@ function stdCounts(){
 }
 function renderStandards(){
   const [met,total]=stdCounts();
-  let h='<div class="prose std-intro"><h2>Varsity standards</h2><p>This is what a varsity player is expected to show by March 1. Meeting a standard doesn’t make the team on its own, and missing one doesn’t cut you. It tells you where you stand and what to work on before tryouts.</p><p>The technical standards are the technical evaluation. On every test, the varsity standard is <strong>Good (level 6.5)</strong>, better than about two-thirds of high-school-age players nationally. Elite is <strong>Great (level 8.0)</strong>, the top 15% and the best of varsity.</p><p>Enter your best numbers as you test. They’re saved on this phone only, and the page shows your evaluation level and how far you are from each standard.</p></div>';
+  let h='<div class="prose std-intro"><h2>Varsity standards</h2><p>This is what a varsity player is expected to show by March 1. Meeting a standard doesn’t make the team on its own, and missing one doesn’t cut you. It tells you where you stand and what to work on before tryouts.</p><p>The technical standards are the technical evaluation. On every test, the varsity standard is <strong>level 7.0</strong>, better than about 70% of high-school-age players nationally. Elite is <strong>Excellent (level 9.0)</strong>: the top 5% nationally, about the level of an average D1 college player.</p><p>Enter your best numbers as you test. They’re saved on this phone only, and the page shows your evaluation level and how far you are from each standard.</p></div>';
   h+='<div class="score-sum" id="stdSum"><b>'+met+' of '+total+'</b> varsity standards met</div>';
   for(const sec of STD){
     h+='<section class="stdsec"><h2>'+sec.title+'</h2><p>'+sec.intro+'</p><p class="where">'+sec.where+'</p>';
