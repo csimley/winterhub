@@ -133,6 +133,8 @@ details.part[open] > summary::after{content:"–"}
 .tblock .focus{display:block;font-size:14px;font-weight:600;color:var(--c-tech);margin:0 0 2px}
 .tblock h4{font:700 22px/1.1 "Barlow Condensed",sans-serif;margin:0 0 4px}
 .tblock .rx{font-weight:600;margin:0 0 6px}
+.tblock .ev{font-size:14px;color:var(--muted);margin:0 0 6px}
+.tblock .ev b{color:var(--ink);font-weight:600}
 .tblock ol{margin:6px 0 8px;padding-left:22px}
 .tblock li{margin:3px 0}
 .cues{border-left:3px solid var(--rule);padding:2px 0 2px 12px;margin:8px 0}
@@ -197,6 +199,7 @@ tr.me td{background:var(--hl)}
 .status.ok{color:var(--c-indoor)}
 .status.elite{color:var(--c-futsal)}
 .status.gap{color:var(--muted);font-weight:500}
+.lvl{display:block;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}
 .score-sum{margin:18px 0 0;padding:14px 16px;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
 .score-sum b{font:800 30px/1 "Barlow Condensed",sans-serif}
 @media (max-width:560px){.test{grid-template-columns:minmax(0,1fr)}}
@@ -359,7 +362,7 @@ tr.me td{background:var(--hl)}
 
 <script>
 /* =========================================================
-   TECHNICAL PROGRAM (copied from the Antler Winter Technical Program page)
+   TECHNICAL PROGRAM (the only copy: every session lives here)
    ========================================================= */
 const TECH=(function(){
 const FORM_PREFILL = "https://docs.google.com/forms/d/e/1FAIpQLSd6ktbfZJGfLcS5TZC1uZDc73a__YOjr4FXcHp-QdM_WASOQQ/viewform?usp=pp_url&entry.31083359=";
@@ -382,13 +385,13 @@ const PHASES={
   3:{name:"Game speed",note:"Random cues and the clock. You react instead of rehearse."},
   4:{name:"Prove it",note:"Best-of sessions, then final testing on Thursday."}
 };
-const THEMES={Mon:"First touch",Tue:"1v1: square up, sell, escape",Thu:"Turns, position work and juggling"};
+const THEMES={Mon:"First touch",Tue:"1v1: square up, sell, escape",Thu:"Turns, position work, striking and juggling"};
 
 /* ---------- Content ---------- */
 const WARM={
   1:{rx:"8 × 30 s on, 15 s off",timer:{work:30,rest:15,rounds:8},items:[
     "Toe taps: alternate soles on top of the ball, stay on your toes",
-    "Bells: inside-inside between your feet",
+    "Foundations: inside-inside between your feet",
     "Sole roll across with your right foot",
     "Sole roll across with your left foot",
     "Pull-push, right: pull back with the sole, push forward with the laces",
@@ -481,13 +484,13 @@ const THU_RX={1:["5 × 45 s, 30 s rest. Two lines 5 yards apart; dribble to a li
 
 const POS={
  central:{label:"Central channel",who:"center backs, center mids, attacking mids and strikers",
-   1:{name:"Half-turn and play forward",text:"Side-on to the wall with a taped target 2 yards to one side. Check a shoulder, receive with your back foot, take your first touch forward, then pass into the target. Center backs and center mids: that pass is your line-breaking ball. Attacking mids and strikers: a forward first touch means you’re facing goal.",cues:["Check before the ball hits the wall","Hips open, first touch forward","Two touches max: receive, play"]},
-   2:{name:"Back to pressure: hold, turn or set",text:"Face the wall with the chair right behind you as the defender. Before every return, check a shoulder and call it out loud: “turn” or “set.” Turn: spin off the chair on your first touch. Set: shield it with your sole, ball on your far foot, then play it back one-touch.",cues:["Wide base, arm out","Ball on the foot farthest from the defender","Decide before the ball arrives"]},
-   3:{name:"Receive, turn, finish or play",random:true,text:"Receive and turn in one touch, then within 3 seconds strike (strikers and attacking mids) or pass (center backs and center mids) into a taped target. A double beep means the defender is tight on your back: set it back instead of turning.",cues:["Three seconds from receive to finish or pass","The beep is pressure: protect the ball"]}},
+   1:{name:"Half-turn and play forward",ev:"Control Passing",text:"Side-on to the wall with a taped target 2 yards to one side. Check a shoulder, receive with your back foot, take your first touch forward, then pass into the target. Center backs and center mids: that pass is your line-breaking ball. Attacking mids and strikers: a forward first touch means you’re facing goal.",cues:["Check before the ball hits the wall","Hips open, first touch forward","Two touches max: receive, play"]},
+   2:{name:"Back to pressure: hold, turn or set",ev:"Sharp Turns · Perfect Passing",text:"Face the wall with the chair right behind you as the defender. Before every return, check a shoulder and call it out loud: “turn” or “set.” Turn: spin off the chair on your first touch. Set: shield it with your sole, ball on your far foot, then play it back one-touch.",cues:["Wide base, arm out","Ball on the foot farthest from the defender","Decide before the ball arrives"]},
+   3:{name:"Receive, turn, finish or play",ev:"Sharp Turns · Pure Strike",random:true,text:"Receive and turn in one touch, then within 3 seconds strike (strikers and attacking mids) or pass (center backs and center mids) into a taped target. A double beep means the defender is tight on your back: set it back instead of turning.",cues:["Three seconds from receive to finish or pass","The beep is pressure: protect the ball"]}},
  wide:{label:"Wide channel",who:"wingers and outside backs",
-   1:{name:"Receive down the line",text:"Imagine a touchline on one side of you. Pass into the wall, receive on the back foot nearest that line, take your first touch forward down it, two touches, then a low cross into a taped target. Wingers start higher, outside backs deeper; the touch is the same.",cues:["Hips open up the field","First touch forward, not across","Cross within two touches"]},
-   2:{name:"Escape the press, then go or cut",text:"Chair right in front of you as the press. Receive and take your first touch away from it with the outside of the foot, drive three touches, then either keep going down the line or cut inside and strike low with your far foot into a taped target.",cues:["Touch away from pressure","Head up on the drive","Cut across the defender’s front foot"]},
-   3:{name:"Receive straight into 1v1",random:true,text:"Receive off the wall with your first touch going at the chair, straight into the move of the week, escape, and deliver a low cross into the target. On a double beep, the defender has shown you inside: cut in and strike instead.",cues:["The receive sets up the move","No stopping between receive, move and delivery"]}}
+   1:{name:"Receive down the line",ev:"Control Passing · Pure Strike",text:"Imagine a touchline on one side of you. Pass into the wall, receive on the back foot nearest that line, take your first touch forward down it, two touches, then a low cross into a taped target. Wingers start higher, outside backs deeper; the touch is the same.",cues:["Hips open up the field","First touch forward, not across","Cross within two touches"]},
+   2:{name:"Escape the press, then go or cut",ev:"Attack Dribbling · Pure Strike",text:"Chair right in front of you as the press. Receive and take your first touch away from it with the outside of the foot, drive three touches, then either keep going down the line or cut inside and strike low with your far foot into a taped target.",cues:["Touch away from pressure","Head up on the drive","Cut across the defender’s front foot"]},
+   3:{name:"Receive straight into 1v1",ev:"Attack Dribbling · Pure Strike",random:true,text:"Receive off the wall with your first touch going at the chair, straight into the move of the week, escape, and deliver a low cross into the target. On a double beep, the defender has shown you inside: cut in and strike instead.",cues:["The receive sets up the move","No stopping between receive, move and delivery"]}}
 };
 
 const JUG=[null,
@@ -513,33 +516,65 @@ const TEST_ITEMS=[
  ["Figure-8 in 30 s","Two markers 3 yards apart. Dribble a figure 8 and count every marker you go around. Best of 2."]
 ];
 
+/* ---------- Technical evaluation links ---------- */
+const CHECK={title:"Monday speed check",min:2,focus:"Evaluation check",rx:"2 × 30 s, 30 s rest. Count every touch.",timer:{work:30,rest:30,rounds:2},timerLabel:"Start the check",
+ text:"Two of the tests on your technical evaluation, done exactly the same way, so your numbers line up with the evaluation targets. Log both numbers in the form.",
+ steps:[["Set 1, Foot Speed","Toe taps in place: alternate soles on top of the ball. Every touch from both feet counts."],["Set 2, Quick Touch","Foundations: tap the ball inside-inside between your feet. Every touch counts."]],
+ cues:["Count out loud, or prop your phone up and count from the video","Same effort every Monday: this is a test, not a warm-up"],ev:"Foot Speed · Quick Touch"};
+const STRIKE={
+ 1:{name:"Strike to target",ev:"Pure Strike",text:"Tape a 2-foot square on the wall with its bottom edge on the floor. From 5 yards, or as far back as your space allows, strike 10 balls with your strong foot, then 10 with your weak foot. Laces, 60–70% power. Count how many land in the square.",cues:["Plant foot beside the ball, pointing at the target","Toe down, ankle locked","Strike through the middle of the ball and land on your striking foot"]},
+ 2:{name:"Bend it around the chair",ev:"Curved Strike",text:"Same square. Put the chair halfway between you and the wall, right in line with the square. Bend each ball around the chair with the inside of your foot so it finishes in the square. 10 with your strong foot, then 10 with your weak foot. Count the ones that land in the square.",cues:["Contact the outside half of the ball with the inside of your foot","Follow through across your body","Pace and bend, not power"]},
+ 3:{name:"Touch and strike",ev:"Pure Strike",random:true,text:"Pass into the wall, set the return out in front with one touch, then strike into the square on your second touch. On a double beep, strike with your weak foot instead. Count hits out of 10 for each foot.",cues:["The set touch goes out in front, not under you","Head still and over the ball as you strike"]}
+};
+const EVAL_TARGETS=[["Basic","3.0",99,54,25],["Below average","4.0",108,60,50],["Average","5.0",118,67,90],["Good","6.5",130,75,150],["Great","8.0",144,84,250],["Excellent","9.0",152,91,400],["Perfect 10","10",162,106,750]];
+const EVAL_GROUPS=[
+ ["Dribbling","Foot Speed, Attack Dribbling (1v1s), Master Dribbling (both feet), Sharp Turns","Warm-up and the Monday speed check, Tuesday 1v1 and dribbling blocks, Thursday turns"],
+ ["Passing","Quick Touch, Control Passing (2-touch) and Perfect Passing (1-touch), both feet","Monday speed check, Monday wall work and gates, and the one-touch finish to Monday sets"],
+ ["Ball striking","Pure Strike and Curved Strike (both feet), Free Kick Placement","Thursday striking and position blocks. Long-range striking and free kicks need a field, so they come in spring team training."],
+ ["Juggling and trapping","Pro Juggling (heading, strong foot, weak foot), Juggling Record, Total Control","Juggling every session, Thursday record attempts, and Mondays out of the air (week 4) and bouncers (week 9)"]];
+function evalHTML(){
+  let g='';for(const [a,b,c] of EVAL_GROUPS)g+='<tr><td><strong>'+a+'</strong></td><td>'+b+'</td><td>'+c+'</td></tr>';
+  let t='';for(const [n,l,f,q,j] of EVAL_TARGETS)t+='<tr><td><strong>'+n+'</strong> ('+l+')</td><td>'+f+'</td><td>'+q+'</td><td>'+j+'</td></tr>';
+  return '<h2>Your technical evaluation</h2>'+
+  '<p>This program builds toward the team’s technical evaluation: 20 tests in four groups, each scored from 0 to 10. On most tests, 5 is the middle of high-school-age players nationally, 9 is the top 5% (about an average D1 college player) and 10 is the top 5% of D1 players. Coaches run the full evaluation in person, and you get a player card with every level. The varsity standard is Good (6.5) on every test, and elite is Great (8.0). Every block in your sessions says which tests it builds.</p>'+
+  '<div class="tablewrap"><table><thead><tr><th>Group</th><th>Tests</th><th>Where you build it this winter</th></tr></thead><tbody>'+g+'</tbody></table></div>'+
+  '<h3>Check yourself at home</h3><p>Three tests work exactly the same at home, so your numbers line up with the evaluation. Each number is the score you need to reach that rating.</p>'+
+  '<div class="tablewrap"><table><thead><tr><th>Rating (level)</th><th>Foot Speed</th><th>Quick Touch</th><th>Juggling Record</th></tr></thead><tbody>'+t+'</tbody></table></div>'+
+  '<p class="note">Foot Speed is toe taps and Quick Touch is foundations: 30 seconds each, counting every touch from both feet. You do both in the Monday speed check. Juggling Record is your juggling max. Middle school players: these are high school standards, so a rating below Average is normal for now.</p>';
+}
+
 /* ---------- Build a session ---------- */
 function demo(key){const u=DEMOS[key];return (typeof u==="string"&&u.startsWith("https://"))?u:"";}
 function blocksFor(s){
   const p=phaseOf(s.w),pp=Math.min(p,3),test=TESTS.includes(s.code),out=[];
   const W=WARM[pp];
-  out.push({title:"Ball mastery warm-up",min:6,rx:W.rx,timer:W.timer,text:W.note||"",items:W.items});
+  out.push({title:"Ball mastery warm-up",min:6,rx:W.rx,timer:W.timer,text:W.note||"",items:W.items,ev:"Foot Speed · Quick Touch · Master Dribbling"});
+  if(s.d==="Mon")out.push(CHECK);
   if(test){
     const which=s.w===1?"Baseline":s.w===7?"Midpoint":"Final";
-    out.push({title:which+" tests",min:15,focus:"Test day",rx:"Four tests, same setup every time. Rest a minute between attempts.",steps:TEST_ITEMS,timer:{work:30,rest:60,rounds:2},timerLabel:"30-second test timer",text:"Log every number in the form today; the test fields are at the bottom."});
+    out.push({title:which+" tests",min:15,focus:"Test day",rx:"Four tests, same setup every time. Rest a minute between attempts.",steps:TEST_ITEMS,timer:{work:30,rest:60,rounds:2},timerLabel:"30-second test timer",text:"Log every number in the form today; the test fields are at the bottom.",ev:"Juggling Record · Control Passing · Master Dribbling"});
   }
   if(s.d==="Mon"){
     const m=MON[s.w],r=MON_RX[pp];
-    out.push({title:m.name,min:test?10:10,focus:"Touch of the week",rx:test?"3 sets × 2 min, 30 s rest.":(m.rx||r[0]),timer:test?{work:120,rest:30,rounds:3}:(m.timer||r[1]),text:m.text,cues:m.cues,demo:demo("mon-"+s.w),setup:"Solid wall, 3–6 yards away."});
-    if(!test){const b=MON_B[pp];out.push({title:b.name,min:8,rx:b.rx,timer:b.timer,text:b.text,cues:b.cues});
+    const air=s.w===4||s.w===9, one=!test&&![4,5,9,11,12].includes(s.w);
+    const mev=air?"Total Control · Control Passing":s.w===5?"Control Passing · Total Control":(one||s.w===12)?"Control Passing · Perfect Passing":"Control Passing";
+    out.push({title:m.name,min:10,focus:"Touch of the week",rx:test?"3 sets × 2 min, 30 s rest.":(m.rx||r[0])+(one?" Last 30 seconds of every set: one-touch passes only.":""),timer:test?{work:120,rest:30,rounds:3}:(m.timer||r[1]),text:m.text,cues:m.cues,demo:demo("mon-"+s.w),setup:"Solid wall, 3–6 yards away.",ev:mev});
+    if(!test){const b=MON_B[pp];out.push({title:b.name,min:8,rx:b.rx,timer:b.timer,text:b.text,cues:b.cues,ev:"Control Passing"});
       out.push(jug(s,5));}
   } else if(s.d==="Tue"){
     const t=TUE[s.w],r=TUE_RX[pp];
-    out.push({title:"Square up, sell, escape",min:12,focus:"Move of the week: "+t.name,rx:r[0],timer:r[1],sse:true,text:t.text,cues:t.cues,demo:demo("tue-"+s.w),setup:"A chair is the defender. Start 5 yards away, or as far as your space allows."});
-    const b=TUE_B[pp];out.push({title:b.name,min:8,rx:b.rx,timer:b.timer,text:b.text,cues:b.cues});
+    out.push({title:"Square up, sell, escape",min:12,focus:"Move of the week: "+t.name,rx:r[0],timer:r[1],sse:true,text:t.text,cues:t.cues,demo:demo("tue-"+s.w),setup:"A chair is the defender. Start 5 yards away, or as far as your space allows.",ev:"Attack Dribbling"});
+    const b=TUE_B[pp];out.push({title:b.name,min:8,rx:b.rx,timer:b.timer,text:b.text,cues:b.cues,ev:"Master Dribbling (both feet)"});
     out.push(jug(s,5));
   } else {
     if(test){
-      out.push({title:"Showcase",min:8,text:"Film one rep each: your best 1v1 move on each foot and your best turn. Send the clips to Coach.",cues:["Square up, sell, escape","Compare it to your first week; you’ll see it"]});
+      out.push({title:"Showcase",min:8,text:"Film one rep each: your best 1v1 move on each foot and your best turn. Send the clips to Coach.",cues:["Square up, sell, escape","Compare it to your first week; you’ll see it"],ev:"Attack Dribbling · Sharp Turns"});
     } else {
       const t=THU[s.w],r=THU_RX[pp];
-      out.push({title:t.name,min:10,focus:"Turn of the week",rx:r[0],timer:r[1],text:t.text,cues:t.cues,demo:demo("thu-"+s.w),setup:"Two lines (tape, shoes or towels) 5 yards apart."});
+      out.push({title:t.name,min:10,focus:"Turn of the week",rx:r[0],timer:r[1],text:t.text,cues:t.cues,demo:demo("thu-"+s.w),setup:"Two lines (tape, shoes or towels) 5 yards apart.",ev:"Sharp Turns"});
       out.push({pos:true,min:6,pp});
+      const k=STRIKE[pp];
+      out.push({title:k.name,min:4,focus:"Striking",rx:"2 × 90 s, 30 s rest: strong foot, then weak foot"+(k.random?", random-cue mode":""),timer:{work:90,rest:30,rounds:2,random:!!k.random},text:k.text,cues:k.cues,setup:"Concrete or brick wall with nothing breakable nearby, a futsal or size 4 ball, and painter’s tape for the square.",ev:k.ev});
       out.push(jug(s,8));
     }
   }
@@ -548,12 +583,13 @@ function blocksFor(s){
 function jug(s,min){
   const thu=s.d==="Thu";
   return {title:"Juggling",min,focus:"Juggling challenge of the week",
-    rx:thu?"Record day: 4 min on the challenge, then 3 attempts at your max and 3 at your weak-foot max.":"5 minutes on the weekly challenge.",
+    rx:thu?"Record day: 4 min on the challenge, then 3 attempts at your max, 3 at your weak-foot max, and 1 heading-only attempt if your ceiling is high enough.":"5 minutes on the weekly challenge.",
     timer:thu?{work:90,rest:30,rounds:4}:{work:60,rest:15,rounds:4},
-    text:JUG[s.w],cues:["Log your best juggle of the day, every session"]};
+    text:JUG[s.w],cues:["Log your best juggle of the day, every session"],
+    ev:s.w===8?"Pro Juggling (heading)":thu?"Juggling Record · Pro Juggling":"Pro Juggling"};
 }
 
-return {FORM_PREFILL,SESSIONS,blocksFor,phaseOf,PHASES,THEMES,POS,SSE,TESTS,TEST_ITEMS};
+return {FORM_PREFILL,SESSIONS,blocksFor,phaseOf,PHASES,THEMES,POS,SSE,TESTS,TEST_ITEMS,evalHTML};
 })();
 
 /* =========================================================
@@ -1023,10 +1059,10 @@ function renderTech(){
   h+=nav;
   const blocks=TECH.blocksFor(s);let total=0;blocks.forEach(b=>total+=b.min);
   h+='<div class="tbody">';blocks.forEach((b,n)=>h+=tblockHTML(b,n+1,s));h+='</div>';
-  h+='<section class="tlog"><h3>Log it</h3><p>About '+total+' minutes. When you finish, log <strong>'+esc(s.label)+'</strong> with your best juggle of the day. Coach sees every log.</p>';
+  h+='<section class="tlog"><h3>Log it</h3><p>About '+total+' minutes. When you finish, log <strong>'+esc(s.label)+'</strong> with your best juggle of the day'+(s.d==="Mon"?', plus your Foot Speed and Quick Touch counts':'')+'. Coach sees every log.</p>';
   if(TECH.FORM_PREFILL.startsWith("https://"))h+='<div class="row"><a class="btn primary" data-log="'+s.code+'" href="'+TECH.FORM_PREFILL+encodeURIComponent(s.label)+'" target="_blank" rel="noopener">Log this session</a>'+(tDone[s.code]?'<span class="note">Logged on this phone.</span>':'')+'</div>';
   h+='</section>';
-  h+='<p class="note" style="margin-top:16px">Test days, juggling club tiers and what you need at home are on the Guide tab.</p>';
+  h+='<p class="note" style="margin-top:16px">Test days, your evaluation targets, juggling club tiers and what you need at home are on the Guide tab.</p>';
   $("#main").innerHTML=h;
 }
 function tblockHTML(b,n,s){
@@ -1039,9 +1075,10 @@ function tblockHTML(b,n,s){
       return '<div class="tblock"><span class="focus">Block '+n+', '+b.min+' min, position block</span><h4>Pick your position</h4><p><strong>Central channel:</strong> center backs, center mids, attacking mids and strikers. <strong>Wide channel:</strong> wingers and outside backs. Play more than one spot? Pick the one you play most. This phone remembers it.</p>'+pk+'</div>';
     }
     const x=P[b.pp];
-    b={title:x.name,min:6,focus:"Position block: "+P.label,rx:"3 × 90 s, 30 s rest"+(x.random?", random-cue mode":""),timer:{work:90,rest:30,rounds:3,random:!!x.random},text:x.text,cues:x.cues};
+    b={title:x.name,min:6,ev:x.ev,focus:"Position block: "+P.label,rx:"3 × 90 s, 30 s rest"+(x.random?", random-cue mode":""),timer:{work:90,rest:30,rounds:3,random:!!x.random},text:x.text,cues:x.cues};
   }
   let h='<div class="tblock"><span class="focus">Block '+n+', '+b.min+' min'+(b.focus?': '+b.focus:'')+'</span><h4>'+b.title+'</h4>';
+  if(b.ev)h+='<p class="ev"><b>Builds:</b> '+b.ev+'</p>';
   if(b.rx)h+='<p class="rx">'+b.rx+'</p>';
   if(b.setup)h+='<p class="note">Setup: '+b.setup+'</p>';
   if(b.sse){h+='<ol>';for(const [a,t] of TECH.SSE)h+='<li><strong>'+a+'.</strong> '+t+'</li>';h+='</ol><p><strong>This week’s move.</strong> '+b.text+'</p>';}
@@ -1165,9 +1202,22 @@ function renderGuide(){
 <li>Monday–Thursday only. Fridays have no lifting or running.</li></ul>
 
 <h2>Winter technical program</h2>
-<p>Every session is on the Technical tab, which opens to today’s session. Three sessions a week at home, about 30 minutes each, Monday, Nov 30 through Thursday, Feb 25. Mondays are first touch. Tuesdays are 1v1: square up, sell the fake, escape with the outside of the foot. Thursdays are turns, a block for your position and a juggling record attempt.</p>
-<p>You need about 4×4 yards, a ball, a solid wall, a chair and six markers. Every block has a timer: it beeps high to start each set and low to rest, and a quick double beep in random-cue mode means react. Turn your volume up.</p>
-<p>Log every session within 24 hours with the button at the bottom of the session. Missed a day? Make it up Wednesday, Friday or the weekend and log the session you made up.</p>
+<p>Every session is on the Technical tab, which opens to today’s session. Three sessions a week at home, 30 to 35 minutes each, Monday, Nov 30 through Thursday, Feb 25. Mondays are first touch and start with a 2-minute speed check. Tuesdays are 1v1: square up, sell the fake, escape with the outside of the foot. Thursdays are turns, a block for your position, a short striking block and a juggling record attempt.</p>
+<p>Each week brings a new touch, a new move, a new turn and a new juggling challenge. The drills around them get faster and less predictable as the winter goes on, and every block tells you which technical evaluation tests it builds.</p>
+<h3>The phases</h3>
+<ul><li><strong>Foundation, weeks 1–4:</strong> learn it clean at 60–75% speed, both feet. Slow is fine. Sloppy is not.</li>
+<li><strong>Speed, weeks 5–8:</strong> same skills at full speed, and every rep ends with an explosive escape. Week 5 is the holiday week: three sessions, any three days.</li>
+<li><strong>Game speed, weeks 9–12:</strong> the timer throws random cues at you, and you score yourself against the clock. You stop rehearsing and start reacting.</li>
+<li><strong>Prove it, week 13:</strong> best-of sessions Monday and Tuesday, final testing Thursday, Feb 25.</li></ul>
+<h3>Your space and gear</h3>
+<p>You need about 4×4 yards (12×12 feet), a ball, a solid wall, a chair, six markers and some painter’s tape. Shoes, water bottles or plastic cups work fine as markers. A basement, a garage floor or a cleared room is enough.</p>
+<p>The best wall is concrete or brick: a basement wall or the outside of the house. Don’t use a garage door, drywall, or anything with a window in it, and make sure nothing breakable is nearby for the Thursday striking block. No wall? A rebounder works. Otherwise use the out-of-the-air version on Mondays (toss and receive), or get someone at home to pass with you.</p>
+<p>A size 4 ball or a futsal ball is easier indoors: less bounce, less noise. Ask before you start kicking a ball in the house.</p>
+<h3>The timer</h3>
+<p>Every block has a timer. It counts you in, beeps high at the start of each set and low at each rest. In random-cue mode, a quick double beep in the middle of a set is your cue to react. Turn your volume up.</p>
+<h3>Logging</h3>
+<p>Log every session within 24 hours with the button at the bottom of the session. Coach sees each log, the date, your effort and your juggling number. Three logged sessions a week is the standard. On Mondays, add your Foot Speed and Quick Touch counts.</p>
+<p>Missed a day? Make it up Wednesday, Friday or the weekend and log the session you made up. Extra work counts too: pick “Bonus session” in the form. Coach will ask for short videos now and then.</p>
 <h3>Which position block?</h3>
 <ul><li><strong>Central channel:</strong> center backs, center mids, attacking mids and strikers. Receiving on the half-turn, playing forward, and holding or turning with your back to pressure.</li>
 <li><strong>Wide channel:</strong> wingers and outside backs. Receiving down the line, beating the press, 1v1 into a cross or a cut inside.</li></ul>
@@ -1179,14 +1229,15 @@ function renderGuide(){
 <h3>Test days: Nov 30, Jan 11 and Feb 25</h3>
 <ul>${tests}</ul>
 <h3>Juggling club</h3>
-<div class="tablewrap"><table><thead><tr><th>Tier</th><th>Total juggles</th><th>Weak foot only</th><th>Proof</th></tr></thead><tbody>
-<tr><td>White</td><td>25</td><td>none</td><td>Log it</td></tr>
-<tr><td>Grey</td><td>50</td><td>10</td><td>Log it</td></tr>
-<tr><td>Red</td><td>100</td><td>25</td><td>Video</td></tr>
-<tr><td>Black</td><td>200</td><td>50</td><td>Video</td></tr></tbody></table></div>
-
+<p>Your tier goes on the board. Total juggles use any surface except hands and arms; weak foot means that foot only. Red and Black need a video sent to Coach.</p>
+<div class="tablewrap"><table><thead><tr><th>Tier</th><th>Total juggles</th><th>Weak foot only</th><th>Proof</th><th>Juggling Record level</th></tr></thead><tbody>
+<tr><td>White</td><td>25</td><td>none</td><td>Log it</td><td>Basic (3.0)</td></tr>
+<tr><td>Grey</td><td>50</td><td>10</td><td>Log it</td><td>Below average (4.0)</td></tr>
+<tr><td>Red</td><td>100</td><td>25</td><td>Video</td><td>Average (5.2)</td></tr>
+<tr><td>Black</td><td>200</td><td>50</td><td>Video</td><td>Good (7.2)</td></tr></tbody></table></div>
+${TECH.evalHTML()}
 <h2>Varsity standards</h2>
-<p>The Varsity standards tab lists what we expect by March 1 in fitness, juggling, first touch, passing and 1v1 moves. Put your best numbers in as you test and it shows how close you are.</p>
+<p>The Varsity standards tab lists what we expect by March 1: fitness tests, the 20 technical evaluation tests and two 1v1 coach sign-offs. On the technical tests, varsity is Good (level 6.5) and elite is Great (level 8.0). Put your best numbers in as you test and it shows your level and how close you are.</p>
 
 <h2>Coaches</h2>
 <p>Coaches have their own view with the full detail for every level. Ask Coach Simley for the link.</p>
@@ -1244,42 +1295,67 @@ const STD=[
    {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:90,e:100,u:"in",step:1,show:{v:"7′6″ (90 in)",e:"8′4″ (100 in)"}},
    {id:"yoyo",t:"Yo-Yo IR1",how:"One effort to completion. Enter the last level you completed, like 17.1.",dir:"high",v:17.1,e:18.1,u:"",step:0.1,show:{v:"Level 17.1 (1,440 m)",e:"Level 18.1 (1,760 m)"}}
   ],note:"Goalkeepers: same jump and agility standards, Yo-Yo one level lower (16.1). Coach Dally has your technical standards."},
- {id:"jug",title:"Juggling",intro:"Ball from your hands, no hands or arms after that. Best of 3 attempts.",
-  where:"Practiced every technical session. Record attempts on Thursdays.",
+ /* Technical standards = technical evaluation levels. Varsity = Good (level 6.5), Elite = Great (level 8.0).
+    a = the evaluation anchors (score needed for levels 0, 1.5, 3, 4, 5, 6.5, 8, 9, 10), copied from the Norms tab. */
+ {id:"evdrib",title:"Dribbling",intro:"Speed with the ball, 1v1 moves and turns. Weak-foot tests use weak-foot standards.",
+  where:"Built by the warm-up, the Monday speed check, Tuesday 1v1 and dribbling blocks, and Thursday turns.",
   tests:[
-   {id:"jtot",t:"Total juggles",how:"Any surface. This is the Red tier of juggling club.",dir:"high",v:100,e:200,u:"",step:1},
-   {id:"jweak",t:"Weak foot only",how:"Weak foot only, no thighs.",dir:"high",v:25,e:50,u:"",step:1},
-   {id:"jalt",t:"Alternating feet",how:"Right, left, right, left. A touch with the same foot twice ends the attempt.",dir:"high",v:30,e:60,u:"",step:1},
-   {id:"jcyc",t:"Full cycles",how:"Laces, thigh, head, thigh, laces = 1 cycle.",dir:"high",v:5,e:10,u:"cycles",step:1}
+   {id:"fs",t:"Foot Speed",how:"Toe taps for 30 seconds, counting every touch from both feet. Same as your Monday speed check.",dir:"high",v:130,e:144,u:"touches",step:1,a:[0,90,99,108,118,130,144,152,162]},
+   {id:"ad",t:"Attack Dribbling (1v1s)",how:"",dir:"high",v:12,e:14,u:"reps",step:1,a:[0,8,9,10,11,12,14,15,17]},
+   {id:"mds",t:"Master Dribbling, strong foot",how:"",dir:"high",v:15,e:17,u:"reps",step:1,a:[0,10,11,12,14,15,17,18,19]},
+   {id:"mdw",t:"Master Dribbling, weak foot",how:"",dir:"high",v:14,e:16,u:"reps",step:1,a:[0,9,10,11,13,14,16,17,19]},
+   {id:"st",t:"Sharp Turns",how:"",dir:"high",v:18,e:20,u:"turns",step:1,a:[0,11,12,14,16,18,20,21,23]}
   ]},
- {id:"touch",title:"First touch",intro:"Your first touch is a weapon, not a stop. Every test counts only clean reps: the ball ends within one step of you and goes where you meant it to.",
-  where:"Practiced on Monday technical sessions.",
+ {id:"evpass",title:"Passing",intro:"Touch speed and wall passing with both feet. Firm, on the ground, to the correct foot.",
+  where:"Built by the Monday speed check, Monday wall work and gates, and futsal.",
   tests:[
-   {id:"air",t:"Out of the air",how:"A partner tosses 10 balls from 10 yards. Kill each one within one step using laces, thigh or the inside of your foot. Count the clean ones.",dir:"high",v:8,e:10,u:"of 10",step:1},
-   {id:"half",t:"Half-turn through a gate",how:"10 passes from 15 yards. Receive on your back foot and take your first touch forward through a 2-yard gate set 2 yards to the side. 5 each direction.",dir:"high",v:8,e:10,u:"of 10",step:1},
-   {id:"weakrec",t:"Weak-foot receive",how:"10 firm passes from 10 yards, received with your weak foot only and set into space for a pass.",dir:"high",v:7,e:9,u:"of 10",step:1},
-   {id:"fig8",t:"Figure-8 in 30 seconds",how:"Two markers 3 yards apart. Count every marker you go around. Best of 2. Same as our winter test.",dir:"high",v:13,e:16,u:"markers",step:1}
+   {id:"qt",t:"Quick Touch",how:"Foundations (inside-inside) for 30 seconds, counting every touch. Same as your Monday speed check.",dir:"high",v:75,e:84,u:"touches",step:1,a:[0,48,54,60,67,75,84,91,106]},
+   {id:"cps",t:"Control Passing (2-touch), strong foot",how:"",dir:"high",v:13,e:16,u:"passes",step:1,a:[0,7,8,10,11,13,16,17,19]},
+   {id:"cpw",t:"Control Passing (2-touch), weak foot",how:"",dir:"high",v:11,e:14,u:"passes",step:1,a:[0,5,6,8,10,11,14,15,18]},
+   {id:"pps",t:"Perfect Passing (1-touch), strong foot",how:"",dir:"high",v:16,e:20,u:"passes",step:1,a:[0,6,8,10,13,16,20,22,24]},
+   {id:"ppw",t:"Perfect Passing (1-touch), weak foot",how:"",dir:"high",v:14,e:18,u:"passes",step:1,a:[0,6,7,9,11,14,18,20,24]}
   ]},
- {id:"pass",title:"Passing",intro:"Firm, on the ground, to the correct foot. A pass that makes your teammate stop the ball is a bad pass.",
-  where:"Practiced on Monday technical sessions and in futsal.",
+ {id:"evstrike",title:"Ball striking",intro:"Accuracy on driven and bent strikes with both feet, plus free kicks.",
+  where:"Built by the Thursday striking block. Long-range striking and free kicks come in spring team training.",
   tests:[
-   {id:"wall",t:"Wall passes in 30 seconds",how:"Line 3 yards from the wall. Two touches max, any foot, every touch behind the line. Best of 2. Same as our winter test.",dir:"high",v:22,e:26,u:"passes",step:1},
-   {id:"gate15",t:"15-yard gate, strong foot",how:"10 ground passes through a 1-yard gate from 15 yards.",dir:"high",v:8,e:10,u:"of 10",step:1},
-   {id:"gate15w",t:"15-yard gate, weak foot",how:"Same test with your weak foot.",dir:"high",v:7,e:9,u:"of 10",step:1},
-   {id:"drive",t:"30-yard driven pass",how:"10 driven passes into a 10×10-yard box, 5 with each foot. Must land in the box or roll through it below knee height.",dir:"high",v:6,e:8,u:"of 10",step:1}
+   {id:"pss",t:"Pure Strike, strong foot",how:"",dir:"high",v:6,e:8,u:"of 10",step:1,a:[0,2,3,4,5,6,8,9,10]},
+   {id:"psw",t:"Pure Strike, weak foot",how:"",dir:"high",v:5,e:7,u:"of 10",step:1,a:[0,1,2,3,4,5,7,8,9]},
+   {id:"css",t:"Curved Strike, strong foot",how:"",dir:"high",v:5,e:7,u:"of 10",step:1,a:[0,1,2,3,4,5,7,8,10]},
+   {id:"csw",t:"Curved Strike, weak foot",how:"",dir:"high",v:5,e:6,u:"of 10",step:1,a:[0,1,2,3,4,5,6,7,9]},
+   {id:"fk",t:"Free Kick Placement",how:"Scored out of 16 points.",dir:"high",v:8,e:10,u:"points",step:1,a:[0,1,2,4,6,8,10,12,16]}
   ]},
- {id:"onev1",title:"1v1 moves",intro:"Every rep: square up, sell it, escape with the outside of the foot. A move that doesn’t change your speed isn’t a move.",
+ {id:"evjug",title:"Juggling and trapping",intro:"Timed juggling with your head and each foot, your all-time juggling max, and control out of the air.",
+  where:"Built by juggling every technical session, with record attempts on Thursdays.",
+  tests:[
+   {id:"jh",t:"Pro Juggling, heading",how:"",dir:"high",v:13,e:19,u:"juggles",step:1,a:[0,2,3,5,9,13,19,23,40]},
+   {id:"js",t:"Pro Juggling, strong foot",how:"",dir:"high",v:28,e:40,u:"juggles",step:1,a:[0,4,7,11,19,28,40,47,62]},
+   {id:"jw",t:"Pro Juggling, weak foot",how:"",dir:"high",v:15,e:22,u:"juggles",step:1,a:[0,1,3,5,10,15,22,27,45]},
+   {id:"jtot",t:"Juggling Record",how:"Your juggling max: ball from your hands, any surface except hands and arms, best of 3. Same as the winter juggling test.",dir:"high",v:150,e:250,u:"juggles",step:1,a:[0,10,25,50,90,150,250,400,750]},
+   {id:"tc",t:"Total Control",how:"Scored out of 16 points.",dir:"high",v:10,e:13,u:"points",step:1,a:[0,3,5,6,8,10,13,14,16]}
+  ]},
+ {id:"onev1",title:"1v1 coach sign-offs",intro:"Not part of the evaluation scores. A coach signs these off when you show them at full speed: square up, sell it, escape with the outside of the foot.",
   where:"Practiced on Tuesday technical sessions and in King of the Court.",
   tests:[
    {id:"bank",t:"Move bank",how:"Three moves you can hit at full speed on both feet, signed off by a coach: shoulder drop, scissors, fake cross, Matthews, stop and go, double scissors, croqueta, pull-V.",dir:"check",v:"3 moves, both feet",e:"5 moves, both feet"},
-   {id:"counter",t:"Move and counter",how:"When the defender doesn’t bite, hit a second move the other way before you escape. Coach sign-off.",dir:"check",v:"1 counter combo",e:"2 counter combos"},
-   {id:"channel",t:"1v1 channel",how:"10 attacks in a 10×20-yard channel against a live defender. Win = dribble through the 2-yard end gate under control.",dir:"high",v:5,e:7,u:"of 10",step:1},
-   {id:"tax",t:"Ball tax",how:"Your 10-yard dash time with a ball minus your time without one. Smaller is better: it means the ball isn’t slowing you down.",dir:"low",v:0.5,e:0.35,u:"s",step:0.01}
+   {id:"counter",t:"Move and counter",how:"When the defender doesn’t bite, hit a second move the other way before you escape. Coach sign-off.",dir:"check",v:"1 counter combo",e:"2 counter combos"}
   ]}
 ];
 let stdMine=store.get("hub-std",{});
 function fmtStd(x,t,which){if(t.show)return t.show[which];if(typeof x==="string")return x;return (t.dir==="low"&&t.u==="s"?x.toFixed(2):x)+(t.u?" "+t.u:"");}
+const EV_L=[0,1.5,3,4,5,6.5,8,9,10];
+const EV_B=[[9,"Excellent"],[8,"Great"],[6.5,"Good"],[5,"Average"],[4,"Below average"],[3,"Basic"],[1.5,"Emerging"],[0,"Beginner"]];
+function evLevel(a,x){
+  if(x>=a[8])return 10;if(x<=a[0])return 0;
+  let k=0;while(k<7&&x>=a[k+1])k++;
+  return Math.floor((EV_L[k]+(x-a[k])/(a[k+1]-a[k])*(EV_L[k+1]-EV_L[k]))*10+1e-6)/10;
+}
 function stdStatus(t){
+  const s=stdStatus0(t),m=stdMine[t.id];
+  if(!t.a||m===undefined||m===""||isNaN(+m))return s;
+  const lv=evLevel(t.a,+m),band=EV_B.find(b=>lv>=b[0])[1];
+  return '<span class="lvl">Level '+lv.toFixed(1)+', '+band+'</span>'+s;
+}
+function stdStatus0(t){
   const m=stdMine[t.id];
   if(t.dir==="check"){
     const lv=m||"";return lv==="e"?'<span class="status elite">Elite</span>':lv==="v"?'<span class="status ok">Varsity standard met</span>':'<span class="status gap">Not signed off yet</span>';
@@ -1291,7 +1367,9 @@ function stdStatus(t){
   if(meets)return '<span class="status ok">Varsity standard met</span>';
   const gap=Math.abs(x-t.v);
   const g=(t.step<1?gap.toFixed(t.step<0.1?2:1):Math.ceil(gap));
-  return '<span class="status gap">'+g+(t.u&&t.u!=="of 10"?" "+t.u:"")+(t.dir==="low"?" to cut":" to go")+'</span>';
+  const ONE={touches:"touch",passes:"pass",reps:"rep",turns:"turn",juggles:"juggle",points:"point"};
+  const un=(String(g)==="1"&&ONE[t.u])?ONE[t.u]:t.u;
+  return '<span class="status gap">'+g+(t.u&&t.u!=="of 10"?" "+un:"")+(t.dir==="low"?" to cut":" to go")+'</span>';
 }
 function stdCounts(){
   let met=0,total=0;
@@ -1302,12 +1380,12 @@ function stdCounts(){
 }
 function renderStandards(){
   const [met,total]=stdCounts();
-  let h='<div class="prose std-intro"><h2>Varsity standards</h2><p>This is what a varsity player is expected to show by March 1. Meeting a standard doesn’t make the team on its own, and missing one doesn’t cut you. It tells you where you stand and what to work on before tryouts.</p><p>Enter your best numbers as you test. They’re saved on this phone only, and the page shows how far you are from each standard.</p></div>';
+  let h='<div class="prose std-intro"><h2>Varsity standards</h2><p>This is what a varsity player is expected to show by March 1. Meeting a standard doesn’t make the team on its own, and missing one doesn’t cut you. It tells you where you stand and what to work on before tryouts.</p><p>The technical standards are the technical evaluation. On every test, the varsity standard is <strong>Good (level 6.5)</strong>, better than about two-thirds of high-school-age players nationally. Elite is <strong>Great (level 8.0)</strong>, the top 15% and the best of varsity.</p><p>Enter your best numbers as you test. They’re saved on this phone only, and the page shows your evaluation level and how far you are from each standard.</p></div>';
   h+='<div class="score-sum" id="stdSum"><b>'+met+' of '+total+'</b> varsity standards met</div>';
   for(const sec of STD){
     h+='<section class="stdsec"><h2>'+sec.title+'</h2><p>'+sec.intro+'</p><p class="where">'+sec.where+'</p>';
     for(const t of sec.tests){
-      h+='<div class="test"><div><h3>'+t.t+'</h3><p class="how">'+t.how+'</p><div class="bar"><span class="v">Varsity: <b>'+fmtStd(t.v,t,"v")+'</b></span><span>Elite: <b>'+fmtStd(t.e,t,"e")+'</b></span></div></div>';
+      h+='<div class="test"><div><h3>'+t.t+'</h3>'+(t.how?'<p class="how">'+t.how+'</p>':'')+'<div class="bar"><span class="v">Varsity: <b>'+fmtStd(t.v,t,"v")+'</b></span><span>Elite: <b>'+fmtStd(t.e,t,"e")+'</b></span></div></div>';
       h+='<div class="mine-in">';
       if(t.dir==="check"){
         const m=stdMine[t.id]||"";
@@ -1467,7 +1545,7 @@ $("#main").addEventListener("change",e=>{if(e.target.id==="cWeek"){const [y,m,d]
 function conv(){const w=parseFloat(($("#cW")||{}).value),r=+(($("#cR")||{}).value);const o=$("#cOut");if(!o)return;if(!(w>0)){o.textContent="–";return;}o.textContent=Math.floor(w/(r===5?0.87:0.93)/5)*5+" lb";}
 
 /* =========================================================
-   INTERVAL TIMER (from the technical program page)
+   INTERVAL TIMER
    ========================================================= */
 let T=null,ac=null,wake=null;
 function audio(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();}catch(e){ac=null;}}
