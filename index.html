@@ -1288,26 +1288,26 @@ function topSetsHTML(){
 const STD=[
  /* Fitness standards come from our own players' most recent results (Max Records sheet):
     varsity = better than about three-quarters of the program (75th percentile), elite = top 10% (90th percentile), rounded to clean numbers. */
- {id:"fit",title:"Fitness: speed and power",intro:"Tested at the end of winter and the start of the season, with the same setup every time. These standards come from our own players’ results: varsity is better than about three-quarters of our program, and elite is the top 10%.",
+ {id:"fit",title:"Fitness: speed and power",intro:"Tested at the end of winter and the start of the season, with the same setup every time. These standards come from our own players’ results: varsity is better than about three-quarters of our program, and elite is the top 10%. Your level uses the same 0–10 scale as your physical evaluation card: varsity is level 7.0, elite is level 9.0.",
   where:"Built by the after-school strength and speed program.",
   tests:[
-   {id:"dash",t:"10-yard dash",how:"Best of 3, from a 2-point stance. Electronic timing.",dir:"low",v:1.62,e:1.55,u:"s",step:0.01},
-   {id:"forty",t:"40-yard dash",how:"Same start and timing as the 10-yard dash.",dir:"low",v:4.95,e:4.75,u:"s",step:0.01},
-   {id:"pro",t:"Pro agility (5-10-5)",how:"Best of 2 each direction. Hand touches every line.",dir:"low",v:4.55,e:4.45,u:"s",step:0.01},
-   {id:"vert",t:"Vertical jump",how:"Jump mat, best of 3, with an arm swing.",dir:"high",v:24,e:25.5,u:"in",step:0.1},
-   {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:94,e:98,u:"in",step:1,show:{v:"7′10″ (94 in)",e:"8′2″ (98 in)"}}
+   {id:"dash",t:"10-yard dash",how:"Best of 3, from a 2-point stance. Electronic timing.",dir:"low",v:1.62,e:1.55,u:"s",step:0.01,a:[2.05,1.78,1.75,1.70,1.68,1.64,1.59,1.55,1.51]},
+   {id:"forty",t:"40-yard dash",how:"Same start and timing as the 10-yard dash.",dir:"low",v:4.95,e:4.75,u:"s",step:0.01,a:[6.40,5.54,5.47,5.30,5.17,5.02,4.82,4.75,4.68]},
+   {id:"pro",t:"Pro agility (5-10-5)",how:"Best of 2 each direction. Hand touches every line.",dir:"low",v:4.55,e:4.45,u:"s",step:0.01,a:[5.80,5.02,4.96,4.84,4.75,4.57,4.51,4.45,4.39]},
+   {id:"vert",t:"Vertical jump",how:"Jump mat, best of 3, with an arm swing.",dir:"high",v:24,e:25.5,u:"in",step:0.1,a:[0,18.9,20.4,21.9,22.5,23.9,24.2,25.5,26.8]},
+   {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:94,e:98,u:"in",step:1,show:{v:"7′10″ (94 in)",e:"8′2″ (98 in)"},a:[0,80,83,85.5,88,93.5,95,98,101]}
   ]},
  {id:"fitstr",title:"Fitness: strength",intro:"Most reps in 1 minute. Full range on every rep, or it doesn’t count.",
   where:"Built by the after-school strength and speed program.",
   tests:[
-   {id:"push",t:"Push-ups",how:"Most in 1 minute.",dir:"high",v:50,e:60,u:"reps",step:1},
-   {id:"pull",t:"Pull-ups",how:"Most in 1 minute. Start each rep from a dead hang and get your chin over the bar.",dir:"high",v:10,e:13,u:"reps",step:1}
+   {id:"push",t:"Push-ups",how:"Most in 1 minute.",dir:"high",v:50,e:60,u:"reps",step:1,a:[0,24,30,35,44,47,55,60,65]},
+   {id:"pull",t:"Pull-ups",how:"Most in 1 minute. Start each rep from a dead hang and get your chin over the bar.",dir:"high",v:10,e:13,u:"reps",step:1,a:[0,1,2,4,6,9,11,13,15]}
   ]},
  {id:"fitaer",title:"Fitness: endurance",intro:"Your engine for 80 minutes. Run every test to completion.",
   where:"Built by the after-school running sessions and futsal.",
   tests:[
-   {id:"bleep",t:"Bleep test",how:"20-meter shuttles in time with the beeps. Enter the total number of shuttles you complete.",dir:"high",v:100,e:113,u:"shuttles",step:1},
-   {id:"cooper",t:"Cooper test (12-minute run)",how:"As far as you can in 12 minutes, timed in three 4-minute splits. Enter your total laps of a 400-meter track; quarter laps count.",dir:"high",v:7.25,e:7.75,u:"laps",step:0.25,show:{v:"7¼ laps (2,900 m)",e:"7¾ laps (3,100 m)"}},
+   {id:"bleep",t:"Bleep test",how:"20-meter shuttles in time with the beeps. Enter the total number of shuttles you complete.",dir:"high",v:100,e:113,u:"shuttles",step:1,a:[0,52,72,82,91,97,105,113,121]},
+   {id:"cooper",t:"Cooper test (12-minute run)",how:"As far as you can in 12 minutes, timed in three 4-minute splits. Enter your total laps of a 400-meter track; quarter laps count.",dir:"high",v:7.25,e:7.75,u:"laps",step:0.25,show:{v:"7¼ laps (2,900 m)",e:"7¾ laps (3,100 m)"},a:[0,5.25,6,6.5,6.75,7,7.5,7.75,8]},
    {id:"yoyo",t:"Yo-Yo IR1",how:"One effort to completion. Enter the last level you completed, like 17.1.",dir:"high",v:17.3,e:18.5,u:"",step:0.1,show:{v:"Level 17.3 (1,520 m)",e:"Level 18.5 (1,920 m)"}}
   ],note:"Goalkeepers: same speed, power and strength standards, Yo-Yo one level lower (16.3). Coach Dally has your technical standards."},
  /* Technical standards = technical evaluation levels. Varsity = level 7.0, Elite = Excellent (level 9.0).
@@ -1345,7 +1345,7 @@ const STD=[
    {id:"jh",t:"Pro Juggling, heading",how:"",dir:"high",v:15,e:23,u:"juggles",step:1,a:[0,2,3,5,9,13,19,23,40]},
    {id:"js",t:"Pro Juggling, strong foot",how:"",dir:"high",v:32,e:47,u:"juggles",step:1,a:[0,4,7,11,19,28,40,47,62]},
    {id:"jw",t:"Pro Juggling, weak foot",how:"",dir:"high",v:18,e:27,u:"juggles",step:1,a:[0,1,3,5,10,15,22,27,45]},
-   {id:"jtot",t:"Juggling Record",how:"Your juggling max: ball from your hands, any surface except hands and arms, best of 3. Same as the winter juggling test.",dir:"high",v:185,e:400,u:"juggles",step:1,a:[0,10,25,50,90,150,250,400,750]},
+   {id:"jtot",t:"Juggling Record",how:"Your juggling max: ball from your hands, any surface except hands and arms, best of 3. Same as the winter juggling test.",dir:"high",v:184,e:400,u:"juggles",step:1,a:[0,10,25,50,90,150,250,400,750]},
    {id:"tc",t:"Total Control",how:"Scored out of 16 points.",dir:"high",v:11,e:14,u:"points",step:1,a:[0,3,5,6,8,10,13,14,16]}
   ]},
  {id:"onev1",title:"1v1 coach sign-offs",intro:"Not part of the evaluation scores. A coach signs these off when you show them at full speed: square up, sell it, escape with the outside of the foot.",
@@ -1367,7 +1367,7 @@ function evLevel(a,x){
 function stdStatus(t){
   const s=stdStatus0(t),m=stdMine[t.id];
   if(!t.a||m===undefined||m===""||isNaN(+m))return s;
-  const lv=evLevel(t.a,+m),band=EV_B.find(b=>lv>=b[0])[1];
+  const lo=t.dir==="low",lv=evLevel(lo?t.a.map(z=>-z):t.a,lo?-(+m):+m),band=EV_B.find(b=>lv>=b[0])[1];
   return '<span class="lvl">Level '+lv.toFixed(1)+', '+band+'</span>'+s;
 }
 function stdStatus0(t){
