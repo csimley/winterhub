@@ -1286,15 +1286,30 @@ function topSetsHTML(){
    ========================================================= */
 /* dir: "low" = lower is better, "high" = higher is better, "check" = coach sign-off */
 const STD=[
- {id:"fit",title:"Fitness tests",intro:"Tested in the pre-season testing week, with the same setup as our Dec 14–18 baseline and Feb 22–25 retest.",
+ /* Fitness standards come from our own players' most recent results (Max Records sheet):
+    varsity = better than about two-thirds of the program (65th percentile), elite = top 15% (85th percentile). */
+ {id:"fit",title:"Fitness: speed and power",intro:"Tested at the end of winter and the start of the season, with the same setup every time. These standards come from our own players’ results: varsity is better than about two-thirds of our program, and elite is the top 15%.",
   where:"Built by the after-school strength and speed program.",
   tests:[
-   {id:"dash",t:"10-yard dash",how:"Best of 3, from a 2-point stance. Electronic timing.",dir:"low",v:1.70,e:1.62,u:"s",step:0.01},
-   {id:"pro",t:"Pro agility (5-10-5)",how:"Best of 2 each direction. Hand touches every line.",dir:"low",v:4.70,e:4.50,u:"s",step:0.01},
-   {id:"vert",t:"Vertical jump",how:"Best of 3, with an arm swing.",dir:"high",v:20,e:24,u:"in",step:0.5},
-   {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:90,e:100,u:"in",step:1,show:{v:"7′6″ (90 in)",e:"8′4″ (100 in)"}},
+   {id:"dash",t:"10-yard dash",how:"Best of 3, from a 2-point stance. Electronic timing.",dir:"low",v:1.63,e:1.59,u:"s",step:0.01},
+   {id:"forty",t:"40-yard dash",how:"Same start and timing as the 10-yard dash.",dir:"low",v:5.10,e:4.80,u:"s",step:0.01},
+   {id:"pro",t:"Pro agility (5-10-5)",how:"Best of 2 each direction. Hand touches every line.",dir:"low",v:4.60,e:4.50,u:"s",step:0.01},
+   {id:"vert",t:"Vertical jump",how:"Jump mat, best of 3, with an arm swing.",dir:"high",v:23.5,e:25,u:"in",step:0.1},
+   {id:"broad",t:"Broad jump",how:"Best of 3. Stick the landing, measured to the back heel. Enter it in inches.",dir:"high",v:92,e:96,u:"in",step:1,show:{v:"7′8″ (92 in)",e:"8′0″ (96 in)"}}
+  ]},
+ {id:"fitstr",title:"Fitness: strength",intro:"Most reps in 1 minute. Full range on every rep, or it doesn’t count.",
+  where:"Built by the after-school strength and speed program.",
+  tests:[
+   {id:"push",t:"Push-ups",how:"Most in 1 minute.",dir:"high",v:46,e:55,u:"reps",step:1},
+   {id:"pull",t:"Pull-ups",how:"Most in 1 minute. Start each rep from a dead hang and get your chin over the bar.",dir:"high",v:7,e:11,u:"reps",step:1}
+  ]},
+ {id:"fitaer",title:"Fitness: endurance",intro:"Your engine for 80 minutes. Run every test to completion.",
+  where:"Built by the after-school running sessions and futsal.",
+  tests:[
+   {id:"bleep",t:"Bleep test",how:"20-meter shuttles in time with the beeps. Enter the total number of shuttles you complete.",dir:"high",v:98,e:105,u:"shuttles",step:1},
+   {id:"cooper",t:"Cooper test (12-minute run)",how:"As far as you can in 12 minutes, timed in three 4-minute splits. Enter your total laps of a 400-meter track; quarter laps count.",dir:"high",v:7,e:7.5,u:"laps",step:0.25,show:{v:"7 laps (2,800 m)",e:"7½ laps (3,000 m)"}},
    {id:"yoyo",t:"Yo-Yo IR1",how:"One effort to completion. Enter the last level you completed, like 17.1.",dir:"high",v:17.1,e:18.1,u:"",step:0.1,show:{v:"Level 17.1 (1,440 m)",e:"Level 18.1 (1,760 m)"}}
-  ],note:"Goalkeepers: same jump and agility standards, Yo-Yo one level lower (16.1). Coach Dally has your technical standards."},
+  ],note:"Goalkeepers: same speed, power and strength standards, Yo-Yo one level lower (16.1). Coach Dally has your technical standards."},
  /* Technical standards = technical evaluation levels. Varsity = Good (level 6.5), Elite = Great (level 8.0).
     a = the evaluation anchors (score needed for levels 0, 1.5, 3, 4, 5, 6.5, 8, 9, 10), copied from the Norms tab. */
  {id:"evdrib",title:"Dribbling",intro:"Speed with the ball, 1v1 moves and turns. Weak-foot tests use weak-foot standards.",
@@ -1366,8 +1381,8 @@ function stdStatus0(t){
   if(elite)return '<span class="status elite">Elite</span>';
   if(meets)return '<span class="status ok">Varsity standard met</span>';
   const gap=Math.abs(x-t.v);
-  const g=(t.step<1?gap.toFixed(t.step<0.1?2:1):Math.ceil(gap));
-  const ONE={touches:"touch",passes:"pass",reps:"rep",turns:"turn",juggles:"juggle",points:"point"};
+  const g=(t.step<1?gap.toFixed((String(t.step).split(".")[1]||"").length):Math.ceil(gap));
+  const ONE={touches:"touch",passes:"pass",reps:"rep",turns:"turn",juggles:"juggle",points:"point",shuttles:"shuttle",laps:"lap"};
   const un=(String(g)==="1"&&ONE[t.u])?ONE[t.u]:t.u;
   return '<span class="status gap">'+g+(t.u&&t.u!=="of 10"?" "+un:"")+(t.dir==="low"?" to cut":" to go")+'</span>';
 }
